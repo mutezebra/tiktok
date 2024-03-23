@@ -1,0 +1,32 @@
+version: "3.3"
+
+networks:
+  tiktok:
+    driver: bridge
+
+services:
+  mysql:
+    container_name: tiktok_mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=tiktok
+      - TZ=Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./config/sql:/docker-entrypoint-initdb.d
+    networks:
+      - tiktok
+
+  etcd:
+    container_name: tiktok_etcd
+    image: bitnami/etcd:latest
+    restart: always
+    ports:
+      - "2379:2379"
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+    networks:
+      - tiktok

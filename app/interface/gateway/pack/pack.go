@@ -10,6 +10,7 @@ import (
 
 type Response struct {
 	Base Base `json:"base"`
+	Data any  `json:"data"`
 }
 
 type Base struct {
@@ -18,7 +19,15 @@ type Base struct {
 }
 
 func SendResponse(c *app.RequestContext, data any) {
-	c.JSON(http.StatusOK, data)
+	resp := &Response{
+		Base: Base{
+			200,
+			"operate success",
+		},
+		Data: data,
+	}
+
+	c.JSON(http.StatusOK, resp)
 }
 
 func SendFailedResponse(c *app.RequestContext, error error) {

@@ -22,11 +22,20 @@ type Logger struct {
 // Panic refactors the panic function within logrus. It records
 // the stack info and outputs it to logrus`s 'Out'
 func (l *Logger) Panic(v any) {
-	stack := make([]byte, 4<<10)
-	length := runtime.Stack(stack, true)
-	msg := fmt.Sprintf("%v  \n%s", v, stack[:length])
+	const depth = 32
+	var pcs [depth]uintptr
+	n := runtime.Callers(2, pcs[:])
+	st := make([]uintptr, n)
+	st = pcs[0:n]
+	var str strings.Builder
+	str.WriteString(fmt.Sprintf("%v\n", v))
+	for _, pc := range st {
+		fn := runtime.FuncForPC(pc)
+		file, line := fn.FileLine(pc)
+		str.WriteString(fmt.Sprintf("\t%s:%d %s\n", file, line, fn.Name()))
+	}
 	fmt.Println(v)
-	l.Logger.Panic(msg)
+	l.Logger.Panic(str.String())
 }
 
 // InitLog initializes a logger and continuously updates its output
@@ -101,5 +110,5 @@ func UpdateLogger() {
 
 // Restore replaces "\\n" with "\n" in the panic msg.
 func Restore(msg string) string {
-	return strings.ReplaceAll(msg, "\\n", "\n")
+	return strings.ReplaceAll(strings.ReplaceAll(msg, "\\n", "\n"), "\\t", "\t")
 }

@@ -10,5 +10,6 @@ type Resolver interface {
 
 type Registry interface {
 	Register(ctx context.Context) error
+	MustRegister(ctx context.Context)
 	Close()
 }

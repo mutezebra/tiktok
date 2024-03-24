@@ -76,6 +76,12 @@ func (r *Registry) Register(ctx context.Context) error {
 	return nil
 }
 
+func (r *Registry) MustRegister(ctx context.Context) {
+	if err := r.Register(ctx); err != nil {
+		panic(err)
+	}
+}
+
 // keepAlive maintains the service registration in etcd by sending keep-alive messages.
 func (r *Registry) keepAlive(ctx context.Context) {
 	childCtx, cancel := context.WithCancel(ctx)

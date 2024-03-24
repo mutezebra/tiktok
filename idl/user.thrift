@@ -16,41 +16,38 @@ struct UserInfo {
 }
 
 struct RegisterReq {
-    1: optional string UserName (go.tag="json:\"user_name,omitempty\",form:\"user_name,required\"")
-    2: optional string Email    (go.tag="json:\"email,omitempty\",form:\"email\"")
-    3: optional string Password (go.tag="json:\"password,omitempty\",form:\"password,required\"")
+    1: optional string UserName (go.tag="form:\"user_name,required\",json:\"user_name,omitempty\"")
+    2: optional string Email    (go.tag="form:\"email,required\",json:\"email,omitempty\"")
+    3: optional string Password (go.tag="form:\"password,required\",json:\"password,omitempty\"")
 }
 
 struct RegisterResp {
-    1: optional base.Base Base (go.tag="json:\"base,omitempty\"")
 }
 
 struct LoginReq {
-    1: optional string UserName (go.tag="json:\"user_name,omitempty\",form:\"user_name,required\"")
-    2: optional string password (go.tag="json:\"password,omitempty\",form:\"password,required\"")
-    3: optional string OTPCode (go.tag="json:\"otp_code,omitempty\"")
+    1: optional string UserName (go.tag="form:\"user_name,required\",json:\"user_name,omitempty\"")
+    2: optional string password (go.tag="form:\"password,required\",json:\"password,omitempty\"")
+    3: optional string OTPCode (go.tag="form:\"otp_code\",json:\"otp_code,omitempty\"")
 }
 
 struct LoginResp {
-    1: optional base.Base Base (go.tag="json:\"base,omitempty\"")
-    2: optional UserInfo Data (go.tag="json:\"data\"")
+    1: optional string AccessToken  (go.tag="json:\"access_token,omitempty\"")
+    2: optional string RefreshToken (go.tag="json:\"refresh_token,omitempty\"")
 }
 
 struct InfoReq {
-    1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
-    2: optional string Name (go.tag="json:\"name,omitempty\"")
+    1: optional i64 UID (go.tag="form:\"uid\",json:\"uid,omitempty\"")
+    2: optional string Name (go.tag="form:\"name\",json:\"name,omitempty\"")
 }
 
 struct InfoResp {
-    1: optional base.Base Base (go.tag="json:\"base,omitempty\"")
-    2: optional UserInfo Data (go.tag="json:\"data\"")
+    1: optional UserInfo Data (go.tag="json:\"data\"")
 }
 
 struct UploadAvatarReq {
 }
 
 struct UploadAvatarResp {
-    1: optional base.Base Base (go.tag="json:\"base,omitempty\"")
 }
 
 struct TotpQrcodeReq {
@@ -62,17 +59,15 @@ struct TotpQrcodeData {
 }
 
 struct TotpQrcodeResp {
-    1: optional base.Base Base (go.tag="json:\"base,omitempty\"")
-    2: optional TotpQrcodeData Data (go.tag="json:\"data\"")
+    1: optional TotpQrcodeData Data (go.tag="json:\"data\"")
 }
 
 struct EnableTotpReq {
-    1: optional string Secret (go.tag="json:\"secret,omitempty\"")
-    2: optional i32 Code (go.tag="json:\"code,omitempty\"")
+    1: optional string Secret (go.tag="form:\"secret\",json:\"secret,omitempty\"")
+    2: optional i32 Code (go.tag="form:\"code\",json:\"code,omitempty\"")
 }
 
 struct EnableTotpResp {
-    1: optional base.Base Base (go.tag="json:\"base,omitempty\"")
 }
 
 service UserService {

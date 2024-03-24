@@ -10,7 +10,7 @@ import (
 
 type Response struct {
 	Base Base `json:"base"`
-	Data any  `json:"data"`
+	Data any  `json:"data,omitempty"`
 }
 
 type Base struct {
@@ -31,7 +31,7 @@ func SendResponse(c *app.RequestContext, data any) {
 }
 
 func SendFailedResponse(c *app.RequestContext, error error) {
-	var e *errno.Errno
+	var e errno.Errno
 	ok := errors.As(error, &e)
 	if !ok {
 		e = errno.Convert(error)

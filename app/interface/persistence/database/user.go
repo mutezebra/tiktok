@@ -25,7 +25,19 @@ func (repo *UserRepository) CreateUser(ctx context.Context, user *repository.Use
 		user.Gender, user.Avatar, user.Fans, user.Follows,
 		user.TotpEnable, user.TotpSecret, user.CreateAt, user.UpdateAt,
 		user.DeleteAt)
+
 	return err
+}
+
+func (repo *UserRepository) GetPasswordAndIDByName(ctx context.Context, name string) (string, int64, error) {
+	var passwordDigest string
+	var id int64
+	if err := repo.db.QueryRowContext(ctx, "SELECT password_digest,id from user WHERE user_name=? LIMIT 1", name).Scan(
+		&passwordDigest, &id); err != nil {
+		return "", 0, err
+	}
+
+	return passwordDigest, id, nil
 }
 
 // UserInfoByID retrieves a user's information from the database using the user's ID.
@@ -52,5 +64,6 @@ func (repo *UserRepository) UserInfoByName(ctx context.Context, name string) (*r
 		&user.DeleteAt); err != nil {
 		return nil, err
 	}
+
 	return &user, nil
 }

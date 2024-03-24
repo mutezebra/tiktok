@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
+	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/usecase/pack"
-	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/pkg/errors"
+	"github.com/Mutezebra/tiktok/pkg/utils"
 	"time"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"
@@ -34,35 +34,44 @@ type userDTO struct {
 func (u *UserCase) Register(ctx context.Context, req *idl.RegisterReq) (r *idl.RegisterResp, err error) {
 	dto := userDTO{}
 	dto.username = *req.UserName
-	dto.email = *req.Email
+	dto.id = u.service.GenerateID()
 
-	dto.id, err = u.service.GenerateID()
-	if err != nil {
-		log.LogrusObj.Error(errors.WithMessage(err, "failed generate id"))
-		return
+	if dto.email, err = u.service.VerifyEmail(*req.Email); err != nil {
+		return nil, pack.ReturnError(errno.EmailFormatError, err)
 	}
 
-	dto.passwordDigest, err = u.service.EncryptPassword(*req.Password)
-	if err != nil {
-		log.LogrusObj.Error(errors.WithMessage(err, "encrypt password failed"))
-		return
+	if dto.passwordDigest, err = u.service.EncryptPassword(*req.Password); err != nil {
+		return nil, pack.ReturnError(errno.EncryptPasswordError, err)
 	}
-	
-	cCtx, cn := context.WithTimeout(ctx, 1*time.Second)
-	defer cn()
-	err = u.repo.CreateUser(cCtx, toUser(&dto))
-	if err != nil {
-		log.LogrusObj.Error(errors.WithMessage(err, "encrypt password failed"))
-		return
+
+	if err = u.repo.CreateUser(ctx, dtoU2Repo(&dto)); err != nil {
+		return nil, pack.ReturnError(errno.DatabaseCreateUserError, err)
 	}
 
 	r = new(idl.RegisterResp)
-	r.Base = pack.Success
 	return r, nil
 }
 
 func (u *UserCase) Login(ctx context.Context, req *idl.LoginReq) (r *idl.LoginResp, err error) {
-	return nil, err
+	passwordDigest, id, err := u.repo.GetPasswordAndIDByName(ctx, *req.UserName)
+	if err != nil {
+		return nil, pack.ReturnError(errno.GetPasswordFromDatabaseError, err)
+	}
+
+	ok := u.service.CheckPassword(*req.Password, passwordDigest)
+	if !ok {
+		return nil, pack.ReturnError(errno.CheckPasswordError, nil)
+	}
+
+	aToken, rToken, err := utils.GenerateToken(*req.UserName, id)
+	if err != nil {
+		return nil, pack.ReturnError(errno.GenerateTokenError, err)
+	}
+
+	r = new(idl.LoginResp)
+	r.AccessToken = &aToken
+	r.RefreshToken = &rToken
+	return r, nil
 }
 func (u *UserCase) Info(ctx context.Context, req *idl.InfoReq) (r *idl.InfoResp, err error) {
 	return nil, err
@@ -77,7 +86,8 @@ func (u *UserCase) EnableTotp(ctx context.Context, req *idl.EnableTotpReq) (r *i
 	return nil, err
 }
 
-func toUser(dto *userDTO) *repository.User {
+// toUser is userDTO to repository.user
+func dtoU2Repo(dto *userDTO) *repository.User {
 	return &repository.User{
 		ID:             dto.id,
 		UserName:       dto.username,
@@ -92,5 +102,20 @@ func toUser(dto *userDTO) *repository.User {
 		CreateAt:       time.Now().Unix(),
 		UpdateAt:       time.Now().Unix(),
 		DeleteAt:       0,
+	}
+}
+
+func repoU2IDL(user repository.User) *idl.UserInfo {
+	return &idl.UserInfo{
+		ID:         &user.ID,
+		UserName:   &user.UserName,
+		Email:      &user.Email,
+		Gender:     &user.Gender,
+		Avatar:     &user.Avatar,
+		Fans:       &user.Fans,
+		Follows:    &user.Follows,
+		CreateAt:   &user.CreateAt,
+		UpdateAt:   &user.UpdateAt,
+		TotpStatus: nil,
 	}
 }

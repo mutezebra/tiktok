@@ -23,6 +23,7 @@ func NewRouter() *server.Hertz {
 	user := v1.Group("/user")
 	{
 		user.GET("/register", handler.UserRegisterHandler())
+		user.GET("/login", handler.UserLoginHandler())
 	}
 
 	return h

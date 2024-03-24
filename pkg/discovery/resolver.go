@@ -2,6 +2,7 @@ package discovery
 
 import (
 	"context"
+
 	"github.com/pkg/errors"
 	etcd "go.etcd.io/etcd/client/v3"
 )

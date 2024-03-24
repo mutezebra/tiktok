@@ -7,11 +7,13 @@ require (
 	github.com/cloudwego/hertz v0.8.1
 	github.com/cloudwego/kitex v0.9.1
 	github.com/go-sql-driver/mysql v1.8.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/sarulabs/di v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.18.2
 	go.etcd.io/etcd/client/v3 v3.5.10
+	golang.org/x/crypto v0.16.0
 )
 
 require (

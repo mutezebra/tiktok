@@ -2,14 +2,16 @@ package pack
 
 import (
 	"errors"
-	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"net/http"
+
+	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
 type Response struct {
 	Base Base `json:"base"`
+	Data any  `json:"data,omitempty"`
 }
 
 type Base struct {
@@ -18,11 +20,19 @@ type Base struct {
 }
 
 func SendResponse(c *app.RequestContext, data any) {
-	c.JSON(http.StatusOK, data)
+	resp := &Response{
+		Base: Base{
+			200,
+			"operate success",
+		},
+		Data: data,
+	}
+
+	c.JSON(http.StatusOK, resp)
 }
 
 func SendFailedResponse(c *app.RequestContext, error error) {
-	var e *errno.Errno
+	var e errno.Errno
 	ok := errors.As(error, &e)
 	if !ok {
 		e = errno.Convert(error)

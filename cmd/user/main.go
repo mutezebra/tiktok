@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/cmd/user/pack"
 	"net"
+
+	"github.com/Mutezebra/tiktok/cmd/user/pack"
 
 	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
 
@@ -18,20 +19,13 @@ import (
 
 func main() {
 	UserInit()
-	registry, err := inject.NewRegistry(pack.UserRegistry())
-	if err != nil {
-		log.LogrusObj.Panic(err)
-	}
-
-	err = registry.Register(context.Background())
+	registry := inject.NewRegistry(pack.UserRegistry())
 	defer registry.Close()
-	if err != nil {
-		log.LogrusObj.Panic(err)
-	}
+	registry.MustRegister(context.Background())
 
 	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.UserServiceName].Address)
 	srv := userservice.NewServer(inject.ApplyUser(), server.WithServiceAddr(addr))
-	err = srv.Run()
+	err := srv.Run()
 	if err != nil {
 		log.LogrusObj.Panic(err)
 	}

@@ -1,11 +1,14 @@
 package repository
 
-import "context"
+import (
+	"context"
+)
 
 // UserRepository defines the operational
 // criteria for the user repository
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *User) error
+	GetPasswordAndIDByName(ctx context.Context, name string) (string, int64, error)
 	UserInfoByID(ctx context.Context, id int64) (*User, error)
 	UserInfoByName(ctx context.Context, name string) (*User, error)
 }

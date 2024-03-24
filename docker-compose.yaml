@@ -10,7 +10,7 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=asodoln1ias
       - MYSQL_DATABASE=tiktok
       - TZ=Asia/Shanghai
     ports:

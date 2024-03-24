@@ -3,6 +3,7 @@ package inject
 import (
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/pkg/discovery"
+	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 type Registry struct {
@@ -12,8 +13,13 @@ type Registry struct {
 	Addr   string
 }
 
-func NewRegistry(registry *Registry) (model.Registry, error) {
-	return discovery.NewRegistry(registry.Addr, registry.Key, registry.TTL, registry.Prefix)
+func NewRegistry(registry *Registry) model.Registry {
+	reg, err := discovery.NewRegistry(registry.Addr, registry.Key, registry.TTL, registry.Prefix)
+	if err != nil {
+		log.LogrusObj.Panic(err)
+		return nil
+	}
+	return reg
 }
 
 type Resolver struct {

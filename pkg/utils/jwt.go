@@ -2,10 +2,12 @@ package utils
 
 import (
 	"errors"
+	"time"
+
+	"github.com/golang-jwt/jwt"
+
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/golang-jwt/jwt"
-	"time"
 )
 
 type Claims struct {

@@ -2,8 +2,9 @@ package pack
 
 import (
 	"errors"
-	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"net/http"
+
+	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )

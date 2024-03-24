@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/cmd/user/pack"
 	"net"
+
+	"github.com/Mutezebra/tiktok/cmd/user/pack"
 
 	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
 

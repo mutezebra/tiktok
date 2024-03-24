@@ -1,8 +1,9 @@
 package user
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"net/mail"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/app/domain/service/user/pkg/snowflake"

@@ -2,8 +2,10 @@ package handler
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/pkg/log"
+
 	"github.com/cloudwego/hertz/pkg/app"
+
+	"github.com/Mutezebra/tiktok/pkg/log"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"

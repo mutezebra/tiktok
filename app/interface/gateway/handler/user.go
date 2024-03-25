@@ -2,8 +2,9 @@ package handler
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/consts"
 	"strconv"
+
+	"github.com/Mutezebra/tiktok/consts"
 
 	"github.com/cloudwego/hertz/pkg/app"
 

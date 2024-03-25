@@ -3,11 +3,13 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/Mutezebra/tiktok/app/domain/model"
-	"golang.org/x/crypto/bcrypt"
 	"net/mail"
 	"path/filepath"
 	"strings"
+
+	"golang.org/x/crypto/bcrypt"
+
+	"github.com/Mutezebra/tiktok/app/domain/model"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/pkg/snowflake"

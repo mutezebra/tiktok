@@ -2,12 +2,14 @@ package middleware
 
 import (
 	"context"
+	"strconv"
+
+	"github.com/cloudwego/hertz/pkg/app"
+
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/pkg/utils"
-	"github.com/cloudwego/hertz/pkg/app"
-	"strconv"
 )
 
 func JWT() app.HandlerFunc {

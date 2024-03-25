@@ -3,8 +3,9 @@ package oss
 import (
 	"context"
 	"fmt"
-	"github.com/Mutezebra/tiktok/config"
 	"testing"
+
+	"github.com/Mutezebra/tiktok/config"
 )
 
 func TestModel_DownloadAvatar(t *testing.T) {

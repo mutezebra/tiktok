@@ -1,8 +1,9 @@
 package oss
 
 import (
-	"github.com/Mutezebra/tiktok/config"
 	"github.com/qiniu/go-sdk/v7/auth"
+
+	"github.com/Mutezebra/tiktok/config"
 )
 
 // conf is the config of oss

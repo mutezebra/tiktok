@@ -1,12 +1,14 @@
 package log
 
 import (
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
+
+	"github.com/Mutezebra/tiktok/config"
 )
 
 var LogrusObj *Logger

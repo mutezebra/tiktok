@@ -2,8 +2,9 @@ package pack
 
 import (
 	"errors"
-	"github.com/Mutezebra/tiktok/pkg/log"
 	"net/http"
+
+	"github.com/Mutezebra/tiktok/pkg/log"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 

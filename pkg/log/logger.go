@@ -2,10 +2,11 @@ package log
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"runtime"
 	"strings"
 	"sync"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Logger struct {

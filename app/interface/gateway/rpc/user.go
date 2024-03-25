@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-
 	"github.com/Mutezebra/tiktok/kitex_gen/api/user"
 )
 
@@ -23,6 +22,11 @@ func Info(ctx context.Context, req *user.InfoReq) (r *user.InfoResp, err error) 
 
 func UploadAvatar(ctx context.Context, req *user.UploadAvatarReq) (r *user.UploadAvatarResp, err error) {
 	r, err = UserClient.UploadAvatar(ctx, req)
+	return r, err
+}
+
+func DownloadAvatar(ctx context.Context, req *user.DownloadAvatarReq) (r *user.DownloadAvatarResp, err error) {
+	r, err = UserClient.DownloadAvatar(ctx, req)
 	return r, err
 }
 

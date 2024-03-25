@@ -5,11 +5,9 @@ package userservice
 import (
 	"context"
 	"errors"
-
+	user "github.com/Mutezebra/tiktok/kitex_gen/api/user"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
-
-	user "github.com/Mutezebra/tiktok/kitex_gen/api/user"
 )
 
 var errInvalidMessageType = errors.New("invalid message type for service method handler")
@@ -40,6 +38,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		uploadAvatarHandler,
 		newUserServiceUploadAvatarArgs,
 		newUserServiceUploadAvatarResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"DownloadAvatar": kitex.NewMethodInfo(
+		downloadAvatarHandler,
+		newUserServiceDownloadAvatarArgs,
+		newUserServiceDownloadAvatarResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -195,6 +200,24 @@ func newUserServiceUploadAvatarResult() interface{} {
 	return user.NewUserServiceUploadAvatarResult()
 }
 
+func downloadAvatarHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceDownloadAvatarArgs)
+	realResult := result.(*user.UserServiceDownloadAvatarResult)
+	success, err := handler.(user.UserService).DownloadAvatar(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceDownloadAvatarArgs() interface{} {
+	return user.NewUserServiceDownloadAvatarArgs()
+}
+
+func newUserServiceDownloadAvatarResult() interface{} {
+	return user.NewUserServiceDownloadAvatarResult()
+}
+
 func totpQrcodeHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*user.UserServiceTotpQrcodeArgs)
 	realResult := result.(*user.UserServiceTotpQrcodeResult)
@@ -276,6 +299,16 @@ func (p *kClient) UploadAvatar(ctx context.Context, req *user.UploadAvatarReq) (
 	_args.Req = req
 	var _result user.UserServiceUploadAvatarResult
 	if err = p.c.Call(ctx, "UploadAvatar", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) DownloadAvatar(ctx context.Context, req *user.DownloadAvatarReq) (r *user.DownloadAvatarResp, err error) {
+	var _args user.UserServiceDownloadAvatarArgs
+	_args.Req = req
+	var _result user.UserServiceDownloadAvatarResult
+	if err = p.c.Call(ctx, "DownloadAvatar", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

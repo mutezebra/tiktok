@@ -67,3 +67,14 @@ func (repo *UserRepository) UserInfoByName(ctx context.Context, name string) (*r
 
 	return &user, nil
 }
+
+func (repo *UserRepository) UpdateUserAvatar(ctx context.Context, filename string, uid int64) error {
+	_, err := repo.db.ExecContext(ctx, "UPDATE user SET avatar=? WHERE id=?", filename, uid)
+	return err
+}
+
+func (repo *UserRepository) GetUserAvatar(ctx context.Context, uid int64) (string, error) {
+	var url string
+	err := repo.db.QueryRowContext(ctx, "SELECT avatar FROM user WHERE id=?", uid).Scan(&url)
+	return url, err
+}

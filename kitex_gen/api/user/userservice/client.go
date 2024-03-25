@@ -4,11 +4,9 @@ package userservice
 
 import (
 	"context"
-
+	user "github.com/Mutezebra/tiktok/kitex_gen/api/user"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
-
-	user "github.com/Mutezebra/tiktok/kitex_gen/api/user"
 )
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
@@ -17,6 +15,7 @@ type Client interface {
 	Login(ctx context.Context, req *user.LoginReq, callOptions ...callopt.Option) (r *user.LoginResp, err error)
 	Info(ctx context.Context, req *user.InfoReq, callOptions ...callopt.Option) (r *user.InfoResp, err error)
 	UploadAvatar(ctx context.Context, req *user.UploadAvatarReq, callOptions ...callopt.Option) (r *user.UploadAvatarResp, err error)
+	DownloadAvatar(ctx context.Context, req *user.DownloadAvatarReq, callOptions ...callopt.Option) (r *user.DownloadAvatarResp, err error)
 	TotpQrcode(ctx context.Context, req *user.TotpQrcodeReq, callOptions ...callopt.Option) (r *user.TotpQrcodeResp, err error)
 	EnableTotp(ctx context.Context, req *user.EnableTotpReq, callOptions ...callopt.Option) (r *user.EnableTotpResp, err error)
 }
@@ -68,6 +67,11 @@ func (p *kUserServiceClient) Info(ctx context.Context, req *user.InfoReq, callOp
 func (p *kUserServiceClient) UploadAvatar(ctx context.Context, req *user.UploadAvatarReq, callOptions ...callopt.Option) (r *user.UploadAvatarResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.UploadAvatar(ctx, req)
+}
+
+func (p *kUserServiceClient) DownloadAvatar(ctx context.Context, req *user.DownloadAvatarReq, callOptions ...callopt.Option) (r *user.DownloadAvatarResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.DownloadAvatar(ctx, req)
 }
 
 func (p *kUserServiceClient) TotpQrcode(ctx context.Context, req *user.TotpQrcodeReq, callOptions ...callopt.Option) (r *user.TotpQrcodeResp, err error) {

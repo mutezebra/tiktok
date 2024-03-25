@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"github.com/Mutezebra/tiktok/app/interface/gateway/middleware"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -20,10 +21,19 @@ func NewRouter() *server.Hertz {
 		c.String(200, "pong")
 	})
 	v1 := h.Group("/api")
+
 	user := v1.Group("/user")
 	{
-		user.GET("/register", handler.UserRegisterHandler())
-		user.GET("/login", handler.UserLoginHandler())
+		user.POST("/register", handler.UserRegisterHandler())
+		user.POST("/login", handler.UserLoginHandler())
+
+		auth := user.Group("/auth")
+		auth.Use(middleware.JWT())
+		{
+			auth.GET("/info", handler.UserInfoHandler())
+			auth.POST("/upload-avatar", handler.UploadAvatarHandler())
+			auth.GET("/download-avatar", handler.DownloadAvatarHandler())
+		}
 	}
 
 	return h

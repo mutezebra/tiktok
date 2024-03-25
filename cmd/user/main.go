@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/Mutezebra/tiktok/pkg/oss"
 	"net"
 
 	"github.com/Mutezebra/tiktok/cmd/user/pack"
@@ -35,4 +36,5 @@ func UserInit() {
 	config.InitConfig()
 	log.InitLog()
 	database.InitMysql()
+	oss.InitOSS()
 }

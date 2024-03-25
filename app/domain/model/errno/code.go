@@ -18,4 +18,18 @@ const (
 	GetPasswordFromDatabase = 10011
 	CheckPassword           = 10012
 	GenerateToken           = 10013
+
+	UserInfo    = 10020
+	GetUserInfo = 10021
+
+	UserUploadAvatar         = 10030
+	GetAvatarName            = 10031
+	VerifyAvatar             = 10032
+	OssUploadAvatar          = 10033
+	DatabaseUpdateUserAvatar = 10034
+	OutOfLimitAvatarSize     = 10035
+
+	DownloadAvatar        = 10040
+	DatabaseGetUserAvatar = 10041
+	OssDownloadAvatar     = 10042
 )

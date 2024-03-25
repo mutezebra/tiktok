@@ -32,7 +32,7 @@ type withMessage struct {
 }
 
 func (w *withMessage) Error() string {
-	return w.msg + ": " + w.cause.Error()
+	return w.msg + " cause: " + w.cause.Error()
 }
 
 func (w *withMessage) Code() int {

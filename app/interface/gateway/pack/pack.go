@@ -2,6 +2,7 @@ package pack
 
 import (
 	"errors"
+	"github.com/Mutezebra/tiktok/pkg/log"
 	"net/http"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
@@ -32,6 +33,8 @@ func SendResponse(c *app.RequestContext, data any) {
 }
 
 func SendFailedResponse(c *app.RequestContext, error error) {
+	log.LogrusObj.Error(error)
+
 	var e errno.Errno
 	ok := errors.As(error, &e)
 	if !ok {

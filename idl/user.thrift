@@ -45,26 +45,34 @@ struct InfoResp {
 }
 
 struct UploadAvatarReq {
+    1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
+    3: optional binary Avatar (go.tag="json:\"avatar,omitempty\"")
+    4: optional string FileName (go.tag="json:\"file_name,omitempty\"")
 }
 
 struct UploadAvatarResp {
 }
 
-struct TotpQrcodeReq {
+struct DownloadAvatarReq {
+    1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
 }
 
-struct TotpQrcodeData {
+struct DownloadAvatarResp {
+    1: optional string URL (go.tag="json:\"url,omitempty\"")
+}
+
+struct TotpQrcodeReq {
+    1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
+}
+
+struct TotpQrcodeResp {
     1: optional string Secret (go.tag="json:\"secret,omitempty\"")
     2: optional string Qrcode (go.tag="json:\"qrcode,omitempty\"")
 }
 
-struct TotpQrcodeResp {
-    1: optional TotpQrcodeData Data (go.tag="json:\"data\"")
-}
-
 struct EnableTotpReq {
-    1: optional string Secret (go.tag="form:\"secret\",json:\"secret,omitempty\"")
-    2: optional i32 Code (go.tag="form:\"code\",json:\"code,omitempty\"")
+    1: optional i32 Code (go.tag="form:\"code,required\",json:\"code,omitempty\"")
+    2: optional i64 UID (go.tag="json:\"uid,omitempty\"")
 }
 
 struct EnableTotpResp {
@@ -75,6 +83,7 @@ service UserService {
     LoginResp Login(1: LoginReq req)
     InfoResp Info(1: InfoReq req)
     UploadAvatarResp UploadAvatar(1: UploadAvatarReq req)
+    DownloadAvatarResp DownloadAvatar(1: DownloadAvatarReq req)
     TotpQrcodeResp TotpQrcode(1: TotpQrcodeReq req)
     EnableTotpResp EnableTotp(1: EnableTotpReq req)
 }

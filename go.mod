@@ -9,6 +9,7 @@ require (
 	github.com/go-sql-driver/mysql v1.8.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/pkg/errors v0.9.1
+	github.com/qiniu/go-sdk/v7 v7.19.1
 	github.com/sarulabs/di v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.18.2

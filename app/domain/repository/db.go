@@ -11,6 +11,8 @@ type UserRepository interface {
 	GetPasswordAndIDByName(ctx context.Context, name string) (string, int64, error)
 	UserInfoByID(ctx context.Context, id int64) (*User, error)
 	UserInfoByName(ctx context.Context, name string) (*User, error)
+	UpdateUserAvatar(ctx context.Context, filename string, uid int64) error
+	GetUserAvatar(ctx context.Context, uid int64) (string, error)
 }
 
 // User is the standards for repo operand objects

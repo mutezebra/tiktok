@@ -7,42 +7,36 @@ import (
 	"github.com/golang-jwt/jwt"
 
 	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 type Claims struct {
-	UserName                  string
-	ID                        int64
-	AccessToken, RefreshToken string
+	UserName    string
+	ID          int64
+	AccessToken string
 	jwt.StandardClaims
 }
 
-// CheckToken 用于jwt中间件里检查token
-func CheckToken(aToken, rToken string) (claim *Claims, err error, count int) {
+// CheckAndUpdateToken 用于jwt中间件里检查token并更新，如果需要更新的话
+func CheckAndUpdateToken(aToken, rToken string) (claim *Claims, err error, count int) {
 	claim = new(Claims)
 
 	aClaims, err, aValid := ParseToken(aToken)
 	if err != nil {
-		log.LogrusObj.Println("atoken", err)
 		return
 	}
 	rClaims, err, rValid := ParseToken(rToken)
 	if err != nil {
-		log.LogrusObj.Println("rtoken", err)
 		return
 	}
 
 	if aClaims.ID != rClaims.ID || aClaims.UserName != rClaims.UserName {
-		log.LogrusObj.Error("fake token")
-		return
+		return nil, errors.New("unsampled token"), 0
 	}
 	claim.ID = aClaims.ID
 	claim.UserName = aClaims.UserName
 
 	// 如果两者都没过期就不更新
 	if aValid && rValid {
-		claim.AccessToken = aToken
-		claim.RefreshToken = rToken
 		count = 0
 		return
 	}
@@ -56,21 +50,10 @@ func CheckToken(aToken, rToken string) (claim *Claims, err error, count int) {
 	// 如果a过期但是r没过期就只更新a
 	if !aValid && rValid {
 		claim.AccessToken, err = GenerateAccessToken(aClaims.UserName, aClaims.ID)
-		claim.RefreshToken = rToken
 		count = 1
 		return
 	}
-
-	// 如果aToken没过期但是rToken过期，两者都更新
-	claim.AccessToken, err = GenerateAccessToken(aClaims.UserName, aClaims.ID)
-	if err != nil {
-		return
-	}
-	claim.RefreshToken, err = GenerateRefreshToken(rClaims.UserName, rClaims.ID)
-	if err != nil {
-		return
-	}
-	count = 2
+	// 原则上不允许r的时间小于a的两倍，所以没有第四种情况了吧，我想
 	return
 
 }

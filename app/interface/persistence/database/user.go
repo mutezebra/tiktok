@@ -78,3 +78,30 @@ func (repo *UserRepository) GetUserAvatar(ctx context.Context, uid int64) (strin
 	err := repo.db.QueryRowContext(ctx, "SELECT avatar FROM user WHERE id=?", uid).Scan(&url)
 	return url, err
 }
+
+func (repo *UserRepository) UpdateTotpSecret(ctx context.Context, uid int64, secret string) error {
+	_, err := repo.db.ExecContext(ctx, "UPDATE user SET totp_secret=? WHERE id=?", secret, uid)
+	return err
+}
+
+func (repo *UserRepository) GetTotpSecret(ctx context.Context, uid int64) (string, error) {
+	var secret string
+	err := repo.db.QueryRowContext(ctx, "SELECT totp_secret FROM user WHERE id=?", uid).Scan(&secret)
+	return secret, err
+}
+
+func (repo *UserRepository) UpdateTotpStatus(ctx context.Context, status bool, uid int64) error {
+	_, err := repo.db.ExecContext(ctx, "UPDATE user SET totp_enable=? WHERE id=?", status, uid)
+	return err
+}
+
+func (repo *UserRepository) UpdateColumnByKV(ctx context.Context, uid int64, k, v string) error {
+	_, err := repo.db.ExecContext(ctx, "UPDATE user SET ?=? WHERE id=?", k, v, uid)
+	return err
+}
+
+func (repo *UserRepository) GetColumnByKUID(ctx context.Context, key string, uid int64) (string, error) {
+	var value string
+	err := repo.db.QueryRowContext(ctx, "SELECT ? FROM user WHERE id=?", key, uid).Scan(&value)
+	return value, err
+}

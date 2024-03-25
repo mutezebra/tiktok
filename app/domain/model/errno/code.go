@@ -32,4 +32,13 @@ const (
 	DownloadAvatar        = 10040
 	DatabaseGetUserAvatar = 10041
 	OssDownloadAvatar     = 10042
+
+	TotpQrCode               = 10050
+	GenerateTotp             = 10051
+	DatabaseUpdateTotpSecret = 10052
+
+	EnableTotp               = 10060
+	DatabaseGetTotpSecret    = 10061
+	VerifyOtpCode            = 10062
+	DatabaseUpdateTotpStatus = 10063
 )

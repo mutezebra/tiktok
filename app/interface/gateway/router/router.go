@@ -34,6 +34,8 @@ func NewRouter() *server.Hertz {
 			auth.GET("/info", handler.UserInfoHandler())
 			auth.POST("/upload-avatar", handler.UploadAvatarHandler())
 			auth.GET("/download-avatar", handler.DownloadAvatarHandler())
+			auth.GET("/totp-qrcode", handler.TotpQRCodeHandler())
+			auth.POST("/enable-totp", handler.EnableTotpHandler())
 		}
 	}
 

@@ -37,7 +37,7 @@ struct LoginResp {
 
 struct InfoReq {
     1: optional i64 UID (go.tag="form:\"uid\",json:\"uid,omitempty\"")
-    2: optional string Name (go.tag="form:\"name\",json:\"name,omitempty\"")
+    2: optional string UserName (go.tag="form:\"user_name\",json:\"user_name,omitempty\"")
 }
 
 struct InfoResp {
@@ -63,15 +63,15 @@ struct DownloadAvatarResp {
 
 struct TotpQrcodeReq {
     1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
+    2: optional string UserName (go.tag="json:\"user_name,omitempty\"")
 }
 
 struct TotpQrcodeResp {
-    1: optional string Secret (go.tag="json:\"secret,omitempty\"")
     2: optional string Qrcode (go.tag="json:\"qrcode,omitempty\"")
 }
 
 struct EnableTotpReq {
-    1: optional i32 Code (go.tag="form:\"code,required\",json:\"code,omitempty\"")
+    1: optional string Code (go.tag="form:\"code,required\",json:\"code,omitempty\"")
     2: optional i64 UID (go.tag="json:\"uid,omitempty\"")
 }
 

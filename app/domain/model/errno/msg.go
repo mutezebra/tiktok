@@ -31,4 +31,13 @@ var (
 	DownloadAvatarError        = New(DownloadAvatar, "")
 	DatabaseGetUserAvatarError = New(DatabaseGetUserAvatar, "get user avatar from database failed")
 	OssDownloadAvatarError     = New(OssDownloadAvatar, "download avatar from oss failed")
+
+	TotpQrCodeError               = New(TotpQrCode, "")
+	GenerateTotpError             = New(GenerateTotp, "generate totp qrcode failed")
+	DatabaseUpdateTotpSecretError = New(DatabaseUpdateTotpSecret, "database update totp secret failed")
+
+	EnableTotpError               = New(EnableTotp, "")
+	DatabaseGetTotpSecretError    = New(DatabaseGetTotpSecret, "get totp secret from database failed")
+	VerifyOtpCodeError            = New(VerifyOtpCode, "verify code with secret failed")
+	DatabaseUpdateTotpStatusError = New(DatabaseUpdateTotpStatus, "update totp status in database failed")
 )

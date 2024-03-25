@@ -12,13 +12,11 @@ run-%:
 	@go mod tidy
 	go build -o $(BIN)/$* $(DIR)/cmd/$*/main.go
 	@echo "running..."
-	@sh ./config/env.sh
 	@$(BIN)/$*
 
 
 .PHONY: env-up
 env-up:
-	@sh ./config/env.sh
 	@docker-compose -f docker-compose.yaml up -d
 
 

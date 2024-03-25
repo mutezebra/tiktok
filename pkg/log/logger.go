@@ -27,7 +27,7 @@ func (l *Logger) Panic(v any) {
 func (l *Logger) Error(v any) {
 	var str *string
 	str = l.formatCallStack(v)
-	l.Logger.Error(str)
+	l.Logger.Error(*str)
 }
 
 func (l *Logger) formatCallStack(v any) *string {

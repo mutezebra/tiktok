@@ -139,6 +139,8 @@ func TotpQRCodeHandler() app.HandlerFunc {
 
 		req.UID = new(int64)
 		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		req.UserName = new(string)
+		*req.UserName = string(c.GetHeader(consts.HeaderUserNameKey))
 
 		resp, err := rpc.TotpQrcode(ctx, &req)
 		if err != nil {

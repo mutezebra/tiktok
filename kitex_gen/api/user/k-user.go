@@ -1454,7 +1454,7 @@ func (p *InfoReq) FastReadField2(buf []byte) (int, error) {
 		return offset, err
 	} else {
 		offset += l
-		p.Name = &v
+		p.UserName = &v
 
 	}
 	return offset, nil
@@ -1502,9 +1502,9 @@ func (p *InfoReq) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter)
 
 func (p *InfoReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetName() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "Name", thrift.STRING, 2)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Name)
+	if p.IsSetUserName() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "UserName", thrift.STRING, 2)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.UserName)
 
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
@@ -1524,9 +1524,9 @@ func (p *InfoReq) field1Length() int {
 
 func (p *InfoReq) field2Length() int {
 	l := 0
-	if p.IsSetName() {
-		l += bthrift.Binary.FieldBeginLength("Name", thrift.STRING, 2)
-		l += bthrift.Binary.StringLengthNocopy(*p.Name)
+	if p.IsSetUserName() {
+		l += bthrift.Binary.FieldBeginLength("UserName", thrift.STRING, 2)
+		l += bthrift.Binary.StringLengthNocopy(*p.UserName)
 
 		l += bthrift.Binary.FieldEndLength()
 	}
@@ -2279,6 +2279,20 @@ func (p *TotpQrcodeReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField2(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -2327,6 +2341,19 @@ func (p *TotpQrcodeReq) FastReadField1(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *TotpQrcodeReq) FastReadField2(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		p.UserName = &v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *TotpQrcodeReq) FastWrite(buf []byte) int {
 	return 0
@@ -2337,6 +2364,7 @@ func (p *TotpQrcodeReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryW
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "TotpQrcodeReq")
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
+		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -2348,6 +2376,7 @@ func (p *TotpQrcodeReq) BLength() int {
 	l += bthrift.Binary.StructBeginLength("TotpQrcodeReq")
 	if p != nil {
 		l += p.field1Length()
+		l += p.field2Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -2365,11 +2394,33 @@ func (p *TotpQrcodeReq) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryW
 	return offset
 }
 
+func (p *TotpQrcodeReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetUserName() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "UserName", thrift.STRING, 2)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.UserName)
+
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
 func (p *TotpQrcodeReq) field1Length() int {
 	l := 0
 	if p.IsSetUID() {
 		l += bthrift.Binary.FieldBeginLength("UID", thrift.I64, 1)
 		l += bthrift.Binary.I64Length(*p.UID)
+
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *TotpQrcodeReq) field2Length() int {
+	l := 0
+	if p.IsSetUserName() {
+		l += bthrift.Binary.FieldBeginLength("UserName", thrift.STRING, 2)
+		l += bthrift.Binary.StringLengthNocopy(*p.UserName)
 
 		l += bthrift.Binary.FieldEndLength()
 	}
@@ -2583,7 +2634,7 @@ func (p *EnableTotpReq) FastRead(buf []byte) (int, error) {
 		}
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.STRING {
 				l, err = p.FastReadField1(buf[offset:])
 				offset += l
 				if err != nil {
@@ -2648,7 +2699,7 @@ ReadStructEndError:
 func (p *EnableTotpReq) FastReadField1(buf []byte) (int, error) {
 	offset := 0
 
-	if v, l, err := bthrift.Binary.ReadI32(buf[offset:]); err != nil {
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
@@ -2680,8 +2731,8 @@ func (p *EnableTotpReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryW
 	offset := 0
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "EnableTotpReq")
 	if p != nil {
-		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
+		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -2703,8 +2754,8 @@ func (p *EnableTotpReq) BLength() int {
 func (p *EnableTotpReq) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	if p.IsSetCode() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "Code", thrift.I32, 1)
-		offset += bthrift.Binary.WriteI32(buf[offset:], *p.Code)
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "Code", thrift.STRING, 1)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Code)
 
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
@@ -2725,8 +2776,8 @@ func (p *EnableTotpReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryW
 func (p *EnableTotpReq) field1Length() int {
 	l := 0
 	if p.IsSetCode() {
-		l += bthrift.Binary.FieldBeginLength("Code", thrift.I32, 1)
-		l += bthrift.Binary.I32Length(*p.Code)
+		l += bthrift.Binary.FieldBeginLength("Code", thrift.STRING, 1)
+		l += bthrift.Binary.StringLengthNocopy(*p.Code)
 
 		l += bthrift.Binary.FieldEndLength()
 	}

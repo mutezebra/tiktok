@@ -1839,8 +1839,8 @@ func (p *LoginResp) Field2DeepEqual(src *string) bool {
 }
 
 type InfoReq struct {
-	UID  *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" form:"uid",json:"uid,omitempty"`
-	Name *string `thrift:"Name,2,optional" frugal:"2,optional,string" form:"name",json:"name,omitempty"`
+	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" form:"uid",json:"uid,omitempty"`
+	UserName *string `thrift:"UserName,2,optional" frugal:"2,optional,string" form:"user_name",json:"user_name,omitempty"`
 }
 
 func NewInfoReq() *InfoReq {
@@ -1860,32 +1860,32 @@ func (p *InfoReq) GetUID() (v int64) {
 	return *p.UID
 }
 
-var InfoReq_Name_DEFAULT string
+var InfoReq_UserName_DEFAULT string
 
-func (p *InfoReq) GetName() (v string) {
-	if !p.IsSetName() {
-		return InfoReq_Name_DEFAULT
+func (p *InfoReq) GetUserName() (v string) {
+	if !p.IsSetUserName() {
+		return InfoReq_UserName_DEFAULT
 	}
-	return *p.Name
+	return *p.UserName
 }
 func (p *InfoReq) SetUID(val *int64) {
 	p.UID = val
 }
-func (p *InfoReq) SetName(val *string) {
-	p.Name = val
+func (p *InfoReq) SetUserName(val *string) {
+	p.UserName = val
 }
 
 var fieldIDToName_InfoReq = map[int16]string{
 	1: "UID",
-	2: "Name",
+	2: "UserName",
 }
 
 func (p *InfoReq) IsSetUID() bool {
 	return p.UID != nil
 }
 
-func (p *InfoReq) IsSetName() bool {
-	return p.Name != nil
+func (p *InfoReq) IsSetUserName() bool {
+	return p.UserName != nil
 }
 
 func (p *InfoReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1966,7 +1966,7 @@ func (p *InfoReq) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.Name = &v
+		p.UserName = &v
 	}
 	return nil
 }
@@ -2023,11 +2023,11 @@ WriteFieldEndError:
 }
 
 func (p *InfoReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if p.IsSetName() {
-		if err = oprot.WriteFieldBegin("Name", thrift.STRING, 2); err != nil {
+	if p.IsSetUserName() {
+		if err = oprot.WriteFieldBegin("UserName", thrift.STRING, 2); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteString(*p.Name); err != nil {
+		if err := oprot.WriteString(*p.UserName); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -2058,7 +2058,7 @@ func (p *InfoReq) DeepEqual(ano *InfoReq) bool {
 	if !p.Field1DeepEqual(ano.UID) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.Name) {
+	if !p.Field2DeepEqual(ano.UserName) {
 		return false
 	}
 	return true
@@ -2078,12 +2078,12 @@ func (p *InfoReq) Field1DeepEqual(src *int64) bool {
 }
 func (p *InfoReq) Field2DeepEqual(src *string) bool {
 
-	if p.Name == src {
+	if p.UserName == src {
 		return true
-	} else if p.Name == nil || src == nil {
+	} else if p.UserName == nil || src == nil {
 		return false
 	}
-	if strings.Compare(*p.Name, *src) != 0 {
+	if strings.Compare(*p.UserName, *src) != 0 {
 		return false
 	}
 	return true
@@ -3029,7 +3029,8 @@ func (p *DownloadAvatarResp) Field1DeepEqual(src *string) bool {
 }
 
 type TotpQrcodeReq struct {
-	UID *int64 `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"uid,omitempty"`
+	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"uid,omitempty"`
+	UserName *string `thrift:"UserName,2,optional" frugal:"2,optional,string" json:"user_name,omitempty"`
 }
 
 func NewTotpQrcodeReq() *TotpQrcodeReq {
@@ -3048,16 +3049,33 @@ func (p *TotpQrcodeReq) GetUID() (v int64) {
 	}
 	return *p.UID
 }
+
+var TotpQrcodeReq_UserName_DEFAULT string
+
+func (p *TotpQrcodeReq) GetUserName() (v string) {
+	if !p.IsSetUserName() {
+		return TotpQrcodeReq_UserName_DEFAULT
+	}
+	return *p.UserName
+}
 func (p *TotpQrcodeReq) SetUID(val *int64) {
 	p.UID = val
+}
+func (p *TotpQrcodeReq) SetUserName(val *string) {
+	p.UserName = val
 }
 
 var fieldIDToName_TotpQrcodeReq = map[int16]string{
 	1: "UID",
+	2: "UserName",
 }
 
 func (p *TotpQrcodeReq) IsSetUID() bool {
 	return p.UID != nil
+}
+
+func (p *TotpQrcodeReq) IsSetUserName() bool {
+	return p.UserName != nil
 }
 
 func (p *TotpQrcodeReq) Read(iprot thrift.TProtocol) (err error) {
@@ -3082,6 +3100,14 @@ func (p *TotpQrcodeReq) Read(iprot thrift.TProtocol) (err error) {
 		case 1:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -3125,6 +3151,15 @@ func (p *TotpQrcodeReq) ReadField1(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
+func (p *TotpQrcodeReq) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.UserName = &v
+	}
+	return nil
+}
 
 func (p *TotpQrcodeReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -3134,6 +3169,10 @@ func (p *TotpQrcodeReq) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
 			goto WriteFieldError
 		}
 	}
@@ -3173,6 +3212,25 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
+func (p *TotpQrcodeReq) writeField2(oprot thrift.TProtocol) (err error) {
+	if p.IsSetUserName() {
+		if err = oprot.WriteFieldBegin("UserName", thrift.STRING, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.UserName); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
 func (p *TotpQrcodeReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -3190,6 +3248,9 @@ func (p *TotpQrcodeReq) DeepEqual(ano *TotpQrcodeReq) bool {
 	if !p.Field1DeepEqual(ano.UID) {
 		return false
 	}
+	if !p.Field2DeepEqual(ano.UserName) {
+		return false
+	}
 	return true
 }
 
@@ -3201,6 +3262,18 @@ func (p *TotpQrcodeReq) Field1DeepEqual(src *int64) bool {
 		return false
 	}
 	if *p.UID != *src {
+		return false
+	}
+	return true
+}
+func (p *TotpQrcodeReq) Field2DeepEqual(src *string) bool {
+
+	if p.UserName == src {
+		return true
+	} else if p.UserName == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.UserName, *src) != 0 {
 		return false
 	}
 	return true
@@ -3458,8 +3531,8 @@ func (p *TotpQrcodeResp) Field2DeepEqual(src *string) bool {
 }
 
 type EnableTotpReq struct {
-	Code *int32 `thrift:"Code,1,optional" frugal:"1,optional,i32" form:"code,required",json:"code,omitempty"`
-	UID  *int64 `thrift:"UID,2,optional" frugal:"2,optional,i64" json:"uid,omitempty"`
+	Code *string `thrift:"Code,1,optional" frugal:"1,optional,string" form:"code,required",json:"code,omitempty"`
+	UID  *int64  `thrift:"UID,2,optional" frugal:"2,optional,i64" json:"uid,omitempty"`
 }
 
 func NewEnableTotpReq() *EnableTotpReq {
@@ -3470,9 +3543,9 @@ func (p *EnableTotpReq) InitDefault() {
 	*p = EnableTotpReq{}
 }
 
-var EnableTotpReq_Code_DEFAULT int32
+var EnableTotpReq_Code_DEFAULT string
 
-func (p *EnableTotpReq) GetCode() (v int32) {
+func (p *EnableTotpReq) GetCode() (v string) {
 	if !p.IsSetCode() {
 		return EnableTotpReq_Code_DEFAULT
 	}
@@ -3487,7 +3560,7 @@ func (p *EnableTotpReq) GetUID() (v int64) {
 	}
 	return *p.UID
 }
-func (p *EnableTotpReq) SetCode(val *int32) {
+func (p *EnableTotpReq) SetCode(val *string) {
 	p.Code = val
 }
 func (p *EnableTotpReq) SetUID(val *int64) {
@@ -3527,7 +3600,7 @@ func (p *EnableTotpReq) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -3573,7 +3646,7 @@ ReadStructEndError:
 
 func (p *EnableTotpReq) ReadField1(iprot thrift.TProtocol) error {
 
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		p.Code = &v
@@ -3624,10 +3697,10 @@ WriteStructEndError:
 
 func (p *EnableTotpReq) writeField1(oprot thrift.TProtocol) (err error) {
 	if p.IsSetCode() {
-		if err = oprot.WriteFieldBegin("Code", thrift.I32, 1); err != nil {
+		if err = oprot.WriteFieldBegin("Code", thrift.STRING, 1); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteI32(*p.Code); err != nil {
+		if err := oprot.WriteString(*p.Code); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -3683,14 +3756,14 @@ func (p *EnableTotpReq) DeepEqual(ano *EnableTotpReq) bool {
 	return true
 }
 
-func (p *EnableTotpReq) Field1DeepEqual(src *int32) bool {
+func (p *EnableTotpReq) Field1DeepEqual(src *string) bool {
 
 	if p.Code == src {
 		return true
 	} else if p.Code == nil || src == nil {
 		return false
 	}
-	if *p.Code != *src {
+	if strings.Compare(*p.Code, *src) != 0 {
 		return false
 	}
 	return true

@@ -130,10 +130,39 @@ func (u *UserCase) DownloadAvatar(ctx context.Context, req *idl.DownloadAvatarRe
 }
 
 func (u *UserCase) TotpQrcode(ctx context.Context, req *idl.TotpQrcodeReq) (r *idl.TotpQrcodeResp, err error) {
-	return nil, err
+	secret, png, err := u.service.GenerateTotp(req.GetUserName())
+	if err != nil {
+		return nil, pack.ReturnError(errno.GenerateTotpError, err)
+	}
+
+	err = u.repo.UpdateTotpSecret(ctx, req.GetUID(), secret)
+	if err != nil {
+		return nil, pack.ReturnError(errno.DatabaseUpdateTotpSecretError, err)
+	}
+
+	r = new(idl.TotpQrcodeResp)
+	r.SetQrcode(&png)
+	return r, nil
 }
+
 func (u *UserCase) EnableTotp(ctx context.Context, req *idl.EnableTotpReq) (r *idl.EnableTotpResp, err error) {
-	return nil, err
+	secret, err := u.repo.GetTotpSecret(ctx, req.GetUID())
+	if err != nil {
+		return nil, pack.ReturnError(errno.DatabaseGetTotpSecretError, err)
+	}
+
+	ok := u.service.VerifyOtp(req.GetCode(), secret)
+	if !ok {
+		return nil, pack.ReturnError(errno.VerifyOtpCodeError, err)
+	}
+
+	err = u.repo.UpdateTotpStatus(ctx, true, req.GetUID())
+	if err != nil {
+		return nil, pack.ReturnError(errno.DatabaseUpdateTotpStatusError, err)
+	}
+
+	r = new(idl.EnableTotpResp)
+	return r, nil
 }
 
 // toUser is userDTO to repository.user

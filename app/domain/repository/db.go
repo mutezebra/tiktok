@@ -13,6 +13,11 @@ type UserRepository interface {
 	UserInfoByName(ctx context.Context, name string) (*User, error)
 	UpdateUserAvatar(ctx context.Context, filename string, uid int64) error
 	GetUserAvatar(ctx context.Context, uid int64) (string, error)
+	UpdateTotpSecret(ctx context.Context, uid int64, secret string) error
+	GetTotpSecret(ctx context.Context, uid int64) (string, error)
+	UpdateTotpStatus(ctx context.Context, status bool, uid int64) error
+	UpdateColumnByKV(ctx context.Context, uid int64, k, v string) error
+	GetColumnByKUID(ctx context.Context, key string, uid int64) (string, error)
 }
 
 // User is the standards for repo operand objects

@@ -18,10 +18,11 @@ import (
 type Service struct {
 	repo repository.UserRepository
 	OSS  model.OSS
+	MFA  model.MFA
 }
 
-func NewService(repo repository.UserRepository, oss model.OSS) *Service {
-	return &Service{repo: repo, OSS: oss}
+func NewService(repo repository.UserRepository, oss model.OSS, mfa model.MFA) *Service {
+	return &Service{repo: repo, OSS: oss, MFA: mfa}
 }
 
 func (srv *Service) GenerateID() int64 {
@@ -73,4 +74,12 @@ func (srv *Service) AvatarName(filename string, id int64) (ok bool, avatarName s
 	}
 	avatarName = fmt.Sprintf("%d%s", id, ext)
 	return true, avatarName
+}
+
+func (srv *Service) GenerateTotp(userName string) (secret string, base64 string, err error) {
+	return srv.MFA.GenerateTotp(userName)
+}
+
+func (srv *Service) VerifyOtp(token string, secret string) bool {
+	return srv.MFA.VerifyOtp(token, secret)
 }

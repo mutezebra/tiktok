@@ -3,8 +3,9 @@ package utils
 import (
 	"bytes"
 	base "encoding/base64"
-	"github.com/pquerna/otp/totp"
 	"image/png"
+
+	"github.com/pquerna/otp/totp"
 )
 
 type MFAModel struct {

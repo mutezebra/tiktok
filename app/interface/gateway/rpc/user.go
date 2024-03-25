@@ -26,6 +26,11 @@ func UploadAvatar(ctx context.Context, req *user.UploadAvatarReq) (r *user.Uploa
 	return r, err
 }
 
+func DownloadAvatar(ctx context.Context, req *user.DownloadAvatarReq) (r *user.DownloadAvatarResp, err error) {
+	r, err = UserClient.DownloadAvatar(ctx, req)
+	return r, err
+}
+
 func TotpQrcode(ctx context.Context, req *user.TotpQrcodeReq) (r *user.TotpQrcodeResp, err error) {
 	r, err = UserClient.TotpQrcode(ctx, req)
 	return r, err

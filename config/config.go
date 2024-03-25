@@ -13,6 +13,7 @@ type Config struct {
 	Service map[string]*Service `yaml:"service"`
 	Mysql   *Mysql              `yaml:"mysql"`
 	Etcd    *Etcd               `yaml:"etcd"`
+	QiNiu   *QiNiu              `yaml:"qiniu"`
 }
 
 type System struct {
@@ -42,12 +43,26 @@ type Etcd struct {
 	ServicePrefix string `yaml:"service_prefix" mapstructure:"service_prefix"`
 }
 
+type QiNiu struct {
+	AccessKey         string `yaml:"access_key" mapstructure:"access_key"`
+	SecretKey         string `yaml:"secret_key" mapstructure:"secret_key"`
+	AvatarPath        string `yaml:"avatar_path" mapstructure:"avatar_path"`
+	DefaultAvatarPath string `yaml:"default_avatar_path" mapstructure:"default_avatar_path"`
+	VideoPath         string `yaml:"video_path" mapstructure:"video_path"`
+	Bucket            string `yaml:"bucket" mapstructure:"bucket"`
+	Domain            string `yaml:"domain" mapstructure:"domain"`
+}
+
 // InitConfig initializes the configuration for the project
 // and unmarshals the configuration into the global variable "Conf"
 func InitConfig() {
 	wd, _ := os.Getwd()
+
+	configDIR := os.Getenv("CONFIG_DIR")
+	viper.AddConfigPath(configDIR) // auto
+
 	viper.AddConfigPath(wd + "/config/")   // linux
-	viper.AddConfigPath(wd + "\\config\\") // linux
+	viper.AddConfigPath(wd + "\\config\\") // windows
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	if err := viper.ReadInConfig(); err != nil {

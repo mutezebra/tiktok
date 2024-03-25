@@ -23,3 +23,4 @@ env-up:
 .PHONY: env-down
 env-down:
 	@docker-compose -f docker-compose.yaml down
+

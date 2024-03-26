@@ -16,18 +16,19 @@ struct UserInfo {
 }
 
 struct RegisterReq {
-    1: optional string UserName (go.tag="form:\"user_name,required\",json:\"user_name,omitempty\"")
-    2: optional string Email    (go.tag="form:\"email,required\",json:\"email,omitempty\"")
-    3: optional string Password (go.tag="form:\"password,required\",json:\"password,omitempty\"")
+    1: optional string UserName (go.tag="form:\"user_name,required\"")
+    2: optional string Email    (go.tag="form:\"email,required\"")
+    3: optional string Password (go.tag="form:\"password,required\"")
 }
 
 struct RegisterResp {
 }
 
+
 struct LoginReq {
-    1: optional string UserName (go.tag="form:\"user_name,required\",json:\"user_name,omitempty\"")
-    2: optional string password (go.tag="form:\"password,required\",json:\"password,omitempty\"")
-    3: optional string OTPCode (go.tag="form:\"otp_code\",json:\"otp_code,omitempty\"")
+    1: optional string UserName (go.tag="form:\"user_name,required\"")
+    2: optional string password (go.tag="form:\"password,required\"")
+    3: optional string OTPCode (go.tag="form:\"otp_code\"")
 }
 
 struct LoginResp {
@@ -35,34 +36,38 @@ struct LoginResp {
     2: optional string RefreshToken (go.tag="json:\"refresh_token,omitempty\"")
 }
 
+
 struct InfoReq {
-    1: optional i64 UID (go.tag="form:\"uid\",json:\"uid,omitempty\"")
-    2: optional string UserName (go.tag="form:\"user_name\",json:\"user_name,omitempty\"")
+    1: optional i64 UID
+    2: optional string UserName (go.tag="form:\"user_name\"")
 }
 
 struct InfoResp {
     1: optional UserInfo Data (go.tag="json:\"data\"")
 }
 
+
 struct UploadAvatarReq {
-    1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
-    3: optional binary Avatar (go.tag="json:\"avatar,omitempty\"")
-    4: optional string FileName (go.tag="json:\"file_name,omitempty\"")
+    1: optional i64 UID
+    3: optional binary Avatar
+    4: optional string FileName
 }
 
 struct UploadAvatarResp {
 }
 
+
 struct DownloadAvatarReq {
-    1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
+    1: optional i64 UID
 }
 
 struct DownloadAvatarResp {
     1: optional string URL (go.tag="json:\"url,omitempty\"")
 }
 
+
 struct TotpQrcodeReq {
-    1: optional i64 UID (go.tag="json:\"uid,omitempty\"")
+    1: optional i64 UID
     2: optional string UserName (go.tag="json:\"user_name,omitempty\"")
 }
 
@@ -70,13 +75,15 @@ struct TotpQrcodeResp {
     2: optional string Qrcode (go.tag="json:\"qrcode,omitempty\"")
 }
 
+
 struct EnableTotpReq {
-    1: optional string Code (go.tag="form:\"code,required\",json:\"code,omitempty\"")
-    2: optional i64 UID (go.tag="json:\"uid,omitempty\"")
+    1: optional string Code (go.tag="form:\"code,required\"")
+    2: optional i64 UID
 }
 
 struct EnableTotpResp {
 }
+
 
 service UserService {
     RegisterResp Register(1: RegisterReq req)

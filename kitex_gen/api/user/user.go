@@ -847,9 +847,9 @@ func (p *UserInfo) Field10DeepEqual(src *bool) bool {
 }
 
 type RegisterReq struct {
-	UserName *string `thrift:"UserName,1,optional" frugal:"1,optional,string" form:"user_name,required",json:"user_name,omitempty"`
-	Email    *string `thrift:"Email,2,optional" frugal:"2,optional,string" form:"email,required",json:"email,omitempty"`
-	Password *string `thrift:"Password,3,optional" frugal:"3,optional,string" form:"password,required",json:"password,omitempty"`
+	UserName *string `thrift:"UserName,1,optional" frugal:"1,optional,string" form:"user_name,required"`
+	Email    *string `thrift:"Email,2,optional" frugal:"2,optional,string" form:"email,required"`
+	Password *string `thrift:"Password,3,optional" frugal:"3,optional,string" form:"password,required"`
 }
 
 func NewRegisterReq() *RegisterReq {
@@ -1264,9 +1264,9 @@ func (p *RegisterResp) DeepEqual(ano *RegisterResp) bool {
 }
 
 type LoginReq struct {
-	UserName *string `thrift:"UserName,1,optional" frugal:"1,optional,string" form:"user_name,required",json:"user_name,omitempty"`
-	Password *string `thrift:"password,2,optional" frugal:"2,optional,string" form:"password,required",json:"password,omitempty"`
-	OTPCode  *string `thrift:"OTPCode,3,optional" frugal:"3,optional,string" form:"otp_code",json:"otp_code,omitempty"`
+	UserName *string `thrift:"UserName,1,optional" frugal:"1,optional,string" form:"user_name,required"`
+	Password *string `thrift:"password,2,optional" frugal:"2,optional,string" form:"password,required"`
+	OTPCode  *string `thrift:"OTPCode,3,optional" frugal:"3,optional,string" form:"otp_code"`
 }
 
 func NewLoginReq() *LoginReq {
@@ -1839,8 +1839,8 @@ func (p *LoginResp) Field2DeepEqual(src *string) bool {
 }
 
 type InfoReq struct {
-	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" form:"uid",json:"uid,omitempty"`
-	UserName *string `thrift:"UserName,2,optional" frugal:"2,optional,string" form:"user_name",json:"user_name,omitempty"`
+	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"UID,omitempty"`
+	UserName *string `thrift:"UserName,2,optional" frugal:"2,optional,string" form:"user_name"`
 }
 
 func NewInfoReq() *InfoReq {
@@ -2261,9 +2261,9 @@ func (p *InfoResp) Field1DeepEqual(src *UserInfo) bool {
 }
 
 type UploadAvatarReq struct {
-	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"uid,omitempty"`
-	Avatar   []byte  `thrift:"Avatar,3,optional" frugal:"3,optional,binary" json:"avatar,omitempty"`
-	FileName *string `thrift:"FileName,4,optional" frugal:"4,optional,string" json:"file_name,omitempty"`
+	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"UID,omitempty"`
+	Avatar   []byte  `thrift:"Avatar,3,optional" frugal:"3,optional,binary" json:"Avatar,omitempty"`
+	FileName *string `thrift:"FileName,4,optional" frugal:"4,optional,string" json:"FileName,omitempty"`
 }
 
 func NewUploadAvatarReq() *UploadAvatarReq {
@@ -2673,7 +2673,7 @@ func (p *UploadAvatarResp) DeepEqual(ano *UploadAvatarResp) bool {
 }
 
 type DownloadAvatarReq struct {
-	UID *int64 `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"uid,omitempty"`
+	UID *int64 `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"UID,omitempty"`
 }
 
 func NewDownloadAvatarReq() *DownloadAvatarReq {
@@ -3029,7 +3029,7 @@ func (p *DownloadAvatarResp) Field1DeepEqual(src *string) bool {
 }
 
 type TotpQrcodeReq struct {
-	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"uid,omitempty"`
+	UID      *int64  `thrift:"UID,1,optional" frugal:"1,optional,i64" json:"UID,omitempty"`
 	UserName *string `thrift:"UserName,2,optional" frugal:"2,optional,string" json:"user_name,omitempty"`
 }
 
@@ -3280,7 +3280,6 @@ func (p *TotpQrcodeReq) Field2DeepEqual(src *string) bool {
 }
 
 type TotpQrcodeResp struct {
-	Secret *string `thrift:"Secret,1,optional" frugal:"1,optional,string" json:"secret,omitempty"`
 	Qrcode *string `thrift:"Qrcode,2,optional" frugal:"2,optional,string" json:"qrcode,omitempty"`
 }
 
@@ -3292,15 +3291,6 @@ func (p *TotpQrcodeResp) InitDefault() {
 	*p = TotpQrcodeResp{}
 }
 
-var TotpQrcodeResp_Secret_DEFAULT string
-
-func (p *TotpQrcodeResp) GetSecret() (v string) {
-	if !p.IsSetSecret() {
-		return TotpQrcodeResp_Secret_DEFAULT
-	}
-	return *p.Secret
-}
-
 var TotpQrcodeResp_Qrcode_DEFAULT string
 
 func (p *TotpQrcodeResp) GetQrcode() (v string) {
@@ -3309,20 +3299,12 @@ func (p *TotpQrcodeResp) GetQrcode() (v string) {
 	}
 	return *p.Qrcode
 }
-func (p *TotpQrcodeResp) SetSecret(val *string) {
-	p.Secret = val
-}
 func (p *TotpQrcodeResp) SetQrcode(val *string) {
 	p.Qrcode = val
 }
 
 var fieldIDToName_TotpQrcodeResp = map[int16]string{
-	1: "Secret",
 	2: "Qrcode",
-}
-
-func (p *TotpQrcodeResp) IsSetSecret() bool {
-	return p.Secret != nil
 }
 
 func (p *TotpQrcodeResp) IsSetQrcode() bool {
@@ -3348,14 +3330,6 @@ func (p *TotpQrcodeResp) Read(iprot thrift.TProtocol) (err error) {
 		}
 
 		switch fieldId {
-		case 1:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField1(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
@@ -3393,15 +3367,6 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *TotpQrcodeResp) ReadField1(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.Secret = &v
-	}
-	return nil
-}
 func (p *TotpQrcodeResp) ReadField2(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadString(); err != nil {
@@ -3418,10 +3383,6 @@ func (p *TotpQrcodeResp) Write(oprot thrift.TProtocol) (err error) {
 		goto WriteStructBeginError
 	}
 	if p != nil {
-		if err = p.writeField1(oprot); err != nil {
-			fieldId = 1
-			goto WriteFieldError
-		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
 			goto WriteFieldError
@@ -3442,25 +3403,6 @@ WriteFieldStopError:
 	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
 WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
-}
-
-func (p *TotpQrcodeResp) writeField1(oprot thrift.TProtocol) (err error) {
-	if p.IsSetSecret() {
-		if err = oprot.WriteFieldBegin("Secret", thrift.STRING, 1); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteString(*p.Secret); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
 func (p *TotpQrcodeResp) writeField2(oprot thrift.TProtocol) (err error) {
@@ -3496,27 +3438,12 @@ func (p *TotpQrcodeResp) DeepEqual(ano *TotpQrcodeResp) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.Secret) {
-		return false
-	}
 	if !p.Field2DeepEqual(ano.Qrcode) {
 		return false
 	}
 	return true
 }
 
-func (p *TotpQrcodeResp) Field1DeepEqual(src *string) bool {
-
-	if p.Secret == src {
-		return true
-	} else if p.Secret == nil || src == nil {
-		return false
-	}
-	if strings.Compare(*p.Secret, *src) != 0 {
-		return false
-	}
-	return true
-}
 func (p *TotpQrcodeResp) Field2DeepEqual(src *string) bool {
 
 	if p.Qrcode == src {
@@ -3531,8 +3458,8 @@ func (p *TotpQrcodeResp) Field2DeepEqual(src *string) bool {
 }
 
 type EnableTotpReq struct {
-	Code *string `thrift:"Code,1,optional" frugal:"1,optional,string" form:"code,required",json:"code,omitempty"`
-	UID  *int64  `thrift:"UID,2,optional" frugal:"2,optional,i64" json:"uid,omitempty"`
+	Code *string `thrift:"Code,1,optional" frugal:"1,optional,string" form:"code,required"`
+	UID  *int64  `thrift:"UID,2,optional" frugal:"2,optional,i64" json:"UID,omitempty"`
 }
 
 func NewEnableTotpReq() *EnableTotpReq {

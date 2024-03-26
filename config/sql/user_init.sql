@@ -14,3 +14,17 @@ CREATE TABLE IF NOT EXISTS user (
     delete_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'item删除时间',
     PRIMARY KEY pk_user(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户基础表' ;
+
+
+CREATE TABLE IF NOT EXISTS video (
+    id BIGINT UNSIGNED COMMENT 'PK',
+    uid BIGINT NOT NULL DEFAULT 0 COMMENT '上传视频者',
+    video_url varchar(255) NOT NULL DEFAULT '' COMMENT  '视频路径',
+    cover_url varchar(255) NOT NULL DEFAULT '' COMMENT '封面路径',
+    intro varchar(255) NOT NULL DEFAULT '' COMMENT '简介',
+    title varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+    stars INT NOT NULL DEFAULT 0 COMMENT '收藏数',
+    favorites INT NOT NULL DEFAULT 0 COMMENT '点赞数',
+    views INT NOT NULL DEFAULT 0 COMMENT '浏览数',
+    PRIMARY KEY pk_video(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='视频信息表' ;

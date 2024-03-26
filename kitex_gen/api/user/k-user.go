@@ -2449,20 +2449,6 @@ func (p *TotpQrcodeResp) FastRead(buf []byte) (int, error) {
 			break
 		}
 		switch fieldId {
-		case 1:
-			if fieldTypeId == thrift.STRING {
-				l, err = p.FastReadField1(buf[offset:])
-				offset += l
-				if err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
-				offset += l
-				if err != nil {
-					goto SkipFieldError
-				}
-			}
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				l, err = p.FastReadField2(buf[offset:])
@@ -2512,19 +2498,6 @@ ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *TotpQrcodeResp) FastReadField1(buf []byte) (int, error) {
-	offset := 0
-
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
-		return offset, err
-	} else {
-		offset += l
-		p.Secret = &v
-
-	}
-	return offset, nil
-}
-
 func (p *TotpQrcodeResp) FastReadField2(buf []byte) (int, error) {
 	offset := 0
 
@@ -2547,7 +2520,6 @@ func (p *TotpQrcodeResp) FastWriteNocopy(buf []byte, binaryWriter bthrift.Binary
 	offset := 0
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "TotpQrcodeResp")
 	if p != nil {
-		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
@@ -2559,23 +2531,11 @@ func (p *TotpQrcodeResp) BLength() int {
 	l := 0
 	l += bthrift.Binary.StructBeginLength("TotpQrcodeResp")
 	if p != nil {
-		l += p.field1Length()
 		l += p.field2Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
 	return l
-}
-
-func (p *TotpQrcodeResp) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
-	offset := 0
-	if p.IsSetSecret() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "Secret", thrift.STRING, 1)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.Secret)
-
-		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
-	}
-	return offset
 }
 
 func (p *TotpQrcodeResp) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
@@ -2587,17 +2547,6 @@ func (p *TotpQrcodeResp) fastWriteField2(buf []byte, binaryWriter bthrift.Binary
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
 	return offset
-}
-
-func (p *TotpQrcodeResp) field1Length() int {
-	l := 0
-	if p.IsSetSecret() {
-		l += bthrift.Binary.FieldBeginLength("Secret", thrift.STRING, 1)
-		l += bthrift.Binary.StringLengthNocopy(*p.Secret)
-
-		l += bthrift.Binary.FieldEndLength()
-	}
-	return l
 }
 
 func (p *TotpQrcodeResp) field2Length() int {

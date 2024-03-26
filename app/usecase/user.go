@@ -102,7 +102,7 @@ func (u *UserCase) UploadAvatar(ctx context.Context, req *idl.UploadAvatarReq) (
 
 	url := u.service.OSS.DownloadAvatar(ctx, path)
 	if url == "" {
-
+		return nil, pack.ReturnError(errno.OssDownloadAvatarError, err)
 	}
 
 	if err = u.repo.UpdateUserAvatar(ctx, path, *req.UID); err != nil {

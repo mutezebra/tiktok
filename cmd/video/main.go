@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
+	"net"
+
 	"github.com/Mutezebra/tiktok/cmd/video/pack"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
-	"net"
 
 	"github.com/Mutezebra/tiktok/pkg/oss"
 

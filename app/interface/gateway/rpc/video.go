@@ -2,9 +2,10 @@ package rpc
 
 import (
 	"context"
+	"io"
+
 	idl "github.com/Mutezebra/tiktok/kitex_gen/api/video"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"io"
 )
 
 func VideoFeed(ctx context.Context, req *idl.VideoFeedReq, ch chan []byte) (err error) {

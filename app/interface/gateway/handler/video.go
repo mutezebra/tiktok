@@ -2,15 +2,17 @@ package handler
 
 import (
 	"context"
+	"strconv"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	hzresp "github.com/cloudwego/hertz/pkg/protocol/http1/resp"
+
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/rpc"
 	"github.com/Mutezebra/tiktok/consts"
 	idl "github.com/Mutezebra/tiktok/kitex_gen/api/video"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/cloudwego/hertz/pkg/app"
-	hzresp "github.com/cloudwego/hertz/pkg/protocol/http1/resp"
-	"strconv"
 )
 
 func VideoFeedHandler() app.HandlerFunc {

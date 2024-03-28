@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/Mutezebra/tiktok/consts"
 	"io"
+
+	"github.com/Mutezebra/tiktok/consts"
 
 	"github.com/qiniu/go-sdk/v7/storage"
 )

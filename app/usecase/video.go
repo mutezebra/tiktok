@@ -3,14 +3,15 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"path/filepath"
+	"strconv"
+
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	videoService "github.com/Mutezebra/tiktok/app/domain/service/video"
 	"github.com/Mutezebra/tiktok/app/usecase/pack"
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/video"
-	"path/filepath"
-	"strconv"
 )
 
 type VideoCase struct {

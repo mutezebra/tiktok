@@ -2,11 +2,12 @@ package video
 
 import (
 	"context"
+	"path/filepath"
+	"strings"
+
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/pkg/snowflake"
-	"path/filepath"
-	"strings"
 )
 
 type Service struct {

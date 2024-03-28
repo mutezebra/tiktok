@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"strings"
+
+	"github.com/Mutezebra/tiktok/app/domain/repository"
 )
 
 type VideoRepository struct {

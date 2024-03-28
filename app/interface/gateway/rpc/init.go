@@ -3,8 +3,10 @@ package rpc
 import (
 	"context"
 	"fmt"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
+
 	"github.com/cloudwego/kitex/client/streamclient"
+
+	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
 
 	"github.com/cloudwego/kitex/client"
 

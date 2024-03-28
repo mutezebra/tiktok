@@ -49,6 +49,7 @@ type QiNiu struct {
 	AvatarPath        string `yaml:"avatar_path" mapstructure:"avatar_path"`
 	DefaultAvatarPath string `yaml:"default_avatar_path" mapstructure:"default_avatar_path"`
 	VideoPath         string `yaml:"video_path" mapstructure:"video_path"`
+	CoverPath         string `yaml:"cover_path" mapstructure:"cover_path"`
 	Bucket            string `yaml:"bucket" mapstructure:"bucket"`
 	Domain            string `yaml:"domain" mapstructure:"domain"`
 }

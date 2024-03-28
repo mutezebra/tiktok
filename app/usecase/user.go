@@ -18,7 +18,7 @@ type UserCase struct {
 	service *userService.Service
 }
 
-func NewUseUseCase(repo repository.UserRepository, srv *userService.Service) *UserCase {
+func NewUserUseCase(repo repository.UserRepository, srv *userService.Service) *UserCase {
 	return &UserCase{
 		repo:    repo,
 		service: srv,
@@ -95,12 +95,12 @@ func (u *UserCase) UploadAvatar(ctx context.Context, req *idl.UploadAvatarReq) (
 		return nil, pack.ReturnError(errno.GetAvatarNameError, nil)
 	}
 
-	err, path := u.service.OSS.UploadAvatar(ctx, avatar, req.Avatar)
+	err, path := u.service.UploadAvatar(ctx, avatar, req.Avatar)
 	if err != nil {
 		return nil, pack.ReturnError(errno.OssUploadAvatarError, err)
 	}
 
-	url := u.service.OSS.DownloadAvatar(ctx, path)
+	url := u.service.DownloadAvatar(ctx, path)
 	if url == "" {
 		return nil, pack.ReturnError(errno.OssDownloadAvatarError, err)
 	}

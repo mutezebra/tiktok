@@ -3,6 +3,8 @@ package rpc
 import (
 	"context"
 	"fmt"
+	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
+	"github.com/cloudwego/kitex/client/streamclient"
 
 	"github.com/cloudwego/kitex/client"
 
@@ -18,8 +20,10 @@ var (
 	err  error
 	Conf *config.Config
 
-	Resolver   model.Resolver
-	UserClient userservice.Client
+	Resolver          model.Resolver
+	UserClient        userservice.Client
+	VideoClient       videoservice.Client
+	VideoStreamClient videoservice.StreamClient
 )
 
 func Init() {
@@ -30,15 +34,16 @@ func Init() {
 	}
 
 	initClient(consts.UserServiceName)
+	initClient(consts.VideoServiceName)
 }
 
 func initClient(serviceName string) {
 	switch serviceName {
 	case consts.UserServiceName:
-		UserClient, err = userservice.NewClient(serviceName, client.WithHostPorts(discovery(serviceName)...))
-	}
-	if err != nil {
-		log.LogrusObj.Panic(err)
+		UserClient = userservice.MustNewClient(serviceName, client.WithHostPorts(discovery(serviceName)...))
+	case consts.VideoServiceName:
+		VideoClient = videoservice.MustNewClient(serviceName, client.WithHostPorts(discovery(serviceName)...))
+		VideoStreamClient = videoservice.MustNewStreamClient(serviceName, streamclient.WithHostPorts(discovery(serviceName)...))
 	}
 }
 

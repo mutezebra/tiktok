@@ -42,3 +42,15 @@ const (
 	VerifyOtpCode            = 10062
 	DatabaseUpdateTotpStatus = 10063
 )
+
+// Video
+const (
+	VideoFeedStreamSend = 20000
+	DatabaseGetVideoUrl = 20001
+	OssGetVideoFeed     = 20002
+
+	OssUploadVideo      = 20010
+	OssUploadVideoCover = 20011
+	DatabaseCreateVideo = 20012
+	OutOfLimitCoverSize = 20013
+)

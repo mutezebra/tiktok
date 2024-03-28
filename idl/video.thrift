@@ -13,25 +13,26 @@ struct VideoInfo {
 }
 
 struct VideoFeedReq {
-    1: optional i64 UID
     2: optional i64 VID (go.tag="form:\"vid,required\"")
 }
 
 struct VideoFeedResp {
-    1: optional i32 Count (go.tag="json:\"count,omitempry\"")
-    2: optional list<VideoInfo> items (go.tag="json:\"items,omitempry\"")
+    1: optional binary Video (go.tag="json:\"vid,omitempry\"")
 }
 
 
 struct PublishVideoReq {
     1: optional string Intro (go.tag="form:\"intro,required\"")
     2: optional string Title (go.tag="form:\"title,required\"")
-    3: optional binary Video (go.tag="form:\"video_content,required\"")
-    4: optional binary cover (go.tag="form:\"cover,required\"")
+    3: optional binary Video
+    4: optional binary cover
     5: optional i64 UID
+    6: optional string VideoName
+    7: optional string CoverName
 }
 
 struct PublishVideoResp {
+    1: optional string VID 
 }
 
 
@@ -47,7 +48,7 @@ struct GetVideoListResp {
 }
 
 
-struct GetVideoPupularReq {
+struct GetVideoPopularReq {
     1: optional i64 VID (go.tag="form:\"vid,required\"")
 }
 
@@ -64,3 +65,10 @@ struct SearchVideoResp {
     2: optional list<VideoInfo> items (go.tag="json:\"items,omitempry\"")
 }
 
+service VideoService {
+    VideoFeedResp VideoFeed(1: VideoFeedReq req) (streaming.mode="server")
+    PublishVideoResp PublishVideo(1: PublishVideoReq req)
+    GetVideoListResp GetVideoList(1: GetVideoListReq req)
+    GetVideoPopularResp GetVideoPopular(1: GetVideoPopularReq req)
+    SearchVideoResp SearchVideo(1: SearchVideoReq req)
+}

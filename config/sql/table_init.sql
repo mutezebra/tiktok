@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS user (
 
 
 CREATE TABLE IF NOT EXISTS video (
-    id BIGINT UNSIGNED COMMENT 'PK',
+    id BIGINT UNSIGNED AUTO_INCREMENT COMMENT 'PK',
     uid BIGINT NOT NULL DEFAULT 0 COMMENT '上传视频者',
     video_url varchar(255) NOT NULL DEFAULT '' COMMENT  '视频路径',
     cover_url varchar(255) NOT NULL DEFAULT '' COMMENT '封面路径',
@@ -26,5 +26,8 @@ CREATE TABLE IF NOT EXISTS video (
     stars INT NOT NULL DEFAULT 0 COMMENT '收藏数',
     favorites INT NOT NULL DEFAULT 0 COMMENT '点赞数',
     views INT NOT NULL DEFAULT 0 COMMENT '浏览数',
+    create_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'item创建时间',
+    update_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'item更新时间',
+    delete_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'item删除时间',
     PRIMARY KEY pk_video(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='视频信息表' ;

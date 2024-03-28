@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
@@ -35,15 +36,17 @@ type dtoVideo struct {
 	coverURL string
 	intro    string
 	title    string
+	videoExt string
+	coverExt string
 }
 
 func (v *VideoCase) VideoFeed(req *video.VideoFeedReq, stream video.VideoService_VideoFeedServer) (err error) {
-	videoURL, err := v.repo.GetVideoUrl(context.Background(), req.GetVID())
+	videoName, err := v.service.OssVideoName(context.Background(), req.GetVID())
 	if err != nil {
-		return pack.ReturnError(errno.DatabaseGetVideoUrlError, err)
+		return pack.ReturnError(errno.OssGetVideoFeedError, err)
 	}
 
-	data, err := v.service.VideoFeed(videoURL)
+	data, err := v.service.VideoFeed(videoName)
 	if err != nil {
 		return pack.ReturnError(errno.OssGetVideoFeedError, err)
 	}
@@ -71,13 +74,15 @@ func (v *VideoCase) VideoFeed(req *video.VideoFeedReq, stream video.VideoService
 
 func (v *VideoCase) PublishVideo(ctx context.Context, req *video.PublishVideoReq) (r *video.PublishVideoResp, err error) {
 	vid := v.service.GenerateID()
-	videoName := fmt.Sprintf("%d%s", vid, filepath.Ext(req.GetVideoName()))
+	videoExt := filepath.Ext(req.GetVideoName())
+	videoName := fmt.Sprintf("%d%s", vid, videoExt)
 	err, videoURL := v.service.UploadVideo(ctx, videoName, req.GetVideo())
 	if err != nil {
-		return nil, pack.ReturnError(errno.OssUploadVideoCoverError, err)
+		return nil, pack.ReturnError(errno.OssUploadVideoError, err)
 	}
 
-	coverName := fmt.Sprintf("%d%s", vid, filepath.Ext(req.GetCoverName()))
+	coverExt := filepath.Ext(req.GetCoverName())
+	coverName := fmt.Sprintf("%d%s", vid, coverExt)
 	err, coverURL := v.service.UploadVideoCover(ctx, coverName, req.GetCover())
 	if err != nil {
 		return nil, pack.ReturnError(errno.OssUploadVideoCoverError, err)
@@ -88,9 +93,12 @@ func (v *VideoCase) PublishVideo(ctx context.Context, req *video.PublishVideoReq
 		uid:      req.GetUID(),
 		videoURL: videoURL,
 		coverURL: coverURL,
+		videoExt: videoExt,
+		coverExt: coverExt,
 		intro:    req.GetIntro(),
 		title:    req.GetTitle(),
 	}
+
 	vid, err = v.repo.CreateVideo(ctx, dtoV2Repo(dto))
 	if err != nil {
 		return nil, pack.ReturnError(errno.DatabaseCreateVideoError, err)
@@ -104,8 +112,21 @@ func (v *VideoCase) PublishVideo(ctx context.Context, req *video.PublishVideoReq
 }
 
 func (v *VideoCase) GetVideoList(ctx context.Context, req *video.GetVideoListReq) (r *video.GetVideoListResp, err error) {
-	return nil, err
+	videos, err := v.repo.GetVideoListByID(ctx, req.GetUID(), int(req.GetPages()), int(req.GetSize()))
+	if err != nil {
+		return nil, pack.ReturnError(errno.DatabaseGetVideoListError, err)
+	}
 
+	respVideos := make([]*video.VideoInfo, len(videos))
+	for i, v := range videos {
+		respVideos[i] = repoV2Idl(&v)
+	}
+
+	r = new(video.GetVideoListResp)
+	length := int32(len(videos))
+	r.SetCount(&length)
+	r.SetItems(respVideos)
+	return r, err
 }
 
 func (v *VideoCase) GetVideoPopular(ctx context.Context, req *video.GetVideoPopularReq) (r *video.GetVideoPopularResp, err error) {
@@ -114,8 +135,21 @@ func (v *VideoCase) GetVideoPopular(ctx context.Context, req *video.GetVideoPopu
 }
 
 func (v *VideoCase) SearchVideo(ctx context.Context, req *video.SearchVideoReq) (r *video.SearchVideoResp, err error) {
-	return nil, err
+	videos, err := v.repo.SearchVideo(ctx, req.GetContent(), int(req.GetPages()), int(req.GetSize()))
+	if err != nil {
+		return nil, pack.ReturnError(errno.DatabaseGetVideoListError, err)
+	}
 
+	respVideos := make([]*video.VideoInfo, len(videos))
+	for i, v := range videos {
+		respVideos[i] = repoV2Idl(&v)
+	}
+
+	r = new(video.SearchVideoResp)
+	length := int32(len(videos))
+	r.SetCount(&length)
+	r.SetItems(respVideos)
+	return r, err
 }
 
 func dtoV2Repo(dto *dtoVideo) *repository.Video {
@@ -126,5 +160,25 @@ func dtoV2Repo(dto *dtoVideo) *repository.Video {
 		CoverURL: dto.coverURL,
 		Intro:    dto.intro,
 		Title:    dto.title,
+		VideoExt: dto.videoExt,
+		CoverExt: dto.coverExt,
+		CreateAt: time.Now().Unix(),
+		UpdateAt: time.Now().Unix(),
+	}
+}
+
+func repoV2Idl(repo *repository.Video) *video.VideoInfo {
+	vid := strconv.FormatInt(repo.ID, 10)
+	uid := strconv.FormatInt(repo.UID, 10)
+	return &video.VideoInfo{
+		ID:        &vid,
+		UID:       &uid,
+		VideoURL:  &repo.VideoURL,
+		CoverURL:  &repo.CoverURL,
+		Intro:     &repo.Intro,
+		Title:     &repo.Title,
+		Starts:    &repo.Starts,
+		Favorites: &repo.Favorites,
+		Views:     &repo.Views,
 	}
 }

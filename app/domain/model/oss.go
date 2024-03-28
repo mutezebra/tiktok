@@ -9,7 +9,7 @@ type OSS interface {
 	DownloadAvatar(ctx context.Context, path string) string
 	UploadVideo(ctx context.Context, name string, data []byte) (err error, path string)
 	DownloadVideo(ctx context.Context, path string) string
-	VideoFeed(path string) ([]byte, error)
+	VideoFeed(name string) ([]byte, error)
 	UploadVideoCover(ctx context.Context, name string, data []byte) (err error, path string)
 	DownloadVideoCover(ctx context.Context, path string) string
 }

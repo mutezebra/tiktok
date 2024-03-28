@@ -16,10 +16,11 @@ type VideoRepository struct {
 func NewVideoRepository() *VideoRepository { return &VideoRepository{_db} }
 
 func (repo *VideoRepository) CreateVideo(ctx context.Context, video *repository.Video) (vid int64, err error) {
-	res, err := repo.db.ExecContext(ctx, "INSERT INTO video(id,uid, video_url, cover_url, intro, title, stars, favorites, views, create_at, update_at, delete_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+	res, err := repo.db.ExecContext(ctx, "INSERT INTO video(id,uid, video_url, cover_url, intro, title, video_ext,cover_ext,stars, favorites, views, create_at, update_at, delete_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 		video.ID, video.UID, video.VideoURL, video.CoverURL,
-		video.Intro, video.Title, video.Starts, video.Favorites,
-		video.Views, video.CreateAt, video.UpdateAt, video.DeleteAt)
+		video.Intro, video.Title, video.VideoExt, video.CoverExt, video.Starts,
+		video.Favorites, video.Views, video.CreateAt, video.UpdateAt,
+		video.DeleteAt)
 	if err != nil {
 		return 0, err
 	}
@@ -27,12 +28,14 @@ func (repo *VideoRepository) CreateVideo(ctx context.Context, video *repository.
 	vid, err = res.LastInsertId()
 	return vid, err
 }
+
 func (repo *VideoRepository) GetVideoInfo(ctx context.Context, vid int64) (*repository.Video, error) {
 	var video repository.Video
 	err := repo.db.QueryRowContext(ctx, "SELECT * FROM video where id=?", vid).Scan(
 		&video.ID, &video.UID, &video.VideoURL, &video.CoverURL,
-		&video.Intro, &video.Title, &video.Starts, &video.Favorites,
-		&video.Views, &video.CreateAt, &video.UpdateAt, &video.DeleteAt)
+		&video.Intro, &video.Title, &video.VideoExt, &video.CoverExt, &video.Starts,
+		&video.Favorites, &video.Views, &video.CreateAt, &video.UpdateAt,
+		&video.DeleteAt)
 
 	return &video, err
 }
@@ -49,7 +52,12 @@ func (repo *VideoRepository) GetVideoListByID(ctx context.Context, uid int64, pa
 	videos := make([]repository.Video, 0)
 	for rows.Next() {
 		var video repository.Video
-		if err = rows.Scan(&video.ID, &video.UID, &video.VideoURL, &video.CoverURL, &video.Intro, &video.Title, &video.Starts, &video.Favorites, &video.Views, &video.CreateAt, &video.UpdateAt, &video.DeleteAt); err != nil {
+		err = rows.Scan(
+			&video.ID, &video.UID, &video.VideoURL, &video.CoverURL,
+			&video.Intro, &video.Title, &video.VideoExt, &video.CoverExt, &video.Starts,
+			&video.Favorites, &video.Views, &video.CreateAt, &video.UpdateAt,
+			&video.DeleteAt)
+		if err != nil {
 			return nil, err
 		}
 		videos = append(videos, video)
@@ -84,7 +92,12 @@ func (repo *VideoRepository) GetVideoPopular(ctx context.Context, vids []int64) 
 	videos := make([]repository.Video, len(vids))
 	for rows.Next() {
 		var video repository.Video
-		if err = rows.Scan(&video.ID, &video.UID, &video.VideoURL, &video.CoverURL, &video.Intro, &video.Title, &video.Starts, &video.Favorites, &video.Views, &video.CreateAt, &video.UpdateAt, &video.DeleteAt); err != nil {
+		err = rows.Scan(
+			&video.ID, &video.UID, &video.VideoURL, &video.CoverURL,
+			&video.Intro, &video.Title, &video.VideoExt, &video.CoverExt, &video.Starts,
+			&video.Favorites, &video.Views, &video.CreateAt, &video.UpdateAt,
+			&video.DeleteAt)
+		if err != nil {
 			return nil, err
 		}
 		videos = append(videos, video)
@@ -96,11 +109,12 @@ func (repo *VideoRepository) GetVideoPopular(ctx context.Context, vids []int64) 
 
 	return videos, nil
 }
-func (repo *VideoRepository) SearchVideo(ctx context.Context, content string, page, size int) ([]repository.Video, error) {
+
+func (repo *VideoRepository) SearchVideo(ctx context.Context, content string, page int, size int) ([]repository.Video, error) {
 	like := fmt.Sprintf("%%%s%%", content)
 	offset := (page - 1) * size
 
-	rows, err := repo.db.QueryContext(ctx, "SELECT * FROM video WHERE intro LIKE ? OR title LIKE ? LIMIT ? offset ?", like, like, size, offset)
+	rows, err := repo.db.QueryContext(ctx, "SELECT * FROM video WHERE intro LIKE ? OR title LIKE ? LIMIT ? OFFSET ?", like, like, size, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -109,8 +123,9 @@ func (repo *VideoRepository) SearchVideo(ctx context.Context, content string, pa
 	videos := make([]repository.Video, 0)
 	for rows.Next() {
 		var video repository.Video
-		if err = rows.Scan(&video.ID, &video.UID, &video.VideoURL,
-			&video.CoverURL, &video.Intro, &video.Title, &video.Starts,
+		if err = rows.Scan(
+			&video.ID, &video.UID, &video.VideoURL, &video.CoverURL,
+			&video.Intro, &video.Title, &video.VideoExt, &video.CoverExt, &video.Starts,
 			&video.Favorites, &video.Views, &video.CreateAt, &video.UpdateAt,
 			&video.DeleteAt); err != nil {
 			return nil, err
@@ -127,7 +142,14 @@ func (repo *VideoRepository) SearchVideo(ctx context.Context, content string, pa
 
 func (repo *VideoRepository) GetVideoUrl(ctx context.Context, vid int64) (string, error) {
 	var url string
-	err := repo.db.QueryRowContext(ctx, "SELECT video_url FROM video where id=?", vid).Scan(&url)
+	err := repo.db.QueryRowContext(ctx, "SELECT video_url FROM video where id=? LIMIT 1", vid).Scan(&url)
 
 	return url, err
+}
+
+func (repo *VideoRepository) GetValByColumn(ctx context.Context, vid int64, column string) (string, error) {
+	var val string
+	query := fmt.Sprintf("SELECT %s FROM video WHERE id=%d LIMIT 1", column, vid)
+	err := repo.db.QueryRowContext(ctx, query).Scan(&val)
+	return val, err
 }

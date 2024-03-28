@@ -53,4 +53,8 @@ const (
 	OssUploadVideoCover = 20011
 	DatabaseCreateVideo = 20012
 	OutOfLimitCoverSize = 20013
+
+	DatabaseGetVideoList = 20020
+
+	DatabaseSearchVideo = 20030
 )

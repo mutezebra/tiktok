@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -54,10 +55,15 @@ func VideoFeedHandler() app.HandlerFunc {
 func VideoPopularHandler() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		var req idl.GetVideoPopularReq
-		if err := c.BindAndValidate(&req); err != nil {
-			pack.SendFailedResponse(c, pack.ReturnError(errno.InvalidParamErrno, err))
+
+		resp, err := rpc.GetVideoPopular(ctx, &req)
+		if err != nil {
+			pack.SendFailedResponse(c, err)
 			return
 		}
+
+		pack.SendResponse(c, resp)
+		return
 
 	}
 }
@@ -69,6 +75,16 @@ func VideoSearchHandler() app.HandlerFunc {
 			pack.SendFailedResponse(c, pack.ReturnError(errno.InvalidParamErrno, err))
 			return
 		}
+
+		resp, err := rpc.SearchVideo(ctx, &req)
+		if err != nil {
+			pack.SendFailedResponse(c, err)
+			return
+		}
+
+		pack.SendResponse(c, resp)
+		return
+
 	}
 }
 
@@ -88,7 +104,7 @@ func VideoPublishHandler() app.HandlerFunc {
 
 		req.SetCoverName(&coverFileHeader.Filename)
 
-		if coverFileHeader.Size > consts.MB*5 {
+		if coverFileHeader.Size > consts.MB*6 {
 			pack.SendFailedResponse(c, pack.ReturnError(errno.OutOfLimitCoverSizeErrno, nil))
 			return
 		}
@@ -149,5 +165,26 @@ func VideoListHandler() app.HandlerFunc {
 			return
 		}
 
+		if req.GetPages() < 1 {
+			pack.SendFailedResponse(c, errors.New("pages must begin with 1"))
+			return
+		}
+
+		if req.GetSize() > 20 || req.GetSize() < 1 {
+			pack.SendFailedResponse(c, errors.New("size must within 1 and 20"))
+			return
+		}
+
+		id, _ := strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		req.SetUID(&id)
+
+		resp, err := rpc.GetVideoList(ctx, &req)
+		if err != nil {
+			pack.SendFailedResponse(c, err)
+			return
+		}
+
+		pack.SendResponse(c, resp)
+		return
 	}
 }

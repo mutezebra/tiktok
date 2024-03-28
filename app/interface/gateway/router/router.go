@@ -2,7 +2,6 @@ package router
 
 import (
 	"context"
-
 	"github.com/Mutezebra/tiktok/app/interface/gateway/middleware"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -50,7 +49,7 @@ func NewRouter() *server.Hertz {
 		auth.Use(middleware.JWT())
 		{
 			auth.POST("/publish", handler.VideoPublishHandler())
-			auth.POST("/list", handler.VideoListHandler())
+			auth.GET("/list", handler.VideoListHandler())
 		}
 	}
 

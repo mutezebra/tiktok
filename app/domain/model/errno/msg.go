@@ -52,4 +52,8 @@ var (
 	OssUploadVideoCoverError = New(OssUploadVideoCover, "oss upload video cover failed")
 	DatabaseCreateVideoError = New(DatabaseCreateVideo, "database create video failed")
 	OutOfLimitCoverSizeErrno = New(OutOfLimitCoverSize, "out of limit of cover size")
+
+	DatabaseGetVideoListError = New(DatabaseGetVideoList, "database get video list failed")
+
+	DatabaseSearchVideoError = New(DatabaseSearchVideo, "database search video failed")
 )

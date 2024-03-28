@@ -77,9 +77,9 @@ func (m *Model) DownloadVideo(ctx context.Context, path string) string {
 	return publicURL
 }
 
-func (m *Model) VideoFeed(path string) ([]byte, error) {
+func (m *Model) VideoFeed(name string) ([]byte, error) {
 	mac, bucket, domain := getOSS()
-	key := path
+	key := conf.VideoPath + name
 	bm := storage.NewBucketManager(mac, &storage.Config{
 		Region: &storage.ZoneHuadong,
 	})

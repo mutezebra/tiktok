@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -50,22 +51,59 @@ func (s *Service) GenerateID() int64 {
 	return snowflake.GenerateID()
 }
 
-func (s *Service) UploadVideo(ctx context.Context, name string, data []byte) (err error, path string) {
-	return s.oss.UploadVideo(ctx, name, data)
+func (s *Service) UploadVideo(ctx context.Context, name string, data []byte) (err error, url string) {
+	err, path := s.oss.UploadVideo(ctx, name, data)
+	if err != nil {
+		return err, path
+	}
+	url = s.oss.DownloadVideo(ctx, path)
+	return nil, url
 }
 
-func (s *Service) DownloadVideo(ctx context.Context, path string) string {
-	return s.oss.DownloadVideo(ctx, path)
+func (s *Service) UploadVideoCover(ctx context.Context, name string, data []byte) (err error, url string) {
+	err, path := s.oss.UploadVideoCover(ctx, name, data)
+	if err != nil {
+		return err, path
+	}
+	url = s.oss.DownloadVideoCover(ctx, path)
+	return nil, url
 }
 
-func (s *Service) VideoFeed(path string) ([]byte, error) {
-	return s.oss.VideoFeed(path)
+func (s *Service) OssVideoURL(ctx context.Context, vid int64) (string, error) {
+	val, err := s.repo.GetValByColumn(ctx, vid, "video_url")
+	if err != nil {
+		return "", err
+	}
+
+	return val, nil
 }
 
-func (s *Service) UploadVideoCover(ctx context.Context, name string, data []byte) (err error, path string) {
-	return s.oss.UploadVideoCover(ctx, name, data)
+func (s *Service) OssCoverURL(ctx context.Context, vid int64) (string, error) {
+	val, err := s.repo.GetValByColumn(ctx, vid, "cover_url")
+	if err != nil {
+		return "", err
+	}
+
+	return val, nil
 }
 
-func (s *Service) DownloadVideoCover(ctx context.Context, path string) string {
-	return s.oss.DownloadVideoCover(ctx, path)
+func (s *Service) OssVideoName(ctx context.Context, vid int64) (string, error) {
+	val, err := s.repo.GetValByColumn(ctx, vid, "video_ext")
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%d%s", vid, val), nil
+}
+
+func (s *Service) OssCoverName(ctx context.Context, vid int64) (string, error) {
+	val, err := s.repo.GetValByColumn(ctx, vid, "cover_ext")
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%d%s", vid, val), nil
+}
+
+func (s *Service) VideoFeed(name string) ([]byte, error) {
+	return s.oss.VideoFeed(name)
 }

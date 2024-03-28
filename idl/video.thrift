@@ -39,25 +39,26 @@ struct PublishVideoResp {
 struct GetVideoListReq {
     1: optional i64 UID
     2: optional i32 Pages (go.tag="form:\"pages,required\"")
-    3: optional i8 Size (go.tag="form:\"pages,required\"")
+    3: optional i8 Size (go.tag="form:\"size,required\"")
 }
 
 struct GetVideoListResp {
     1: optional i32 Count (go.tag="json:\"count,omitempty\"")
-    2: optional list<VideoInfo> items (go.tag="json:\"items,omitempry\"")
+    2: optional list<VideoInfo> Items (go.tag="json:\"items,omitempry\"")
 }
 
 
 struct GetVideoPopularReq {
-    1: optional i64 VID (go.tag="form:\"vid,required\"")
 }
 
 struct GetVideoPopularResp {
-    1: optional i32 FavoriteCount (go.tag="json:\"favorite_count,omitempry\"")
+    1: optional list<VideoInfo> Items (go.tag="json:\"items,omitempry\"")
 }
 
 struct SearchVideoReq {
-    1: optional string content (go.tag="form:\"content,required\"")
+    1: optional string Content (go.tag="form:\"content,required\"")
+    2: optional i32 Pages (go.tag="form:\"pages,required\"")
+    3: optional i8 Size (go.tag="form:\"size,required\"")
 }
 
 struct SearchVideoResp {

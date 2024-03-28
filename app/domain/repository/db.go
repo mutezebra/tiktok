@@ -42,8 +42,9 @@ type VideoRepository interface {
 	GetVideoInfo(ctx context.Context, vid int64) (*Video, error)
 	GetVideoListByID(ctx context.Context, uid int64, page int, size int) ([]Video, error)
 	GetVideoPopular(ctx context.Context, vid []int64) ([]Video, error)
-	SearchVideo(ctx context.Context, content string, page, size int) ([]Video, error)
+	SearchVideo(ctx context.Context, content string, page int, size int) ([]Video, error)
 	GetVideoUrl(ctx context.Context, vid int64) (string, error)
+	GetValByColumn(ctx context.Context, vid int64, column string) (string, error)
 }
 
 type Video struct {
@@ -53,9 +54,11 @@ type Video struct {
 	CoverURL  string `db:"cover_url"`
 	Intro     string `db:"intro"`
 	Title     string `db:"title"`
-	Starts    int    `db:"starts"`
-	Favorites int    `db:"favorites"`
-	Views     int    `db:"views"`
+	VideoExt  string `db:"video_ext"`
+	CoverExt  string `db:"cover_ext"`
+	Starts    int32  `db:"starts"`
+	Favorites int32  `db:"favorites"`
+	Views     int32  `db:"views"`
 	CreateAt  int64  `db:"create_at"`
 	UpdateAt  int64  `db:"update_at"`
 	DeleteAt  int64  `db:"delete_at"`

@@ -12,7 +12,6 @@ import (
 	"github.com/Mutezebra/tiktok/app/interface/gateway/rpc"
 	"github.com/Mutezebra/tiktok/consts"
 	idl "github.com/Mutezebra/tiktok/kitex_gen/api/video"
-	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 func VideoFeedHandler() app.HandlerFunc {
@@ -35,7 +34,6 @@ func VideoFeedHandler() app.HandlerFunc {
 			for {
 				buf = <-ch
 				if buf == nil {
-					log.LogrusObj.Info("buf is nil")
 					break
 				}
 				_, _ = c.Write(buf)
@@ -48,7 +46,6 @@ func VideoFeedHandler() app.HandlerFunc {
 			pack.SendFailedResponse(c, err)
 			return
 		}
-		log.LogrusObj.Info("rpc is over")
 
 		return
 	}

@@ -5,7 +5,6 @@ import (
 	"io"
 
 	idl "github.com/Mutezebra/tiktok/kitex_gen/api/video"
-	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 func VideoFeed(ctx context.Context, req *idl.VideoFeedReq, ch chan []byte) (err error) {
@@ -19,17 +18,14 @@ func VideoFeed(ctx context.Context, req *idl.VideoFeedReq, ch chan []byte) (err 
 		resp, err = stream.Recv()
 		if err == io.EOF {
 			err = nil
-			log.LogrusObj.Info("client stream closed count is", i)
 			break
 		} else if err != nil {
-			log.LogrusObj.Info("err != nil", err)
 			break
 		}
 		ch <- resp.Video
 		i++
 	}
 
-	log.LogrusObj.Info("i am free")
 	ch <- nil
 	return err
 }

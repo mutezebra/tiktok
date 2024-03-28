@@ -79,7 +79,7 @@ func (repo *VideoRepository) GetVideoPopular(ctx context.Context, vids []int64) 
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	videos := make([]repository.Video, len(vids))
 	for rows.Next() {

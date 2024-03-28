@@ -49,7 +49,7 @@ func (p *UserInfo) FastRead(buf []byte) (int, error) {
 		}
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				l, err = p.FastReadField1(buf[offset:])
 				offset += l
 				if err != nil {
@@ -226,7 +226,7 @@ ReadStructEndError:
 func (p *UserInfo) FastReadField1(buf []byte) (int, error) {
 	offset := 0
 
-	if v, l, err := bthrift.Binary.ReadI64(buf[offset:]); err != nil {
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
 		return offset, err
 	} else {
 		offset += l
@@ -362,13 +362,13 @@ func (p *UserInfo) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter
 	offset := 0
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "UserInfo")
 	if p != nil {
-		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 		offset += p.fastWriteField7(buf[offset:], binaryWriter)
 		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 		offset += p.fastWriteField10(buf[offset:], binaryWriter)
+		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
@@ -401,8 +401,8 @@ func (p *UserInfo) BLength() int {
 func (p *UserInfo) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
 	if p.IsSetID() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ID", thrift.I64, 1)
-		offset += bthrift.Binary.WriteI64(buf[offset:], *p.ID)
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ID", thrift.STRING, 1)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.ID)
 
 		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
@@ -511,8 +511,8 @@ func (p *UserInfo) fastWriteField10(buf []byte, binaryWriter bthrift.BinaryWrite
 func (p *UserInfo) field1Length() int {
 	l := 0
 	if p.IsSetID() {
-		l += bthrift.Binary.FieldBeginLength("ID", thrift.I64, 1)
-		l += bthrift.Binary.I64Length(*p.ID)
+		l += bthrift.Binary.FieldBeginLength("ID", thrift.STRING, 1)
+		l += bthrift.Binary.StringLengthNocopy(*p.ID)
 
 		l += bthrift.Binary.FieldEndLength()
 	}

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
@@ -185,8 +186,9 @@ func dtoU2Repo(dto *userDTO) *repository.User {
 }
 
 func repoU2IDL(user repository.User) *idl.UserInfo {
+	uid := strconv.FormatInt(user.ID, 10)
 	return &idl.UserInfo{
-		ID:         &user.ID,
+		ID:         &uid,
 		UserName:   &user.UserName,
 		Email:      &user.Email,
 		Gender:     &user.Gender,

@@ -3,7 +3,7 @@ namespace go api.user
 include "base.thrift"
 
 struct UserInfo {
-    1: optional i64 ID (go.tag="json:\"id,omitempty\"")
+    1: optional string ID (go.tag="json:\"id,omitempty\"")
     2: optional string UserName (go.tag="json:\"user_name,omitempty\"")
     3: optional string Email (go.tag="json:\"email,omitempty\"")
     4: optional i8 Gender (go.tag="json:\"gender,omitempty\"")

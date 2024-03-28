@@ -6,13 +6,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"strings"
-
 	"github.com/apache/thrift/lib/go/thrift"
+	"strings"
 )
 
 type UserInfo struct {
-	ID         *int64  `thrift:"ID,1,optional" frugal:"1,optional,i64" json:"id,omitempty"`
+	ID         *string `thrift:"ID,1,optional" frugal:"1,optional,string" json:"id,omitempty"`
 	UserName   *string `thrift:"UserName,2,optional" frugal:"2,optional,string" json:"user_name,omitempty"`
 	Email      *string `thrift:"Email,3,optional" frugal:"3,optional,string" json:"email,omitempty"`
 	Gender     *int8   `thrift:"Gender,4,optional" frugal:"4,optional,i8" json:"gender,omitempty"`
@@ -32,9 +31,9 @@ func (p *UserInfo) InitDefault() {
 	*p = UserInfo{}
 }
 
-var UserInfo_ID_DEFAULT int64
+var UserInfo_ID_DEFAULT string
 
-func (p *UserInfo) GetID() (v int64) {
+func (p *UserInfo) GetID() (v string) {
 	if !p.IsSetID() {
 		return UserInfo_ID_DEFAULT
 	}
@@ -121,7 +120,7 @@ func (p *UserInfo) GetTotpStatus() (v bool) {
 	}
 	return *p.TotpStatus
 }
-func (p *UserInfo) SetID(val *int64) {
+func (p *UserInfo) SetID(val *string) {
 	p.ID = val
 }
 func (p *UserInfo) SetUserName(val *string) {
@@ -225,7 +224,7 @@ func (p *UserInfo) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -335,7 +334,7 @@ ReadStructEndError:
 
 func (p *UserInfo) ReadField1(iprot thrift.TProtocol) error {
 
-	if v, err := iprot.ReadI64(); err != nil {
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		p.ID = &v
@@ -490,10 +489,10 @@ WriteStructEndError:
 
 func (p *UserInfo) writeField1(oprot thrift.TProtocol) (err error) {
 	if p.IsSetID() {
-		if err = oprot.WriteFieldBegin("ID", thrift.I64, 1); err != nil {
+		if err = oprot.WriteFieldBegin("ID", thrift.STRING, 1); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteI64(*p.ID); err != nil {
+		if err := oprot.WriteString(*p.ID); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -725,14 +724,14 @@ func (p *UserInfo) DeepEqual(ano *UserInfo) bool {
 	return true
 }
 
-func (p *UserInfo) Field1DeepEqual(src *int64) bool {
+func (p *UserInfo) Field1DeepEqual(src *string) bool {
 
 	if p.ID == src {
 		return true
 	} else if p.ID == nil || src == nil {
 		return false
 	}
-	if *p.ID != *src {
+	if strings.Compare(*p.ID, *src) != 0 {
 		return false
 	}
 	return true

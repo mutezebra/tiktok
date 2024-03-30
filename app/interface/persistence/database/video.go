@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
 	"github.com/Mutezebra/tiktok/pkg/log"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"

@@ -40,8 +40,8 @@ type User struct {
 type VideoRepository interface {
 	CreateVideo(ctx context.Context, video *Video) (int64, error)
 	GetVideoInfo(ctx context.Context, vid int64) (*Video, error)
+	GetVideosInfo(ctx context.Context, vid []int64) ([]Video, error)
 	GetVideoListByID(ctx context.Context, uid int64, page int, size int) ([]Video, error)
-	GetVideoPopular(ctx context.Context, vid []int64) ([]Video, error)
 	SearchVideo(ctx context.Context, content string, page int, size int) ([]Video, error)
 	GetVideoUrl(ctx context.Context, vid int64) (string, error)
 	GetValByColumn(ctx context.Context, vid int64, column string) (string, error)

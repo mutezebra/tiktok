@@ -6,9 +6,10 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/kitex/pkg/streaming"
-	"strings"
 )
 
 type VideoInfo struct {
@@ -2596,7 +2597,8 @@ func (p *GetVideoPopularReq) DeepEqual(ano *GetVideoPopularReq) bool {
 }
 
 type GetVideoPopularResp struct {
-	Items []*VideoInfo `thrift:"Items,1,optional" frugal:"1,optional,list<VideoInfo>" json:"items,omitempry"`
+	Count *int32       `thrift:"Count,1,optional" frugal:"1,optional,i32" json:"count,omitempty"`
+	Items []*VideoInfo `thrift:"Items,2,optional" frugal:"2,optional,list<VideoInfo>" json:"items,omitempry"`
 }
 
 func NewGetVideoPopularResp() *GetVideoPopularResp {
@@ -2607,6 +2609,15 @@ func (p *GetVideoPopularResp) InitDefault() {
 	*p = GetVideoPopularResp{}
 }
 
+var GetVideoPopularResp_Count_DEFAULT int32
+
+func (p *GetVideoPopularResp) GetCount() (v int32) {
+	if !p.IsSetCount() {
+		return GetVideoPopularResp_Count_DEFAULT
+	}
+	return *p.Count
+}
+
 var GetVideoPopularResp_Items_DEFAULT []*VideoInfo
 
 func (p *GetVideoPopularResp) GetItems() (v []*VideoInfo) {
@@ -2615,12 +2626,20 @@ func (p *GetVideoPopularResp) GetItems() (v []*VideoInfo) {
 	}
 	return p.Items
 }
+func (p *GetVideoPopularResp) SetCount(val *int32) {
+	p.Count = val
+}
 func (p *GetVideoPopularResp) SetItems(val []*VideoInfo) {
 	p.Items = val
 }
 
 var fieldIDToName_GetVideoPopularResp = map[int16]string{
-	1: "Items",
+	1: "Count",
+	2: "Items",
+}
+
+func (p *GetVideoPopularResp) IsSetCount() bool {
+	return p.Count != nil
 }
 
 func (p *GetVideoPopularResp) IsSetItems() bool {
@@ -2647,8 +2666,16 @@ func (p *GetVideoPopularResp) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -2684,6 +2711,15 @@ ReadStructEndError:
 }
 
 func (p *GetVideoPopularResp) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.Count = &v
+	}
+	return nil
+}
+func (p *GetVideoPopularResp) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -2713,6 +2749,10 @@ func (p *GetVideoPopularResp) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 1
 			goto WriteFieldError
 		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -2732,8 +2772,27 @@ WriteStructEndError:
 }
 
 func (p *GetVideoPopularResp) writeField1(oprot thrift.TProtocol) (err error) {
+	if p.IsSetCount() {
+		if err = oprot.WriteFieldBegin("Count", thrift.I32, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI32(*p.Count); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *GetVideoPopularResp) writeField2(oprot thrift.TProtocol) (err error) {
 	if p.IsSetItems() {
-		if err = oprot.WriteFieldBegin("Items", thrift.LIST, 1); err != nil {
+		if err = oprot.WriteFieldBegin("Items", thrift.LIST, 2); err != nil {
 			goto WriteFieldBeginError
 		}
 		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Items)); err != nil {
@@ -2753,9 +2812,9 @@ func (p *GetVideoPopularResp) writeField1(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
 func (p *GetVideoPopularResp) String() string {
@@ -2772,13 +2831,28 @@ func (p *GetVideoPopularResp) DeepEqual(ano *GetVideoPopularResp) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.Items) {
+	if !p.Field1DeepEqual(ano.Count) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Items) {
 		return false
 	}
 	return true
 }
 
-func (p *GetVideoPopularResp) Field1DeepEqual(src []*VideoInfo) bool {
+func (p *GetVideoPopularResp) Field1DeepEqual(src *int32) bool {
+
+	if p.Count == src {
+		return true
+	} else if p.Count == nil || src == nil {
+		return false
+	}
+	if *p.Count != *src {
+		return false
+	}
+	return true
+}
+func (p *GetVideoPopularResp) Field2DeepEqual(src []*VideoInfo) bool {
 
 	if len(p.Items) != len(src) {
 		return false

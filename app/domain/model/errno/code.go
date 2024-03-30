@@ -58,4 +58,6 @@ const (
 	DatabaseGetVideoList = 20020
 
 	DatabaseSearchVideo = 20030
+
+	DatabaseGetVideoInfo = 20040
 )

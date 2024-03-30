@@ -52,7 +52,8 @@ struct GetVideoPopularReq {
 }
 
 struct GetVideoPopularResp {
-    1: optional list<VideoInfo> Items (go.tag="json:\"items,omitempry\"")
+    1: optional i32 Count (go.tag="json:\"count,omitempty\"")
+    2: optional list<VideoInfo> Items (go.tag="json:\"items,omitempry\"")
 }
 
 struct SearchVideoReq {

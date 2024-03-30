@@ -57,4 +57,6 @@ var (
 	DatabaseGetVideoListError = New(DatabaseGetVideoList, "database get video list failed")
 
 	DatabaseSearchVideoError = New(DatabaseSearchVideo, "database search video failed")
+
+	DatabaseGetVideoInfoError = New(DatabaseGetVideoInfo, "database get video info failed")
 )

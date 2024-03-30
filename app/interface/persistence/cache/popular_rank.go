@@ -2,11 +2,13 @@ package cache
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/redis/go-redis/v9"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/redis/go-redis/v9"
+
+	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 type popularRankModel struct {

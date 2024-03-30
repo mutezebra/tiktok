@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/app/interface/persistence/cache"
 	"net"
+
+	"github.com/Mutezebra/tiktok/app/interface/persistence/cache"
 
 	"github.com/Mutezebra/tiktok/cmd/video/pack"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"

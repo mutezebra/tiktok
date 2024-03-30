@@ -2,9 +2,11 @@ package cache
 
 import (
 	"context"
+
+	"github.com/redis/go-redis/v9"
+
 	"github.com/Mutezebra/tiktok/config"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/redis/go-redis/v9"
 )
 
 var RedisClient *redis.Client

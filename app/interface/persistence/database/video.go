@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"strings"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 )
@@ -71,43 +70,30 @@ func (repo *VideoRepository) GetVideoListByID(ctx context.Context, uid int64, pa
 	return videos, nil
 }
 
-func (repo *VideoRepository) GetVideoPopular(ctx context.Context, vids []int64) ([]repository.Video, error) {
-	if len(vids) == 0 {
-		return nil, nil
-	}
-
-	query := "SELECT * FROM video WHERE id IN (?" + strings.Repeat(",?", len(vids)-1) + ")"
-
-	args := make([]interface{}, len(vids))
-	for i, v := range vids {
-		args[i] = v
-	}
-
-	// Execute the query
-	rows, err := repo.db.QueryContext(ctx, query, args...)
+func (repo *VideoRepository) GetVideosInfo(ctx context.Context, vids []int64) ([]repository.Video, error) {
+	stmt, err := repo.db.Prepare("SELECT * FROM video WHERE id=?")
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = stmt.Close() }()
 
-	videos := make([]repository.Video, len(vids))
-	for rows.Next() {
-		var video repository.Video
-		err = rows.Scan(
+	videos := make([]repository.Video, 0, len(vids))
+
+	for _, vid := range vids {
+		row := stmt.QueryRowContext(ctx, vid)
+		if row.Err() != nil {
+			return nil, row.Err()
+		}
+		video := repository.Video{}
+		if err = row.Scan(
 			&video.ID, &video.UID, &video.VideoURL, &video.CoverURL,
 			&video.Intro, &video.Title, &video.VideoExt, &video.CoverExt, &video.Starts,
 			&video.Favorites, &video.Views, &video.CreateAt, &video.UpdateAt,
-			&video.DeleteAt)
-		if err != nil {
+			&video.DeleteAt); err != nil {
 			return nil, err
 		}
 		videos = append(videos, video)
 	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
 	return videos, nil
 }
 

@@ -3,11 +3,12 @@ package video
 import (
 	"context"
 	"fmt"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/log"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/Mutezebra/tiktok/consts"
+	"github.com/Mutezebra/tiktok/pkg/log"
 
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"

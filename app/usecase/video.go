@@ -124,7 +124,7 @@ func (v *VideoCase) GetVideoList(ctx context.Context, req *video.GetVideoListReq
 
 	respVideos := make([]*video.VideoInfo, len(videos))
 	for i, value := range videos {
-		respVideos[i] = repoV2Idl(&value)
+		respVideos[i] = repoV2IDL(&value)
 	}
 
 	r = new(video.GetVideoListResp)
@@ -135,8 +135,19 @@ func (v *VideoCase) GetVideoList(ctx context.Context, req *video.GetVideoListReq
 }
 
 func (v *VideoCase) GetVideoPopular(ctx context.Context, req *video.GetVideoPopularReq) (r *video.GetVideoPopularResp, err error) {
-	return nil, err
-
+	vids := v.cache.GetPopularVids()
+	videos, err := v.repo.GetVideosInfo(ctx, vids)
+	if err != nil {
+		return nil, pack.ReturnError(errno.DatabaseGetVideoInfoError, err)
+	}
+	r = new(video.GetVideoPopularResp)
+	length := int32(len(vids))
+	r.SetCount(&length)
+	r.Items = make([]*video.VideoInfo, 0, length)
+	for _, value := range videos {
+		r.Items = append(r.Items, repoV2IDL(&value))
+	}
+	return r, nil
 }
 
 func (v *VideoCase) SearchVideo(ctx context.Context, req *video.SearchVideoReq) (r *video.SearchVideoResp, err error) {
@@ -147,7 +158,7 @@ func (v *VideoCase) SearchVideo(ctx context.Context, req *video.SearchVideoReq) 
 
 	respVideos := make([]*video.VideoInfo, len(videos))
 	for i, v := range videos {
-		respVideos[i] = repoV2Idl(&v)
+		respVideos[i] = repoV2IDL(&v)
 	}
 
 	r = new(video.SearchVideoResp)
@@ -172,7 +183,7 @@ func dtoV2Repo(dto *dtoVideo) *repository.Video {
 	}
 }
 
-func repoV2Idl(repo *repository.Video) *video.VideoInfo {
+func repoV2IDL(repo *repository.Video) *video.VideoInfo {
 	vid := strconv.FormatInt(repo.ID, 10)
 	uid := strconv.FormatInt(repo.UID, 10)
 	return &video.VideoInfo{

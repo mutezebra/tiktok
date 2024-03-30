@@ -3,6 +3,7 @@ package inject
 import (
 	"github.com/Mutezebra/tiktok/app/domain/service/user"
 	"github.com/Mutezebra/tiktok/app/domain/service/video"
+	"github.com/Mutezebra/tiktok/app/interface/persistence/cache"
 	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
 	"github.com/Mutezebra/tiktok/app/usecase"
 	"github.com/Mutezebra/tiktok/pkg/oss"
@@ -20,6 +21,13 @@ func ApplyUser() *usecase.UserCase {
 func ApplyVideo() *usecase.VideoCase {
 	repo := database.NewVideoRepository()
 	ossModel := oss.NewOssModel()
-	service := video.NewService(repo, nil, ossModel)
-	return usecase.NewVideoUseCase(repo, nil, service)
+	cacheRepo := cache.NewVideoCacheRepo()
+	service := &video.Service{
+		EnablePopularVideoRank:  true,
+		EnableTimedRefreshViews: true,
+		Repo:                    repo,
+		Cache:                   cacheRepo,
+		Oss:                     ossModel,
+	}
+	return usecase.NewVideoUseCase(repo, cacheRepo, video.NewService(service))
 }

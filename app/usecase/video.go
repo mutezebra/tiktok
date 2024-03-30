@@ -41,6 +41,11 @@ type dtoVideo struct {
 }
 
 func (v *VideoCase) VideoFeed(req *video.VideoFeedReq, stream video.VideoService_VideoFeedServer) (err error) {
+	err = v.service.IncrViews(context.Background(), req.GetVID())
+	if err != nil {
+		return pack.ReturnError(errno.IncrViewError, err)
+	}
+
 	videoName, err := v.service.OssVideoName(context.Background(), req.GetVID())
 	if err != nil {
 		return pack.ReturnError(errno.OssGetVideoFeedError, err)
@@ -118,8 +123,8 @@ func (v *VideoCase) GetVideoList(ctx context.Context, req *video.GetVideoListReq
 	}
 
 	respVideos := make([]*video.VideoInfo, len(videos))
-	for i, v := range videos {
-		respVideos[i] = repoV2Idl(&v)
+	for i, value := range videos {
+		respVideos[i] = repoV2Idl(&value)
 	}
 
 	r = new(video.GetVideoListResp)

@@ -45,6 +45,8 @@ type VideoRepository interface {
 	SearchVideo(ctx context.Context, content string, page int, size int) ([]Video, error)
 	GetVideoUrl(ctx context.Context, vid int64) (string, error)
 	GetValByColumn(ctx context.Context, vid int64, column string) (string, error)
+	UpdateViews(kvs map[int64]int32)
+	GetVideoViews(ctx context.Context, vid int64) (int32, error)
 }
 
 type Video struct {

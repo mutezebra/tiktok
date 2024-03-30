@@ -3,8 +3,11 @@ package video
 import (
 	"context"
 	"fmt"
+	"github.com/Mutezebra/tiktok/consts"
+	"github.com/Mutezebra/tiktok/pkg/log"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
@@ -12,17 +15,31 @@ import (
 )
 
 type Service struct {
-	repo  repository.VideoRepository
-	cache repository.VideoCacheRepository
-	oss   model.OSS
+	EnablePopularVideoRank  bool
+	EnableTimedRefreshViews bool
+
+	Repo  repository.VideoRepository
+	Cache repository.VideoCacheRepository
+	Oss   model.OSS
 }
 
-func NewService(repo repository.VideoRepository, cache repository.VideoCacheRepository, oss model.OSS) *Service {
-	return &Service{
-		repo:  repo,
-		cache: cache,
-		oss:   oss,
+func NewService(service *Service) *Service {
+	if service.Repo == nil {
+		log.LogrusObj.Panic("video service.Repo should not be nil")
 	}
+	if service.Cache == nil {
+		log.LogrusObj.Panic("video service.cacheRepo should not be nil")
+	}
+	if service.Oss == nil {
+		log.LogrusObj.Panic("video service.Oss should not be nil")
+	}
+	if service.EnablePopularVideoRank {
+		service.Cache.EnablePopularRanking()
+	}
+	if service.EnableTimedRefreshViews {
+		service.timedRefreshViews()
+	}
+	return service
 }
 
 func (s *Service) IsVideo(filename string) bool {
@@ -52,25 +69,25 @@ func (s *Service) GenerateID() int64 {
 }
 
 func (s *Service) UploadVideo(ctx context.Context, name string, data []byte) (err error, url string) {
-	err, path := s.oss.UploadVideo(ctx, name, data)
+	err, path := s.Oss.UploadVideo(ctx, name, data)
 	if err != nil {
 		return err, path
 	}
-	url = s.oss.DownloadVideo(ctx, path)
+	url = s.Oss.DownloadVideo(ctx, path)
 	return nil, url
 }
 
 func (s *Service) UploadVideoCover(ctx context.Context, name string, data []byte) (err error, url string) {
-	err, path := s.oss.UploadVideoCover(ctx, name, data)
+	err, path := s.Oss.UploadVideoCover(ctx, name, data)
 	if err != nil {
 		return err, path
 	}
-	url = s.oss.DownloadVideoCover(ctx, path)
+	url = s.Oss.DownloadVideoCover(ctx, path)
 	return nil, url
 }
 
 func (s *Service) OssVideoURL(ctx context.Context, vid int64) (string, error) {
-	val, err := s.repo.GetValByColumn(ctx, vid, "video_url")
+	val, err := s.Repo.GetValByColumn(ctx, vid, "video_url")
 	if err != nil {
 		return "", err
 	}
@@ -79,7 +96,7 @@ func (s *Service) OssVideoURL(ctx context.Context, vid int64) (string, error) {
 }
 
 func (s *Service) OssCoverURL(ctx context.Context, vid int64) (string, error) {
-	val, err := s.repo.GetValByColumn(ctx, vid, "cover_url")
+	val, err := s.Repo.GetValByColumn(ctx, vid, "cover_url")
 	if err != nil {
 		return "", err
 	}
@@ -88,7 +105,7 @@ func (s *Service) OssCoverURL(ctx context.Context, vid int64) (string, error) {
 }
 
 func (s *Service) OssVideoName(ctx context.Context, vid int64) (string, error) {
-	val, err := s.repo.GetValByColumn(ctx, vid, "video_ext")
+	val, err := s.Repo.GetValByColumn(ctx, vid, "video_ext")
 	if err != nil {
 		return "", err
 	}
@@ -96,7 +113,7 @@ func (s *Service) OssVideoName(ctx context.Context, vid int64) (string, error) {
 }
 
 func (s *Service) OssCoverName(ctx context.Context, vid int64) (string, error) {
-	val, err := s.repo.GetValByColumn(ctx, vid, "cover_ext")
+	val, err := s.Repo.GetValByColumn(ctx, vid, "cover_ext")
 	if err != nil {
 		return "", err
 	}
@@ -105,5 +122,37 @@ func (s *Service) OssCoverName(ctx context.Context, vid int64) (string, error) {
 }
 
 func (s *Service) VideoFeed(name string) ([]byte, error) {
-	return s.oss.VideoFeed(name)
+	return s.Oss.VideoFeed(name)
+}
+
+func (s *Service) IncrViews(ctx context.Context, vid int64) error {
+	if s.Cache.ViewKeyExist(vid) {
+		return s.Cache.IncrVideoViews(vid)
+	}
+
+	views, err := s.Repo.GetVideoViews(ctx, vid)
+	if err != nil {
+		return err
+	}
+
+	return s.Cache.SetVideoViews(vid, views)
+}
+
+func (s *Service) timedRefreshViews(intervals ...time.Duration) {
+	var interval time.Duration
+	if intervals == nil {
+		interval = consts.DatabaseDefaultUpdateViewInterval
+	} else {
+		interval = intervals[0]
+	}
+
+	go func(s *Service, interval time.Duration) {
+		for {
+			kvs := s.Cache.ViewsKVS()
+			if kvs != nil {
+				s.Repo.UpdateViews(kvs)
+			}
+			time.Sleep(interval)
+		}
+	}(s, interval)
 }

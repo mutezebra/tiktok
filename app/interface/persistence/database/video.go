@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/Mutezebra/tiktok/pkg/log"
 	"strings"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"
@@ -152,4 +153,27 @@ func (repo *VideoRepository) GetValByColumn(ctx context.Context, vid int64, colu
 	query := fmt.Sprintf("SELECT %s FROM video WHERE id=%d LIMIT 1", column, vid)
 	err := repo.db.QueryRowContext(ctx, query).Scan(&val)
 	return val, err
+}
+
+func (repo *VideoRepository) GetVideoViews(ctx context.Context, vid int64) (int32, error) {
+	var views int32
+	err := repo.db.QueryRowContext(ctx, "SELECT views FROM video where id=? LIMIT 1", vid).Scan(&views)
+
+	return views, err
+}
+
+func (repo *VideoRepository) UpdateViews(kvs map[int64]int32) {
+	stmt, err := repo.db.Prepare("UPDATE video SET views=? WHERE id=?")
+	if err != nil {
+		log.LogrusObj.Panic(fmt.Sprintf("create prepare sql failed,cause:%s", err.Error()))
+	}
+	defer func() { _ = stmt.Close() }()
+
+	for id, views := range kvs {
+		_, err = stmt.Exec(views, id)
+		if err != nil {
+			log.LogrusObj.Warning(fmt.Sprintf("update views to database failed,cause:%s", err.Error()))
+			return
+		}
+	}
 }

@@ -48,6 +48,7 @@ const (
 	VideoFeedStreamSend = 20000
 	DatabaseGetVideoUrl = 20001
 	OssGetVideoFeed     = 20002
+	IncrView            = 20003
 
 	OssUploadVideo      = 20010
 	OssUploadVideoCover = 20011

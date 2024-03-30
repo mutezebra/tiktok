@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/Mutezebra/tiktok/app/interface/persistence/cache"
 	"net"
 
 	"github.com/Mutezebra/tiktok/cmd/video/pack"
@@ -37,5 +38,6 @@ func VideoInit() {
 	config.InitConfig()
 	log.InitLog()
 	database.InitMysql()
+	cache.InitCache()
 	oss.InitOSS()
 }

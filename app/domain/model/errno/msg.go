@@ -47,6 +47,7 @@ var (
 	VideoFeedStreamSendError = New(VideoFeedStreamSend, "stream of video feed send resp failed")
 	DatabaseGetVideoUrlError = New(DatabaseGetVideoUrl, "database get video url failed")
 	OssGetVideoFeedError     = New(OssGetVideoFeed, "oss get video feed failed")
+	IncrViewError            = New(IncrView, "cache incr view failed")
 
 	OssUploadVideoError      = New(OssUploadVideo, "oss upload video failed")
 	OssUploadVideoCoverError = New(OssUploadVideoCover, "oss upload video cover failed")

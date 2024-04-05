@@ -41,3 +41,22 @@ var (
 	VerifyOtpCodeError            = New(VerifyOtpCode, "verify code with secret failed")
 	DatabaseUpdateTotpStatusError = New(DatabaseUpdateTotpStatus, "update totp status in database failed")
 )
+
+// video
+var (
+	VideoFeedStreamSendError = New(VideoFeedStreamSend, "stream of video feed send resp failed")
+	DatabaseGetVideoUrlError = New(DatabaseGetVideoUrl, "database get video url failed")
+	OssGetVideoFeedError     = New(OssGetVideoFeed, "oss get video feed failed")
+	IncrViewError            = New(IncrView, "cache incr view failed")
+
+	OssUploadVideoError      = New(OssUploadVideo, "oss upload video failed")
+	OssUploadVideoCoverError = New(OssUploadVideoCover, "oss upload video cover failed")
+	DatabaseCreateVideoError = New(DatabaseCreateVideo, "database create video failed")
+	OutOfLimitCoverSizeErrno = New(OutOfLimitCoverSize, "out of limit of cover size")
+
+	DatabaseGetVideoListError = New(DatabaseGetVideoList, "database get video list failed")
+
+	DatabaseSearchVideoError = New(DatabaseSearchVideo, "database search video failed")
+
+	DatabaseGetVideoInfoError = New(DatabaseGetVideoInfo, "database get video info failed")
+)

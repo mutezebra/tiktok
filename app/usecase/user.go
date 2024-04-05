@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
@@ -18,7 +19,7 @@ type UserCase struct {
 	service *userService.Service
 }
 
-func NewUseUseCase(repo repository.UserRepository, srv *userService.Service) *UserCase {
+func NewUserUseCase(repo repository.UserRepository, srv *userService.Service) *UserCase {
 	return &UserCase{
 		repo:    repo,
 		service: srv,
@@ -95,14 +96,14 @@ func (u *UserCase) UploadAvatar(ctx context.Context, req *idl.UploadAvatarReq) (
 		return nil, pack.ReturnError(errno.GetAvatarNameError, nil)
 	}
 
-	err, path := u.service.OSS.UploadAvatar(ctx, avatar, req.Avatar)
+	err, path := u.service.UploadAvatar(ctx, avatar, req.Avatar)
 	if err != nil {
 		return nil, pack.ReturnError(errno.OssUploadAvatarError, err)
 	}
 
-	url := u.service.OSS.DownloadAvatar(ctx, path)
+	url := u.service.DownloadAvatar(ctx, path)
 	if url == "" {
-
+		return nil, pack.ReturnError(errno.OssDownloadAvatarError, err)
 	}
 
 	if err = u.repo.UpdateUserAvatar(ctx, path, *req.UID); err != nil {
@@ -185,8 +186,9 @@ func dtoU2Repo(dto *userDTO) *repository.User {
 }
 
 func repoU2IDL(user repository.User) *idl.UserInfo {
+	uid := strconv.FormatInt(user.ID, 10)
 	return &idl.UserInfo{
-		ID:         &user.ID,
+		ID:         &uid,
 		UserName:   &user.UserName,
 		Email:      &user.Email,
 		Gender:     &user.Gender,

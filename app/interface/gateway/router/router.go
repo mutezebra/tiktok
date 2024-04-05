@@ -18,6 +18,7 @@ func NewRouter() *server.Hertz {
 		server.WithHostPorts(config.Conf.Service[consts.GatewayServiceKey].Address),
 		server.WithMaxRequestBodySize(100*consts.MB),
 	)
+
 	h.GET("/ping", func(ctx context.Context, c *app.RequestContext) {
 		c.String(200, "pong")
 	})
@@ -36,6 +37,20 @@ func NewRouter() *server.Hertz {
 			auth.GET("/download-avatar", handler.DownloadAvatarHandler())
 			auth.GET("/totp-qrcode", handler.TotpQRCodeHandler())
 			auth.POST("/enable-totp", handler.EnableTotpHandler())
+		}
+	}
+
+	video := v1.Group("/video")
+	{
+		video.GET("/feed", handler.VideoFeedHandler())
+		video.GET("/popular", handler.VideoPopularHandler())
+		video.POST("/search", handler.VideoSearchHandler())
+
+		auth := video.Group("/auth")
+		auth.Use(middleware.JWT())
+		{
+			auth.POST("/publish", handler.VideoPublishHandler())
+			auth.GET("/list", handler.VideoListHandler())
 		}
 	}
 

@@ -30,3 +30,15 @@ services:
       - ALLOW_NONE_AUTHENTICATION=yes
     networks:
       - tiktok
+
+  redis:
+    container_name: tiktok_redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./config/conf/redis.conf:/usr/local/etc/redis/redis.conf # password 配置也在其中
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - tiktok

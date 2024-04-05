@@ -17,12 +17,12 @@ import (
 
 type Service struct {
 	repo repository.UserRepository
-	OSS  model.OSS
-	MFA  model.MFA
+	oss  model.OSS
+	mfa  model.MFA
 }
 
 func NewService(repo repository.UserRepository, oss model.OSS, mfa model.MFA) *Service {
-	return &Service{repo: repo, OSS: oss, MFA: mfa}
+	return &Service{repo: repo, oss: oss, mfa: mfa}
 }
 
 func (srv *Service) GenerateID() int64 {
@@ -53,11 +53,11 @@ func (srv *Service) VerifyEmail(email string) (string, error) {
 }
 
 func (srv *Service) UploadAvatar(ctx context.Context, name string, data []byte) (err error, path string) {
-	return srv.OSS.UploadAvatar(ctx, name, data)
+	return srv.oss.UploadAvatar(ctx, name, data)
 }
 
 func (srv *Service) DownloadAvatar(ctx context.Context, name string) (url string) {
-	return srv.OSS.DownloadAvatar(ctx, name)
+	return srv.oss.DownloadAvatar(ctx, name)
 }
 
 // AvatarName get the avatar filename
@@ -77,9 +77,9 @@ func (srv *Service) AvatarName(filename string, id int64) (ok bool, avatarName s
 }
 
 func (srv *Service) GenerateTotp(userName string) (secret string, base64 string, err error) {
-	return srv.MFA.GenerateTotp(userName)
+	return srv.mfa.GenerateTotp(userName)
 }
 
 func (srv *Service) VerifyOtp(token string, secret string) bool {
-	return srv.MFA.VerifyOtp(token, secret)
+	return srv.mfa.VerifyOtp(token, secret)
 }

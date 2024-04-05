@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/cloudwego/kitex/pkg/transmeta"
 	"net"
 
 	"github.com/Mutezebra/tiktok/app/interface/persistence/cache"
@@ -28,7 +29,10 @@ func main() {
 	registry.MustRegister(context.Background())
 
 	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.VideoServiceName].Address)
-	srv := videoservice.NewServer(inject.ApplyVideo(), server.WithServiceAddr(addr))
+	srv := videoservice.NewServer(
+		inject.ApplyVideo(),
+		server.WithServiceAddr(addr),
+		server.WithMetaHandler(transmeta.ServerTTHeaderHandler))
 	err := srv.Run()
 	if err != nil {
 		log.LogrusObj.Panic(err)

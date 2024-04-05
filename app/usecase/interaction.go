@@ -2,6 +2,9 @@ package usecase
 
 import (
 	"context"
+	"strconv"
+	"time"
+
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	interactionService "github.com/Mutezebra/tiktok/app/domain/service/interaction"
@@ -9,8 +12,6 @@ import (
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/video"
-	"strconv"
-	"time"
 )
 
 type InteractionCase struct {

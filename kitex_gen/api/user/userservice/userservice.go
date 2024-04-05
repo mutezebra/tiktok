@@ -5,10 +5,11 @@ package userservice
 import (
 	"context"
 	"errors"
-	"fmt"
-	user "github.com/Mutezebra/tiktok/kitex_gen/api/user"
+
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
+
+	user "github.com/Mutezebra/tiktok/kitex_gen/api/user"
 )
 
 var errInvalidMessageType = errors.New("invalid message type for service method handler")
@@ -134,7 +135,6 @@ func registerHandler(ctx context.Context, handler interface{}, arg, result inter
 	realResult := result.(*user.UserServiceRegisterResult)
 	success, err := handler.(user.UserService).Register(ctx, realArg.Req)
 	if err != nil {
-		fmt.Println("i am in registerHandler")
 		return err
 	}
 	realResult.Success = success

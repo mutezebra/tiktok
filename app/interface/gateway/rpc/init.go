@@ -3,9 +3,11 @@ package rpc
 import (
 	"context"
 	"fmt"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction/interactionservice"
+
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/transport"
+
+	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction/interactionservice"
 
 	"github.com/cloudwego/kitex/client/streamclient"
 

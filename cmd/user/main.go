@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/cloudwego/kitex/pkg/transmeta"
 	"net"
+
+	"github.com/cloudwego/kitex/pkg/transmeta"
 
 	"github.com/Mutezebra/tiktok/pkg/oss"
 

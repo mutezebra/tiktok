@@ -4,9 +4,11 @@ package interactionservice
 
 import (
 	"context"
-	interaction "github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
+
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
+
+	interaction "github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
 )
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.

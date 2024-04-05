@@ -50,7 +50,7 @@ func (w *withMessage) BizStatusCode() int32 {
 }
 
 func (w *withMessage) BizMessage() string {
-	return w.msg
+	return w.msg + " cause: " + w.cause.Error()
 }
 
 func (w *withMessage) BizExtra() map[string]string {

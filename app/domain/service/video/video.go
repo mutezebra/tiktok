@@ -32,7 +32,7 @@ func NewService(service *Service) *Service {
 		log.LogrusObj.Panic("video service.cacheRepo should not be nil")
 	}
 	if service.Oss == nil {
-		log.LogrusObj.Panic("video service.Oss should not be nil")
+		log.LogrusObj.Panic("video service.OSS should not be nil")
 	}
 	if service.EnablePopularVideoRank {
 		service.Cache.EnablePopularRanking()
@@ -135,7 +135,7 @@ func (s *Service) IncrViews(ctx context.Context, vid int64) error {
 	if err != nil {
 		return err
 	}
-
+	fmt.Println("i am here")
 	return s.Cache.SetVideoViews(vid, views)
 }
 

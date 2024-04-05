@@ -8,7 +8,7 @@ struct VideoInfo {
     5: optional string Intro (go.tag="json:\"intro,omitempry\"")
     6: optional string Title (go.tag="json:\"title,omitempry\"")
     7: optional i32 Starts (go.tag="json:\"starts,omitempry\"")
-    8: optional i32 Favorites (go.tag="json:\"favorites,omitempry\"")
+    8: optional i32 Likes (go.tag="json:\"likes,omitempry\"")
     9: optional i32 Views (go.tag="json:\"views,omitempry\"")
 }
 

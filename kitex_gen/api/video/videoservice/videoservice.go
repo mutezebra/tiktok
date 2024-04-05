@@ -6,12 +6,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-
+	video "github.com/Mutezebra/tiktok/kitex_gen/api/video"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
 	streaming "github.com/cloudwego/kitex/pkg/streaming"
-
-	video "github.com/Mutezebra/tiktok/kitex_gen/api/video"
 )
 
 var errInvalidMessageType = errors.New("invalid message type for service method handler")

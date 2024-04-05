@@ -16,13 +16,22 @@ import (
 )
 
 type Service struct {
-	repo repository.UserRepository
-	oss  model.OSS
-	mfa  model.MFA
+	Repo repository.UserRepository
+	OSS  model.OSS
+	MFA  model.MFA
 }
 
-func NewService(repo repository.UserRepository, oss model.OSS, mfa model.MFA) *Service {
-	return &Service{repo: repo, oss: oss, mfa: mfa}
+func NewService(service *Service) *Service {
+	if service.Repo == nil {
+		panic("user service.Repo should not be nil")
+	}
+	if service.OSS == nil {
+		panic("user service.OSS should not be nil")
+	}
+	if service.MFA == nil {
+		panic("user service.MFA should not be nil")
+	}
+	return service
 }
 
 func (srv *Service) GenerateID() int64 {
@@ -53,11 +62,11 @@ func (srv *Service) VerifyEmail(email string) (string, error) {
 }
 
 func (srv *Service) UploadAvatar(ctx context.Context, name string, data []byte) (err error, path string) {
-	return srv.oss.UploadAvatar(ctx, name, data)
+	return srv.OSS.UploadAvatar(ctx, name, data)
 }
 
 func (srv *Service) DownloadAvatar(ctx context.Context, name string) (url string) {
-	return srv.oss.DownloadAvatar(ctx, name)
+	return srv.OSS.DownloadAvatar(ctx, name)
 }
 
 // AvatarName get the avatar filename
@@ -77,9 +86,9 @@ func (srv *Service) AvatarName(filename string, id int64) (ok bool, avatarName s
 }
 
 func (srv *Service) GenerateTotp(userName string) (secret string, base64 string, err error) {
-	return srv.mfa.GenerateTotp(userName)
+	return srv.MFA.GenerateTotp(userName)
 }
 
 func (srv *Service) VerifyOtp(token string, secret string) bool {
-	return srv.mfa.VerifyOtp(token, secret)
+	return srv.MFA.VerifyOtp(token, secret)
 }

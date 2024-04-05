@@ -46,6 +46,10 @@ func (u *UserCase) Register(ctx context.Context, req *idl.RegisterReq) (r *idl.R
 		return nil, pack.ReturnError(errno.EncryptPasswordError, err)
 	}
 
+	if ok, err := u.repo.UserNameExists(ctx, dto.username); err != nil || !ok {
+		return nil, pack.ReturnError(errno.DatabaseUserNameExistsError, err)
+	}
+
 	if err = u.repo.CreateUser(ctx, dtoU2Repo(&dto)); err != nil {
 		return nil, pack.ReturnError(errno.DatabaseCreateUserError, err)
 	}

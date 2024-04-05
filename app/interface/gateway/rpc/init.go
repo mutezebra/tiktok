@@ -4,6 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cloudwego/kitex/pkg/transmeta"
+	"github.com/cloudwego/kitex/transport"
+
+	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction/interactionservice"
+
 	"github.com/cloudwego/kitex/client/streamclient"
 
 	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
@@ -26,6 +31,7 @@ var (
 	UserClient        userservice.Client
 	VideoClient       videoservice.Client
 	VideoStreamClient videoservice.StreamClient
+	InteractionClient interactionservice.Client
 )
 
 func Init() {
@@ -37,15 +43,29 @@ func Init() {
 
 	initClient(consts.UserServiceName)
 	initClient(consts.VideoServiceName)
+	initClient(consts.InteractionServiceName)
 }
 
 func initClient(serviceName string) {
 	switch serviceName {
 	case consts.UserServiceName:
-		UserClient = userservice.MustNewClient(serviceName, client.WithHostPorts(discovery(serviceName)...))
+		UserClient = userservice.MustNewClient(serviceName,
+			client.WithHostPorts(discovery(serviceName)...),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler))
 	case consts.VideoServiceName:
-		VideoClient = videoservice.MustNewClient(serviceName, client.WithHostPorts(discovery(serviceName)...))
-		VideoStreamClient = videoservice.MustNewStreamClient(serviceName, streamclient.WithHostPorts(discovery(serviceName)...))
+		VideoClient = videoservice.MustNewClient(serviceName,
+			client.WithHostPorts(discovery(serviceName)...),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler))
+		VideoStreamClient = videoservice.MustNewStreamClient(serviceName,
+			streamclient.WithHostPorts(discovery(serviceName)...),
+			streamclient.WithMetaHandler(transmeta.ClientTTHeaderHandler))
+	case consts.InteractionServiceName:
+		InteractionClient = interactionservice.MustNewClient(serviceName,
+			client.WithHostPorts(discovery(serviceName)...),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler))
 	}
 }
 

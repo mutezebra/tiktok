@@ -7,7 +7,8 @@ import (
 // UserRepository defines the operational
 // criteria for the user repository
 type UserRepository interface {
-	CreateUser(ctx context.Context, user *User) error
+	CreateUser(ctx context.Context, user *User) error // create a new user
+	UserNameExists(ctx context.Context, userName string) (bool, error)
 	GetPasswordAndIDByName(ctx context.Context, name string) (string, int64, error)
 	UserInfoByID(ctx context.Context, id int64) (*User, error)
 	UserInfoByName(ctx context.Context, name string) (*User, error)
@@ -50,18 +51,48 @@ type VideoRepository interface {
 }
 
 type Video struct {
-	ID        int64  `db:"id"`
-	UID       int64  `db:"uid"`
-	VideoURL  string `db:"video_url"`
-	CoverURL  string `db:"cover_url"`
-	Intro     string `db:"intro"`
-	Title     string `db:"title"`
-	VideoExt  string `db:"video_ext"`
-	CoverExt  string `db:"cover_ext"`
-	Starts    int32  `db:"starts"`
-	Favorites int32  `db:"favorites"`
-	Views     int32  `db:"views"`
-	CreateAt  int64  `db:"create_at"`
-	UpdateAt  int64  `db:"update_at"`
-	DeleteAt  int64  `db:"delete_at"`
+	ID       int64  `db:"id"`
+	UID      int64  `db:"uid"`
+	VideoURL string `db:"video_url"`
+	CoverURL string `db:"cover_url"`
+	Intro    string `db:"intro"`
+	Title    string `db:"title"`
+	VideoExt string `db:"video_ext"`
+	CoverExt string `db:"cover_ext"`
+	Starts   int32  `db:"starts"`
+	Likes    int32  `db:"likes"`
+	Views    int32  `db:"views"`
+	CreateAt int64  `db:"create_at"`
+	UpdateAt int64  `db:"update_at"`
+	DeleteAt int64  `db:"delete_at"`
+}
+
+type InteractionRepository interface {
+	CreateComment(ctx context.Context, comment *Comment) error
+	LikeComment(ctx context.Context, uid, cid int64) error    // like a comment
+	DislikeComment(ctx context.Context, uid, cid int64) error // dislike a comment
+	DeleteComment(ctx context.Context, uid, cid int64) error  // delete a comment
+	GetCommentRootID(ctx context.Context, cid int64) (int64, error)
+	GetCommentList(ctx context.Context, cid int64, page int8, size int8) ([]Comment, error)
+	WhetherCommentLikeItemExist(ctx context.Context, uid, cid int64) (bool, error) // check if the user has liked the video
+	WhetherCommentExist(ctx context.Context, cid int64) (bool, error)
+
+	LikeVideo(ctx context.Context, uid, vid int64) error                                               // like a video
+	DislikeVideo(ctx context.Context, uid, vid int64) error                                            // dislike a video
+	LikeList(ctx context.Context, uid int64, page int8, size int8) ([]Video, error)                    // get the user's like list
+	GetVideoDirectCommentList(ctx context.Context, vid int64, page int8, size int8) ([]Comment, error) // get a video's comment list
+	WhetherVideoLikeItemExist(ctx context.Context, uid, vid int64) (bool, error)                       // check if the user has liked the video
+	WhetherVideoExist(ctx context.Context, vid int64) (bool, error)
+}
+
+type Comment struct {
+	ID       int64  `db:"id"`
+	UID      int64  `db:"uid"`
+	VID      int64  `db:"vid"`
+	RootID   int64  `db:"root_id"` // 用来标记这条评论是否是直接对视频的评论
+	ReplyID  int64  `db:"reply_id"`
+	Content  string `db:"content"`
+	Likes    int32  `db:"likes"`
+	CreateAt int64  `db:"create_at"`
+	DeleteAt int64  `db:"delete_at"`
 }

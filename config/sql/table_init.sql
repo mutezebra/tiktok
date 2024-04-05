@@ -26,10 +26,34 @@ CREATE TABLE IF NOT EXISTS video (
     video_ext varchar(6) NOT NULL DEFAULT '' COMMENT '文件后缀，用于oss获取path',
     cover_ext varchar(6) NOT NULL DEFAULT '' COMMENT '文件后缀，用于oss获取path',
     stars INT NOT NULL DEFAULT 0 COMMENT '收藏数',
-    favorites INT NOT NULL DEFAULT 0 COMMENT '点赞数',
+    likes INT NOT NULL DEFAULT 0 COMMENT '点赞数',
     views INT NOT NULL DEFAULT 0 COMMENT '浏览数',
     create_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'item创建时间',
     update_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'item更新时间',
     delete_at BIGINT UNSIGNED DEFAULT NULL COMMENT 'item删除时间',
     PRIMARY KEY pk_video(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='视频信息表' ;
+
+
+CREATE TABLE IF NOT EXISTS comment (
+    id BIGINT UNSIGNED AUTO_INCREMENT COMMENT 'PK',
+    uid BIGINT NOT NULL DEFAULT 0 COMMENT '评论人id',
+    vid BIGINT NOT NULL DEFAULT 0 COMMENT '视频id',
+    root_id BIGINT NOT NULL DEFAULT 0 COMMENT '为0的话则是对视频的评论',
+    reply_id BIGINT NOT NULL DEFAULT 0 COMMENT '回复id，为0则说明是对视频的评论',
+    content varchar(255) NOT NULL DEFAULT '' COMMENT '评论内容',
+    likes INT NOT NULL DEFAULT 0 COMMENT '点赞数',
+    create_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'item创建时间',
+    delete_at BIGINT UNSIGNED DEFAULT NULL COMMENT 'item删除时间',
+    PRIMARY KEY pk_comment(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评论表' ;
+
+CREATE TABLE user_video_likes (
+    user_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'user_id',
+    video_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'video_id'
+);
+
+CREATE TABLE user_comment_likes (
+    user_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'user_id',
+    comment_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'comment_id'
+);

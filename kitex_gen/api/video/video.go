@@ -13,15 +13,15 @@ import (
 )
 
 type VideoInfo struct {
-	ID        *string `thrift:"ID,1,optional" frugal:"1,optional,string" json:"id,omitempry"`
-	UID       *string `thrift:"UID,2,optional" frugal:"2,optional,string" json:"uid,omitempry"`
-	VideoURL  *string `thrift:"VideoURL,3,optional" frugal:"3,optional,string" json:"video_url,omitempry"`
-	CoverURL  *string `thrift:"CoverURL,4,optional" frugal:"4,optional,string" json:"cover_url,omitempry"`
-	Intro     *string `thrift:"Intro,5,optional" frugal:"5,optional,string" json:"intro,omitempry"`
-	Title     *string `thrift:"Title,6,optional" frugal:"6,optional,string" json:"title,omitempry"`
-	Starts    *int32  `thrift:"Starts,7,optional" frugal:"7,optional,i32" json:"starts,omitempry"`
-	Favorites *int32  `thrift:"Favorites,8,optional" frugal:"8,optional,i32" json:"favorites,omitempry"`
-	Views     *int32  `thrift:"Views,9,optional" frugal:"9,optional,i32" json:"views,omitempry"`
+	ID       *string `thrift:"ID,1,optional" frugal:"1,optional,string" json:"id,omitempry"`
+	UID      *string `thrift:"UID,2,optional" frugal:"2,optional,string" json:"uid,omitempry"`
+	VideoURL *string `thrift:"VideoURL,3,optional" frugal:"3,optional,string" json:"video_url,omitempry"`
+	CoverURL *string `thrift:"CoverURL,4,optional" frugal:"4,optional,string" json:"cover_url,omitempry"`
+	Intro    *string `thrift:"Intro,5,optional" frugal:"5,optional,string" json:"intro,omitempry"`
+	Title    *string `thrift:"Title,6,optional" frugal:"6,optional,string" json:"title,omitempry"`
+	Starts   *int32  `thrift:"Starts,7,optional" frugal:"7,optional,i32" json:"starts,omitempry"`
+	Likes    *int32  `thrift:"Likes,8,optional" frugal:"8,optional,i32" json:"likes,omitempry"`
+	Views    *int32  `thrift:"Views,9,optional" frugal:"9,optional,i32" json:"views,omitempry"`
 }
 
 func NewVideoInfo() *VideoInfo {
@@ -95,13 +95,13 @@ func (p *VideoInfo) GetStarts() (v int32) {
 	return *p.Starts
 }
 
-var VideoInfo_Favorites_DEFAULT int32
+var VideoInfo_Likes_DEFAULT int32
 
-func (p *VideoInfo) GetFavorites() (v int32) {
-	if !p.IsSetFavorites() {
-		return VideoInfo_Favorites_DEFAULT
+func (p *VideoInfo) GetLikes() (v int32) {
+	if !p.IsSetLikes() {
+		return VideoInfo_Likes_DEFAULT
 	}
-	return *p.Favorites
+	return *p.Likes
 }
 
 var VideoInfo_Views_DEFAULT int32
@@ -133,8 +133,8 @@ func (p *VideoInfo) SetTitle(val *string) {
 func (p *VideoInfo) SetStarts(val *int32) {
 	p.Starts = val
 }
-func (p *VideoInfo) SetFavorites(val *int32) {
-	p.Favorites = val
+func (p *VideoInfo) SetLikes(val *int32) {
+	p.Likes = val
 }
 func (p *VideoInfo) SetViews(val *int32) {
 	p.Views = val
@@ -148,7 +148,7 @@ var fieldIDToName_VideoInfo = map[int16]string{
 	5: "Intro",
 	6: "Title",
 	7: "Starts",
-	8: "Favorites",
+	8: "Likes",
 	9: "Views",
 }
 
@@ -180,8 +180,8 @@ func (p *VideoInfo) IsSetStarts() bool {
 	return p.Starts != nil
 }
 
-func (p *VideoInfo) IsSetFavorites() bool {
-	return p.Favorites != nil
+func (p *VideoInfo) IsSetLikes() bool {
+	return p.Likes != nil
 }
 
 func (p *VideoInfo) IsSetViews() bool {
@@ -376,7 +376,7 @@ func (p *VideoInfo) ReadField8(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
 	} else {
-		p.Favorites = &v
+		p.Likes = &v
 	}
 	return nil
 }
@@ -584,11 +584,11 @@ WriteFieldEndError:
 }
 
 func (p *VideoInfo) writeField8(oprot thrift.TProtocol) (err error) {
-	if p.IsSetFavorites() {
-		if err = oprot.WriteFieldBegin("Favorites", thrift.I32, 8); err != nil {
+	if p.IsSetLikes() {
+		if err = oprot.WriteFieldBegin("Likes", thrift.I32, 8); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteI32(*p.Favorites); err != nil {
+		if err := oprot.WriteI32(*p.Likes); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -656,7 +656,7 @@ func (p *VideoInfo) DeepEqual(ano *VideoInfo) bool {
 	if !p.Field7DeepEqual(ano.Starts) {
 		return false
 	}
-	if !p.Field8DeepEqual(ano.Favorites) {
+	if !p.Field8DeepEqual(ano.Likes) {
 		return false
 	}
 	if !p.Field9DeepEqual(ano.Views) {
@@ -751,12 +751,12 @@ func (p *VideoInfo) Field7DeepEqual(src *int32) bool {
 }
 func (p *VideoInfo) Field8DeepEqual(src *int32) bool {
 
-	if p.Favorites == src {
+	if p.Likes == src {
 		return true
-	} else if p.Favorites == nil || src == nil {
+	} else if p.Likes == nil || src == nil {
 		return false
 	}
-	if *p.Favorites != *src {
+	if *p.Likes != *src {
 		return false
 	}
 	return true

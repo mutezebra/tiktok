@@ -54,5 +54,18 @@ func NewRouter() *server.Hertz {
 		}
 	}
 
+	interaction := v1.Group("/interaction")
+	{
+		auth := interaction.Group("/auth")
+		auth.Use(middleware.JWT())
+		{
+			auth.POST("/like", handler.LikeHandler())
+			auth.POST("/dislike", handler.DisLikeHandler())
+			auth.POST("/like-list", handler.LikeListHandler())
+			auth.POST("/comment", handler.CommentHandler())
+			auth.POST("/comment-list", handler.CommentListHandler())
+			auth.POST("delete-comment", handler.DeleteCommentHandler())
+		}
+	}
 	return h
 }

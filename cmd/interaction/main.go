@@ -5,33 +5,26 @@ import (
 	"net"
 
 	"github.com/cloudwego/kitex/pkg/transmeta"
-
-	"github.com/Mutezebra/tiktok/app/interface/persistence/cache"
-
-	"github.com/Mutezebra/tiktok/cmd/video/pack"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
-
-	"github.com/Mutezebra/tiktok/pkg/oss"
-
-	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
-
 	"github.com/cloudwego/kitex/server"
 
+	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
+	"github.com/Mutezebra/tiktok/cmd/interaction/pack"
 	"github.com/Mutezebra/tiktok/config"
 	"github.com/Mutezebra/tiktok/consts"
+	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction/interactionservice"
 	"github.com/Mutezebra/tiktok/pkg/inject"
 	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 func main() {
-	VideoInit()
-	registry := inject.NewRegistry(pack.VideoRegistry())
+	InteractionInit()
+	registry := inject.NewRegistry(pack.InteractionRegistry())
 	defer registry.Close()
 	registry.MustRegister(context.Background())
 
-	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.VideoServiceName].Address)
-	srv := videoservice.NewServer(
-		inject.ApplyVideo(),
+	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.InteractionServiceName].Address)
+	srv := interactionservice.NewServer(
+		inject.ApplyInteraction(),
 		server.WithServiceAddr(addr),
 		server.WithMetaHandler(transmeta.ServerTTHeaderHandler))
 	err := srv.Run()
@@ -40,10 +33,8 @@ func main() {
 	}
 }
 
-func VideoInit() {
+func InteractionInit() {
 	config.InitConfig()
 	log.InitLog()
 	database.InitMysql()
-	cache.InitCache()
-	oss.InitOSS()
 }

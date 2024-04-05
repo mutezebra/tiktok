@@ -9,11 +9,10 @@ const (
 
 // User
 const (
-	UserRegister           = 10000
-	EncryptPassword        = 10001
-	DatabaseCreateUser     = 10002
-	EmailFormat            = 10003
-	DatabaseUserNameExists = 10004
+	UserRegister       = 10000
+	EncryptPassword    = 10001
+	DatabaseCreateUser = 10002
+	EmailFormat        = 10003
 
 	UserLogin               = 10010
 	GetPasswordFromDatabase = 10011
@@ -42,49 +41,4 @@ const (
 	DatabaseGetTotpSecret    = 10061
 	VerifyOtpCode            = 10062
 	DatabaseUpdateTotpStatus = 10063
-)
-
-// Video
-const (
-	VideoFeedStreamSend = 20000
-	DatabaseGetVideoUrl = 20001
-	OssGetVideoFeed     = 20002
-	IncrView            = 20003
-
-	OssUploadVideo      = 20010
-	OssUploadVideoCover = 20011
-	DatabaseCreateVideo = 20012
-	OutOfLimitCoverSize = 20013
-
-	DatabaseGetVideoList = 20020
-
-	DatabaseSearchVideo = 20030
-
-	DatabaseGetVideoInfo = 20040
-)
-
-// Interaction
-const (
-	DatabaseLikeComment                 = 30000
-	DatabaseLikeVideo                   = 30001
-	DatabaseWhetherCommentLikeItemExist = 30002
-	CommentAlreadyLiked                 = 30003
-	DatabaseWhetherVideoLikeItemExist   = 30004
-	VideoAlreadyLiked                   = 30005
-	DatabaseIfCommentExist              = 30006
-	CommentNotExist                     = 30007
-	DatabaseIfVideoExist                = 30008
-	VideoNotExist                       = 30009
-
-	DatabaseDislikeComment = 30010
-	DatabaseDislikeVideo   = 30011
-
-	DatabaseLikeList = 30020
-
-	DatabaseGetCommentRootID = 30030
-	DatabaseCreateComment    = 30031
-
-	DatabaseGetCommentList = 30040
-
-	DatabaseDeleteComment = 30050
 )

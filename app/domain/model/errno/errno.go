@@ -1,16 +1,12 @@
 package errno
 
-import "github.com/cloudwego/kitex/pkg/kerrors"
-
 type Errno interface {
-	BizStatusCode() int32
-	BizMessage() string
-	BizExtra() map[string]string
 	Error() string
+	Code() int
 }
 
 type errno struct {
-	code int32
+	code int
 	msg  string
 }
 
@@ -18,25 +14,19 @@ func (e *errno) Error() string {
 	return e.msg
 }
 
-func (e *errno) BizStatusCode() int32 {
+func (e *errno) Code() int {
 	return e.code
 }
 
-func (e *errno) BizMessage() string {
-	return e.msg
-}
-
-func (e *errno) BizExtra() map[string]string {
-	// do nothing
-	return nil
-}
-
-func New(code int32, msg string) Errno {
-	return kerrors.NewBizStatusError(code, msg)
+func New(code int, msg string) Errno {
+	return &errno{
+		code: code,
+		msg:  msg,
+	}
 }
 
 type withMessage struct {
-	code  int32
+	code  int
 	msg   string
 	cause error
 }
@@ -45,16 +35,8 @@ func (w *withMessage) Error() string {
 	return w.msg + " cause: " + w.cause.Error()
 }
 
-func (w *withMessage) BizStatusCode() int32 {
+func (w *withMessage) Code() int {
 	return w.code
-}
-
-func (w *withMessage) BizMessage() string {
-	return w.msg + " cause: " + w.cause.Error()
-}
-
-func (w *withMessage) BizExtra() map[string]string {
-	return nil
 }
 
 func (w *withMessage) Cause() error {
@@ -70,7 +52,7 @@ func WithError(errno Errno, err error) Errno {
 	}
 
 	return &withMessage{
-		code:  errno.BizStatusCode(),
+		code:  errno.Code(),
 		msg:   errno.Error(),
 		cause: err,
 	}

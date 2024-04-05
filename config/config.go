@@ -14,7 +14,6 @@ type Config struct {
 	Mysql   *Mysql              `yaml:"mysql"`
 	Etcd    *Etcd               `yaml:"etcd"`
 	QiNiu   *QiNiu              `yaml:"qiniu"`
-	Redis   *Redis              `yaml:"redis"`
 }
 
 type System struct {
@@ -50,21 +49,12 @@ type QiNiu struct {
 	AvatarPath        string `yaml:"avatar_path" mapstructure:"avatar_path"`
 	DefaultAvatarPath string `yaml:"default_avatar_path" mapstructure:"default_avatar_path"`
 	VideoPath         string `yaml:"video_path" mapstructure:"video_path"`
-	CoverPath         string `yaml:"cover_path" mapstructure:"cover_path"`
 	Bucket            string `yaml:"bucket" mapstructure:"bucket"`
 	Domain            string `yaml:"domain" mapstructure:"domain"`
 }
 
-type Redis struct {
-	Host     string `yaml:"host" mapstructure:"host"`
-	Port     string `yaml:"port" mapstructure:"port"`
-	Database int    `yaml:"database" mapstructure:"database"`
-	Network  string `yaml:"network" mapstructure:"network"`
-	Password string `yaml:"password" mapstructure:"password"`
-}
-
 // InitConfig initializes the configuration for the project
-// and unmarshall the configuration into the global variable "Conf"
+// and unmarshals the configuration into the global variable "Conf"
 func InitConfig() {
 	wd, _ := os.Getwd()
 

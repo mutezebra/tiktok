@@ -1,10 +1,7 @@
 package log
 
 import (
-	"fmt"
 	"os"
-	"path"
-	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -30,12 +27,8 @@ func InitLog() {
 		logger.SetLevel(logrus.WarnLevel)
 	}
 
-	logger.SetFormatter(&logrus.TextFormatter{
+	logger.SetFormatter(&logrus.TextFormatter{ // 记录的是打日志的位置
 		TimestampFormat: "2006-01-02 15:04:05",
-		CallerPrettyfier: func(frame *runtime.Frame) (function string, file string) {
-			fileName := path.Base(frame.File)
-			return frame.Function, fmt.Sprintf("%s:%d", fileName, frame.Line)
-		},
 	})
 
 	LogrusObj = &Logger{

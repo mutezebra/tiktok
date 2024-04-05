@@ -10,7 +10,4 @@ const (
 	HeaderRefreshTokenKey     = "Refresh-Token"
 
 	FormUserAvatarKey = "avatar"
-
-	FormVideoKey      = "video"
-	FormVideoCoverKey = "cover"
 )

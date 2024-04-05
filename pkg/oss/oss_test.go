@@ -12,7 +12,7 @@ func TestModel_DownloadAvatar(t *testing.T) {
 	config.InitConfig()
 	InitOSS()
 	model := NewOssModel()
-	url := model.DownloadVideo(context.Background(), "static/videos/covers/1749124012052480.png")
+	url := model.DownloadAvatar(context.Background(), "static/avatars/968796674723840.png")
 	if url == "" {
 		fmt.Println("is empty")
 	}

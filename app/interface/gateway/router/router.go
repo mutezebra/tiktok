@@ -18,7 +18,6 @@ func NewRouter() *server.Hertz {
 		server.WithHostPorts(config.Conf.Service[consts.GatewayServiceKey].Address),
 		server.WithMaxRequestBodySize(100*consts.MB),
 	)
-
 	h.GET("/ping", func(ctx context.Context, c *app.RequestContext) {
 		c.String(200, "pong")
 	})
@@ -40,32 +39,5 @@ func NewRouter() *server.Hertz {
 		}
 	}
 
-	video := v1.Group("/video")
-	{
-		video.GET("/feed", handler.VideoFeedHandler())
-		video.GET("/popular", handler.VideoPopularHandler())
-		video.POST("/search", handler.VideoSearchHandler())
-
-		auth := video.Group("/auth")
-		auth.Use(middleware.JWT())
-		{
-			auth.POST("/publish", handler.VideoPublishHandler())
-			auth.GET("/list", handler.VideoListHandler())
-		}
-	}
-
-	interaction := v1.Group("/interaction")
-	{
-		auth := interaction.Group("/auth")
-		auth.Use(middleware.JWT())
-		{
-			auth.POST("/like", handler.LikeHandler())
-			auth.POST("/dislike", handler.DisLikeHandler())
-			auth.POST("/like-list", handler.LikeListHandler())
-			auth.POST("/comment", handler.CommentHandler())
-			auth.POST("/comment-list", handler.CommentListHandler())
-			auth.POST("delete-comment", handler.DeleteCommentHandler())
-		}
-	}
 	return h
 }

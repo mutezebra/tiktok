@@ -9,11 +9,10 @@ var (
 
 // user
 var (
-	UserRegisterError           = New(UserRegister, "")
-	EncryptPasswordError        = New(EncryptPassword, "encrypt password failed")
-	DatabaseCreateUserError     = New(DatabaseCreateUser, "create user failed")
-	EmailFormatError            = New(EmailFormat, "email format errno")
-	DatabaseUserNameExistsError = New(DatabaseUserNameExists, "user name exists in database")
+	UserRegisterError       = New(UserRegister, "")
+	EncryptPasswordError    = New(EncryptPassword, "encrypt password failed")
+	DatabaseCreateUserError = New(DatabaseCreateUser, "create user failed")
+	EmailFormatError        = New(EmailFormat, "email format errno")
 
 	UserLoginError               = New(UserLogin, "")
 	GetPasswordFromDatabaseError = New(GetPasswordFromDatabase, "get password digest from db failed")
@@ -41,49 +40,4 @@ var (
 	DatabaseGetTotpSecretError    = New(DatabaseGetTotpSecret, "get totp secret from database failed")
 	VerifyOtpCodeError            = New(VerifyOtpCode, "verify code with secret failed")
 	DatabaseUpdateTotpStatusError = New(DatabaseUpdateTotpStatus, "update totp status in database failed")
-)
-
-// video
-var (
-	VideoFeedStreamSendError = New(VideoFeedStreamSend, "stream of video feed send resp failed")
-	DatabaseGetVideoUrlError = New(DatabaseGetVideoUrl, "database get video url failed")
-	OssGetVideoFeedError     = New(OssGetVideoFeed, "oss get video feed failed")
-	IncrViewError            = New(IncrView, "incr view failed")
-
-	OssUploadVideoError      = New(OssUploadVideo, "oss upload video failed")
-	OssUploadVideoCoverError = New(OssUploadVideoCover, "oss upload video cover failed")
-	DatabaseCreateVideoError = New(DatabaseCreateVideo, "database create video failed")
-	OutOfLimitCoverSizeErrno = New(OutOfLimitCoverSize, "out of limit of cover size")
-
-	DatabaseGetVideoListError = New(DatabaseGetVideoList, "database get video list failed")
-
-	DatabaseSearchVideoError = New(DatabaseSearchVideo, "database search video failed")
-
-	DatabaseGetVideoInfoError = New(DatabaseGetVideoInfo, "database get video info failed")
-)
-
-// interaction
-var (
-	DatabaseLikeCommentError                 = New(DatabaseLikeComment, "database like comment failed")
-	DatabaseLikeVideoError                   = New(DatabaseLikeVideo, "database like video failed")
-	DatabaseWhetherCommentLikeItemExistError = New(DatabaseWhetherCommentLikeItemExist, "database whether comment like item exist failed")
-	CommentAlreadyLikedError                 = New(CommentAlreadyLiked, "comment already liked")
-	DatabaseWhetherVideoLikeItemExistError   = New(DatabaseWhetherVideoLikeItemExist, "database if video like item exist failed")
-	VideoAlreadyLikedError                   = New(VideoAlreadyLiked, "video already liked")
-	DatabaseIfCommentExistError              = New(DatabaseIfCommentExist, "database if comment exist failed")
-	CommentNotExistError                     = New(CommentNotExist, "comment not exist")
-	DatabaseIfVideoExistError                = New(DatabaseIfVideoExist, "database if video exist failed")
-	VideoNotExistError                       = New(VideoNotExist, "video not exist")
-
-	DatabaseDislikeCommentError = New(DatabaseDislikeComment, "database dislike comment failed")
-	DatabaseDislikeVideoError   = New(DatabaseDislikeVideo, "database dislike video failed")
-
-	DatabaseLikeListError = New(DatabaseLikeList, "database get like list failed")
-
-	DatabaseGetCommentRootIDError = New(DatabaseGetCommentRootID, "database get comment root id failed")
-	DatabaseCreateCommentError    = New(DatabaseCreateComment, "database create comment failed")
-
-	DatabaseGetCommentListError = New(DatabaseGetCommentList, "database get comment list failed")
-
-	DatabaseDeleteCommentError = New(DatabaseDeleteComment, "database delete comment failed")
 )

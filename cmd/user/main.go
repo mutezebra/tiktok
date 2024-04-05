@@ -4,8 +4,6 @@ import (
 	"context"
 	"net"
 
-	"github.com/cloudwego/kitex/pkg/transmeta"
-
 	"github.com/Mutezebra/tiktok/pkg/oss"
 
 	"github.com/Mutezebra/tiktok/cmd/user/pack"
@@ -28,10 +26,7 @@ func main() {
 	registry.MustRegister(context.Background())
 
 	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.UserServiceName].Address)
-	srv := userservice.NewServer(
-		inject.ApplyUser(),
-		server.WithServiceAddr(addr),
-		server.WithMetaHandler(transmeta.ServerTTHeaderHandler))
+	srv := userservice.NewServer(inject.ApplyUser(), server.WithServiceAddr(addr))
 	err := srv.Run()
 	if err != nil {
 		log.LogrusObj.Panic(err)

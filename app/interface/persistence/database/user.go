@@ -20,13 +20,24 @@ func NewUserRepository() *UserRepository {
 // CreateUser create a repository.User object in database.
 func (repo *UserRepository) CreateUser(ctx context.Context, user *repository.User) error {
 	_, err := repo.db.ExecContext(ctx,
-		"INSERT INTO user(id,user_name,email,password_digest,gender,avatar,fans,follows,totp_enable,totp_secret,create_at,update_at,delete_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+		"INSERT INTO user(id,user_name,email,password_digest,gender,avatar,fans,follows,totp_enable,totp_secret,create_at,update_at,delete_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ",
 		user.ID, user.UserName, user.Email, user.PasswordDigest,
 		user.Gender, user.Avatar, user.Fans, user.Follows,
 		user.TotpEnable, user.TotpSecret, user.CreateAt, user.UpdateAt,
 		user.DeleteAt)
 
 	return err
+}
+
+// UserNameExists checks if a username already exists in the database.
+func (repo *UserRepository) UserNameExists(ctx context.Context, userName string) (bool, error) {
+	var exists bool
+	query := "SELECT EXISTS(SELECT 1 FROM user WHERE user_name=?)"
+	err := repo.db.QueryRowContext(ctx, query, userName).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
 }
 
 func (repo *UserRepository) GetPasswordAndIDByName(ctx context.Context, name string) (string, int64, error) {

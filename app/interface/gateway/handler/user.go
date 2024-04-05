@@ -68,6 +68,7 @@ func UserInfoHandler() app.HandlerFunc {
 			pack.SendFailedResponse(c, err)
 			return
 		}
+
 		pack.SendResponse(c, resp)
 		return
 	}

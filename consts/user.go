@@ -1,6 +1,8 @@
 package consts
 
 const (
-	UserServiceName = "user"
-	UserUseCase     = "user-use-case"
+	UserServiceName        = "user"
+	VideoServiceName       = "video"
+	InteractionServiceName = "interaction"
+	UserUseCase            = "user-use-case"
 )

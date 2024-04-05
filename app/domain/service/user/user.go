@@ -16,13 +16,22 @@ import (
 )
 
 type Service struct {
-	repo repository.UserRepository
+	Repo repository.UserRepository
 	OSS  model.OSS
 	MFA  model.MFA
 }
 
-func NewService(repo repository.UserRepository, oss model.OSS, mfa model.MFA) *Service {
-	return &Service{repo: repo, OSS: oss, MFA: mfa}
+func NewService(service *Service) *Service {
+	if service.Repo == nil {
+		panic("user service.Repo should not be nil")
+	}
+	if service.OSS == nil {
+		panic("user service.OSS should not be nil")
+	}
+	if service.MFA == nil {
+		panic("user service.MFA should not be nil")
+	}
+	return service
 }
 
 func (srv *Service) GenerateID() int64 {

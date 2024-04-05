@@ -17,7 +17,7 @@ type Response struct {
 }
 
 type Base struct {
-	Code int    `json:"code"`
+	Code int32  `json:"code"`
 	Msg  string `json:"msg"`
 }
 
@@ -33,19 +33,18 @@ func SendResponse(c *app.RequestContext, data any) {
 	c.JSON(http.StatusOK, resp)
 }
 
-func SendFailedResponse(c *app.RequestContext, error error) {
-	log.LogrusObj.Error(error)
-
+func SendFailedResponse(c *app.RequestContext, err error) {
+	log.LogrusObj.Error(err)
 	var e errno.Errno
-	ok := errors.As(error, &e)
+	ok := errors.As(err, &e)
 	if !ok {
-		e = errno.Convert(error)
+		e = errno.Convert(err)
 	}
 
 	resp := &Response{
 		Base: Base{
-			e.Code(),
-			e.Error(),
+			e.BizStatusCode(),
+			e.BizMessage(),
 		},
 	}
 	c.JSON(http.StatusOK, resp)

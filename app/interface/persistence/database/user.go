@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"github.com/pkg/errors"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -25,8 +26,10 @@ func (repo *UserRepository) CreateUser(ctx context.Context, user *repository.Use
 		user.Gender, user.Avatar, user.Fans, user.Follows,
 		user.TotpEnable, user.TotpSecret, user.CreateAt, user.UpdateAt,
 		user.DeleteAt)
-
-	return err
+	if err != nil {
+		return errors.Wrap(err, "insert item to user failed")
+	}
+	return nil
 }
 
 // UserNameExists checks if a username already exists in the database.
@@ -35,7 +38,7 @@ func (repo *UserRepository) UserNameExists(ctx context.Context, userName string)
 	query := "SELECT EXISTS(SELECT 1 FROM user WHERE user_name=?)"
 	err := repo.db.QueryRowContext(ctx, query, userName).Scan(&exists)
 	if err != nil {
-		return false, err
+		return false, errors.Wrap(err, "query user by name failed")
 	}
 	return exists, nil
 }
@@ -45,7 +48,7 @@ func (repo *UserRepository) GetPasswordAndIDByName(ctx context.Context, name str
 	var id int64
 	if err := repo.db.QueryRowContext(ctx, "SELECT password_digest,id from user WHERE user_name=? LIMIT 1", name).Scan(
 		&passwordDigest, &id); err != nil {
-		return "", 0, err
+		return "", 0, errors.Wrap(err, "query password and id by name failed")
 	}
 
 	return passwordDigest, id, nil
@@ -59,7 +62,7 @@ func (repo *UserRepository) UserInfoByID(ctx context.Context, id int64) (*reposi
 		&user.Gender, &user.Avatar, &user.Fans, &user.Follows,
 		&user.TotpEnable, &user.TotpSecret, &user.CreateAt, &user.UpdateAt,
 		&user.DeleteAt); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "query user by id failed")
 	}
 
 	return &user, nil
@@ -73,7 +76,7 @@ func (repo *UserRepository) UserInfoByName(ctx context.Context, name string) (*r
 		&user.Gender, &user.Avatar, &user.Fans, &user.Follows,
 		&user.TotpEnable, &user.TotpSecret, &user.CreateAt, &user.UpdateAt,
 		&user.DeleteAt); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "query user by name failed")
 	}
 
 	return &user, nil
@@ -81,38 +84,59 @@ func (repo *UserRepository) UserInfoByName(ctx context.Context, name string) (*r
 
 func (repo *UserRepository) UpdateUserAvatar(ctx context.Context, filename string, uid int64) error {
 	_, err := repo.db.ExecContext(ctx, "UPDATE user SET avatar=? WHERE id=?", filename, uid)
-	return err
+	if err != nil {
+		return errors.Wrap(err, "update user avatar failed")
+	}
+	return nil
 }
 
 func (repo *UserRepository) GetUserAvatar(ctx context.Context, uid int64) (string, error) {
 	var url string
 	err := repo.db.QueryRowContext(ctx, "SELECT avatar FROM user WHERE id=?", uid).Scan(&url)
-	return url, err
+	if err != nil {
+		return "", errors.Wrap(err, "query user avatar failed")
+	}
+	return url, nil
 }
 
 func (repo *UserRepository) UpdateTotpSecret(ctx context.Context, uid int64, secret string) error {
 	_, err := repo.db.ExecContext(ctx, "UPDATE user SET totp_secret=? WHERE id=?", secret, uid)
-	return err
+	if err != nil {
+		return errors.Wrap(err, "update totp secret failed")
+	}
+	return nil
 }
 
 func (repo *UserRepository) GetTotpSecret(ctx context.Context, uid int64) (string, error) {
 	var secret string
 	err := repo.db.QueryRowContext(ctx, "SELECT totp_secret FROM user WHERE id=?", uid).Scan(&secret)
-	return secret, err
+	if err != nil {
+		return "", errors.Wrap(err, "query totp secret failed")
+	}
+	return secret, nil
 }
 
 func (repo *UserRepository) UpdateTotpStatus(ctx context.Context, status bool, uid int64) error {
 	_, err := repo.db.ExecContext(ctx, "UPDATE user SET totp_enable=? WHERE id=?", status, uid)
-	return err
+	if err != nil {
+		return errors.Wrap(err, "update totp status failed")
+	}
+	return nil
 }
 
 func (repo *UserRepository) UpdateColumnByKV(ctx context.Context, uid int64, k, v string) error {
 	_, err := repo.db.ExecContext(ctx, "UPDATE user SET ?=? WHERE id=?", k, v, uid)
-	return err
+	if err != nil {
+		return errors.Wrap(err, "update column by kv failed")
+	}
+	return nil
 }
 
 func (repo *UserRepository) GetColumnByKUID(ctx context.Context, key string, uid int64) (string, error) {
 	var value string
 	err := repo.db.QueryRowContext(ctx, "SELECT ? FROM user WHERE id=?", key, uid).Scan(&value)
-	return value, err
+	if err != nil {
+		return "", errors.Wrap(err, "get column by kuid failed")
+	}
+	return value, nil
 }

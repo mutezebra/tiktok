@@ -135,7 +135,6 @@ func (s *Service) IncrViews(ctx context.Context, vid int64) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("i am here")
 	return s.Cache.SetVideoViews(vid, views)
 }
 

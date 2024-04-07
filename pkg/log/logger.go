@@ -1,12 +1,12 @@
 package log
 
 import (
+	errors2 "errors"
 	"fmt"
-	"runtime"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"strings"
 	"sync"
-
-	"github.com/sirupsen/logrus"
 )
 
 type Logger struct {
@@ -32,23 +32,14 @@ func (l *Logger) Error(v any) {
 
 func (l *Logger) formatCallStack(v any) *string {
 	builder := l.pool.Get().(*strings.Builder)
+	builder.WriteString(fmt.Sprintf("%v  \n", v))
 
 	err, ok := v.(error)
 	if ok {
-		builder.WriteString(fmt.Sprintf("%s  \n", err.Error()))
-	} else {
-		builder.WriteString(fmt.Sprintf("%v  \n", v))
-	}
-
-	const depth = 32
-	var pcs [depth]uintptr
-	n := runtime.Callers(3, pcs[:])
-	st := make([]uintptr, n)
-	st = pcs[0:n]
-	for _, pc := range st {
-		fn := runtime.FuncForPC(pc)
-		file, line := fn.FileLine(pc)
-		builder.WriteString(fmt.Sprintf("\t%s:%d %s\n", file, line, fn.Name()))
+		originErr := errors.Cause(err)
+		if errors2.Is(originErr, err) {
+			builder.WriteString(fmt.Sprintf(" originl error: %v  \n", errors.Cause(err)))
+		}
 	}
 
 	str := builder.String()

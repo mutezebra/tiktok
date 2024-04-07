@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"strconv"
 	"sync"
 
@@ -51,7 +52,7 @@ func (cache *VideoCacheRepo) SetVideoViews(vid int64, views int32) error {
 	key := fmt.Sprintf("%s%d", consts.CacheVideoViewKeyPrefix, vid)
 	err := cache.client.SetEx(cache.ctx, key, views, consts.CacheVideoViewExpireTime).Err()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "set video views failed")
 	}
 	if cache.popularRankModel.enablePopularRanking {
 		cache.popularRankModel.AddToRank(vid, views)
@@ -63,12 +64,16 @@ func (cache *VideoCacheRepo) IncrVideoViews(vid int64) error {
 	key := fmt.Sprintf("%s%d", consts.CacheVideoViewKeyPrefix, vid)
 	views, err := cache.client.Incr(cache.ctx, key).Result()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "incr video views failed")
 	}
 	if cache.popularRankModel.enablePopularRanking {
 		cache.popularRankModel.AddToRank(vid, int32(views))
 	}
-	return cache.client.Expire(cache.ctx, key, consts.CacheVideoViewExpireTime).Err()
+	err = cache.client.Expire(cache.ctx, key, consts.CacheVideoViewExpireTime).Err()
+	if err != nil {
+		return errors.Wrap(err, "expire video views failed")
+	}
+	return nil
 }
 
 func (cache *VideoCacheRepo) EnablePopularRanking() {

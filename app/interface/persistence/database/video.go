@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/pkg/errors"
 
 	"github.com/Mutezebra/tiktok/pkg/log"
 
@@ -23,11 +24,14 @@ func (repo *VideoRepository) CreateVideo(ctx context.Context, video *repository.
 		video.Likes, video.Views, video.CreateAt, video.UpdateAt,
 		video.DeleteAt)
 	if err != nil {
-		return 0, err
+		return 0, errors.Wrap(err, "failed to insert video")
 	}
 
 	vid, err = res.LastInsertId()
-	return vid, err
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to get last insert id")
+	}
+	return vid, nil
 }
 
 func (repo *VideoRepository) GetVideoInfo(ctx context.Context, vid int64) (*repository.Video, error) {
@@ -38,7 +42,10 @@ func (repo *VideoRepository) GetVideoInfo(ctx context.Context, vid int64) (*repo
 		&video.Likes, &video.Views, &video.CreateAt, &video.UpdateAt,
 		&video.DeleteAt)
 
-	return &video, err
+	if err != nil {
+		return nil, err
+	}
+	return &video, nil
 }
 
 func (repo *VideoRepository) GetVideoListByID(ctx context.Context, uid int64, page int, size int) ([]repository.Video, error) {
@@ -46,7 +53,7 @@ func (repo *VideoRepository) GetVideoListByID(ctx context.Context, uid int64, pa
 
 	rows, err := repo.db.QueryContext(ctx, "SELECT * FROM video WHERE uid = ? LIMIT ? OFFSET ?", uid, size, offset)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get video list by uid")
 	}
 	defer func() { _ = rows.Close() }()
 
@@ -59,13 +66,13 @@ func (repo *VideoRepository) GetVideoListByID(ctx context.Context, uid int64, pa
 			&video.Likes, &video.Views, &video.CreateAt, &video.UpdateAt,
 			&video.DeleteAt)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to scan video")
 		}
 		videos = append(videos, video)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get video list by uid")
 	}
 
 	return videos, nil
@@ -74,7 +81,7 @@ func (repo *VideoRepository) GetVideoListByID(ctx context.Context, uid int64, pa
 func (repo *VideoRepository) GetVideosInfo(ctx context.Context, vids []int64) ([]repository.Video, error) {
 	stmt, err := repo.db.Prepare("SELECT * FROM video WHERE id=?")
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to prepare sql")
 	}
 	defer func() { _ = stmt.Close() }()
 
@@ -83,7 +90,7 @@ func (repo *VideoRepository) GetVideosInfo(ctx context.Context, vids []int64) ([
 	for _, vid := range vids {
 		row := stmt.QueryRowContext(ctx, vid)
 		if row.Err() != nil {
-			return nil, row.Err()
+			return nil, errors.Wrap(row.Err(), "failed to query row")
 		}
 		video := repository.Video{}
 		if err = row.Scan(
@@ -91,7 +98,7 @@ func (repo *VideoRepository) GetVideosInfo(ctx context.Context, vids []int64) ([
 			&video.Intro, &video.Title, &video.VideoExt, &video.CoverExt, &video.Starts,
 			&video.Likes, &video.Views, &video.CreateAt, &video.UpdateAt,
 			&video.DeleteAt); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to scan row")
 		}
 		videos = append(videos, video)
 	}
@@ -104,7 +111,7 @@ func (repo *VideoRepository) SearchVideo(ctx context.Context, content string, pa
 
 	rows, err := repo.db.QueryContext(ctx, "SELECT * FROM video WHERE intro LIKE ? OR title LIKE ? LIMIT ? OFFSET ?", like, like, size, offset)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to search video")
 	}
 	defer func() { _ = rows.Close() }()
 
@@ -122,7 +129,7 @@ func (repo *VideoRepository) SearchVideo(ctx context.Context, content string, pa
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to search video")
 	}
 
 	return videos, nil
@@ -131,22 +138,29 @@ func (repo *VideoRepository) SearchVideo(ctx context.Context, content string, pa
 func (repo *VideoRepository) GetVideoUrl(ctx context.Context, vid int64) (string, error) {
 	var url string
 	err := repo.db.QueryRowContext(ctx, "SELECT video_url FROM video where id=? LIMIT 1", vid).Scan(&url)
-
-	return url, err
+	if err != nil {
+		return "", errors.Wrap(err, "failed to get video url")
+	}
+	return url, nil
 }
 
 func (repo *VideoRepository) GetValByColumn(ctx context.Context, vid int64, column string) (string, error) {
 	var val string
 	query := fmt.Sprintf("SELECT %s FROM video WHERE id=%d LIMIT 1", column, vid)
 	err := repo.db.QueryRowContext(ctx, query).Scan(&val)
-	return val, err
+	if err != nil {
+		return "", errors.Wrap(err, "failed to get value by column")
+	}
+	return val, nil
 }
 
 func (repo *VideoRepository) GetVideoViews(ctx context.Context, vid int64) (int32, error) {
 	var views int32
 	err := repo.db.QueryRowContext(ctx, "SELECT views FROM video where id=? LIMIT 1", vid).Scan(&views)
-
-	return views, err
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to get video views")
+	}
+	return views, nil
 }
 
 func (repo *VideoRepository) UpdateViews(kvs map[int64]int32) {

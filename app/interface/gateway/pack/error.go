@@ -6,7 +6,6 @@ import (
 )
 
 func ReturnError(errno errno2.Errno, err error) error {
-	errno = errno2.WithError(errno, err)
-	log.LogrusObj.Error(errno)
+	log.LogrusObj.Error(errno2.WithError(errno, err))
 	return errno
 }

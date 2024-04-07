@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"io"
 
 	"github.com/Mutezebra/tiktok/consts"
@@ -39,7 +40,7 @@ func (m *Model) UploadAvatar(ctx context.Context, name string, data []byte) (err
 	length := int64(len(data))
 
 	err = formLoader.Put(ctx, ret, upToken, path, bytes.NewReader(data), length, putExtra)
-	return err, path
+	return errors.Wrap(err, "upload avatar failed"), path
 }
 
 func (m *Model) DownloadAvatar(ctx context.Context, path string) string {
@@ -67,7 +68,7 @@ func (m *Model) UploadVideo(ctx context.Context, name string, data []byte) (err 
 	putExtra := storage.RputV2Extra{PartSize: 2 * consts.MB}
 
 	err = resumeUploader.Put(ctx, &ret, upToken, path, bytes.NewReader(data), int64(len(data)), &putExtra)
-	return err, path
+	return errors.Wrap(err, "upload video failed"), path
 }
 
 func (m *Model) DownloadVideo(ctx context.Context, path string) string {
@@ -90,12 +91,12 @@ func (m *Model) VideoFeed(name string) ([]byte, error) {
 		Range:           "bytes=0-",
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "get video feed failed")
 	}
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "read video feed failed")
 	}
 
 	return data, nil
@@ -121,7 +122,7 @@ func (m *Model) UploadVideoCover(ctx context.Context, name string, data []byte) 
 	length := int64(len(data))
 
 	err = formLoader.Put(ctx, ret, upToken, path, bytes.NewReader(data), length, putExtra)
-	return err, path
+	return errors.Wrap(err, "upload video cover failed"), path
 }
 
 func (m *Model) DownloadVideoCover(ctx context.Context, path string) string {

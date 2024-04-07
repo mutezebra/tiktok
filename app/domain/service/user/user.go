@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"net/mail"
 	"path/filepath"
 	"strings"
@@ -42,7 +43,7 @@ func (srv *Service) EncryptPassword(password string) (string, error) {
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
 	if err != nil {
-		return "nil", err
+		return "nil", errors.Wrap(err, "failed to encrypt password")
 	}
 	result := string(hashPassword)
 
@@ -56,7 +57,7 @@ func (srv *Service) CheckPassword(password string, passwordDigest string) bool {
 func (srv *Service) VerifyEmail(email string) (string, error) {
 	_, err := mail.ParseAddress(email)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "invalid email format")
 	}
 	return email, nil
 }

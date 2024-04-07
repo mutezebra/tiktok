@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	base "encoding/base64"
+	"github.com/pkg/errors"
 	"image/png"
 
 	"github.com/pquerna/otp/totp"
@@ -21,18 +22,18 @@ func (m *MFAModel) GenerateTotp(userName string) (secret string, base64 string, 
 		AccountName: userName,
 	})
 	if err != nil {
-		return
+		return "", "", errors.Wrap(err, "failed to generate totp")
 	}
 
 	img, err := key.Image(200, 200)
 	if err != nil {
-		return
+		return "", "", errors.Wrap(err, "failed to generate totp image")
 	}
 
 	var buf bytes.Buffer
 	err = png.Encode(&buf, img)
 	if err != nil {
-		return
+		return "", "", errors.Wrap(err, "failed to encode totp image")
 	}
 
 	return key.Secret(), base.StdEncoding.EncodeToString(buf.Bytes()), nil

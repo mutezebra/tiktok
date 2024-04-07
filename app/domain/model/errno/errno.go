@@ -1,6 +1,9 @@
 package errno
 
-import "github.com/cloudwego/kitex/pkg/kerrors"
+import (
+	"fmt"
+	"github.com/cloudwego/kitex/pkg/kerrors"
+)
 
 type Errno interface {
 	BizStatusCode() int32
@@ -15,7 +18,7 @@ type errno struct {
 }
 
 func (e *errno) Error() string {
-	return e.msg
+	return fmt.Sprintf("Code: %d, Msg: %s", e.BizStatusCode(), e.BizMessage())
 }
 
 func (e *errno) BizStatusCode() int32 {
@@ -42,7 +45,7 @@ type withMessage struct {
 }
 
 func (w *withMessage) Error() string {
-	return w.msg + " cause: " + w.cause.Error()
+	return fmt.Sprintf("Code: %d, Msg: %s", w.BizStatusCode(), w.BizMessage())
 }
 
 func (w *withMessage) BizStatusCode() int32 {
@@ -50,7 +53,7 @@ func (w *withMessage) BizStatusCode() int32 {
 }
 
 func (w *withMessage) BizMessage() string {
-	return w.msg + " cause: " + w.cause.Error()
+	return fmt.Sprintf("%s cause: %s", w.msg, w.cause.Error())
 }
 
 func (w *withMessage) BizExtra() map[string]string {
@@ -74,22 +77,6 @@ func WithError(errno Errno, err error) Errno {
 		msg:   errno.Error(),
 		cause: err,
 	}
-
-}
-
-func Cause(err error) error {
-	type causer interface {
-		Cause() error
-	}
-
-	for err != nil {
-		cause, ok := err.(causer)
-		if !ok {
-			break
-		}
-		err = cause.Cause()
-	}
-	return err
 }
 
 func Convert(err error) Errno {

@@ -46,7 +46,7 @@ func (u *UserCase) Register(ctx context.Context, req *idl.RegisterReq) (r *idl.R
 		return nil, pack.ReturnError(errno.EncryptPasswordError, err)
 	}
 
-	if ok, err := u.repo.UserNameExists(ctx, dto.username); err != nil || !ok {
+	if exist, err := u.repo.UserNameExists(ctx, dto.username); err != nil || exist {
 		return nil, pack.ReturnError(errno.DatabaseUserNameExistsError, err)
 	}
 
@@ -54,9 +54,7 @@ func (u *UserCase) Register(ctx context.Context, req *idl.RegisterReq) (r *idl.R
 		return nil, pack.ReturnError(errno.DatabaseCreateUserError, err)
 	}
 
-	r = new(idl.RegisterResp)
-
-	return r, nil
+	return nil, nil
 }
 
 func (u *UserCase) Login(ctx context.Context, req *idl.LoginReq) (r *idl.LoginResp, err error) {

@@ -88,3 +88,8 @@ const (
 
 	DatabaseDeleteComment = 30050
 )
+
+// Chat
+const (
+	ChatRegister = 40000
+)

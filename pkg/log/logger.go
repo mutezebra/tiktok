@@ -37,7 +37,7 @@ func (l *Logger) formatCallStack(v any) *string {
 	err, ok := v.(error)
 	if ok {
 		originErr := errors.Cause(err)
-		if errors2.Is(originErr, err) {
+		if !errors2.Is(originErr, err) {
 			builder.WriteString(fmt.Sprintf(" originl error: %v  \n", errors.Cause(err)))
 		}
 	}

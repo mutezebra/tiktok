@@ -87,3 +87,8 @@ var (
 
 	DatabaseDeleteCommentError = New(DatabaseDeleteComment, "database delete comment failed")
 )
+
+// chat
+var (
+	ChatRegisterError = New(ChatRegister, "chat register failed")
+)

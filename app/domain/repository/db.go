@@ -96,3 +96,7 @@ type Comment struct {
 	CreateAt int64  `db:"create_at"`
 	DeleteAt int64  `db:"delete_at"`
 }
+
+type ChatRepository interface {
+	WhetherExistUser(ctx context.Context, uid int64) (bool, error)
+}

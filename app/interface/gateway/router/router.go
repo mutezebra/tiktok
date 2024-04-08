@@ -67,5 +67,14 @@ func NewRouter() *server.Hertz {
 			auth.POST("delete-comment", handler.DeleteCommentHandler())
 		}
 	}
+
+	social := v1.Group("/social")
+	{
+		auth := social.Group("/auth")
+		auth.Use(middleware.JWT())
+		{
+			auth.GET("/chat", handler.ChatHandler())
+		}
+	}
 	return h
 }

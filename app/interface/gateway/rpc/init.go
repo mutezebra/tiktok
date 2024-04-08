@@ -42,8 +42,8 @@ func Init() {
 	}
 
 	initClient(consts.UserServiceName)
-	initClient(consts.VideoServiceName)
-	initClient(consts.InteractionServiceName)
+	//initClient(consts.VideoServiceName)
+	//initClient(consts.InteractionServiceName)
 }
 
 func initClient(serviceName string) {

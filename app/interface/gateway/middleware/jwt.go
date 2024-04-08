@@ -24,7 +24,7 @@ func JWT() app.HandlerFunc {
 
 		claim, err, count := utils.CheckAndUpdateToken(aToken, rToken)
 		if err != nil {
-			pack.SendFailedResponse(c, errno.UnauthorizedErrno)
+			pack.SendFailedResponse(c, errno.WithError(errno.UnauthorizedErrno, err))
 			c.Abort()
 			return
 		}

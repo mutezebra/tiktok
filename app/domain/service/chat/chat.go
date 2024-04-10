@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
-	"fmt"
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
@@ -178,7 +177,6 @@ func (s *Service) MessagePersistence(asyncNumber int) {
 			go s.repo.CreateMessageWithChannel(s.ctx, ch)
 			for {
 				msg, err := s.readMsgFromMQ()
-				fmt.Println(msg.From)
 				if err != nil {
 					log.LogrusObj.Error(errors.WithMessage(err, "message persistence failed when read msg From mq"))
 					return

@@ -31,7 +31,7 @@ func (l *Logger) Error(v any) {
 }
 
 func (l *Logger) formatCallStack(v any) *string {
-	builder := l.pool.Get().(*strings.Builder)
+	builder := l.get()
 	builder.WriteString(fmt.Sprintf("%v  \n", v))
 
 	err, ok := v.(error)
@@ -43,13 +43,18 @@ func (l *Logger) formatCallStack(v any) *string {
 	}
 
 	str := builder.String()
-	l.clean(builder)
-	l.pool.Put(builder)
+
+	l.put(builder)
 	return &str
 }
 
-func (l *Logger) clean(str *strings.Builder) {
+func (l *Logger) get() *strings.Builder {
+	return l.pool.Get().(*strings.Builder)
+}
+
+func (l *Logger) put(str *strings.Builder) {
 	str.Reset()
+	l.pool.Put(str)
 }
 
 // Restore replaces "\\n" with "\n" in the panic msg.

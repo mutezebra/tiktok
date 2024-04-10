@@ -13,18 +13,6 @@ type Manager struct {
 	mu           sync.RWMutex
 }
 
-func (m *Manager) Send(content []byte, to int64) error {
-	m.mu.RLock()
-	ch, ok := m.msgChan[to]
-	m.mu.RUnlock()
-	if !ok {
-		return NotOnlineError
-	}
-
-	ch <- content
-	return nil
-}
-
 func (m *Manager) Register(from int64, conn *websocket.Conn, ch chan []byte) {
 	m.connMap[from] = conn
 	m.msgChan[from] = ch
@@ -36,6 +24,20 @@ func (m *Manager) Unregister(from int64) {
 	delete(m.msgChan, from)
 	delete(m.notOnlineTip, from)
 	m.mu.Unlock()
+}
+
+// Send the only error is 'to' not online
+// so for some part, you can ignore him
+func (m *Manager) Send(content []byte, to int64) error {
+	m.mu.RLock()
+	ch, ok := m.msgChan[to]
+	m.mu.RUnlock()
+	if !ok {
+		return NotOnlineError
+	}
+
+	ch <- content
+	return nil
 }
 
 var (

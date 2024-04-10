@@ -53,11 +53,8 @@ func (c *Client) Read() {
 				var msg Message
 				if err = json.Unmarshal(data, &msg); err != nil {
 					log.LogrusObj.Error(err)
-
-					if err = c.srv.WriteToConn("you message format is wrong", c.From); err != nil {
-						log.LogrusObj.Error(err)
-					}
-					break
+					_ = c.srv.WriteToConn([]byte("Manager: you message format is wrong"), c.From)
+					continue
 				}
 				msg.From = c.From
 				msg.To = c.To
@@ -83,7 +80,7 @@ func (c *Client) Write() {
 		data, ok := <-c.Channel
 		if ok {
 			if err := c.Conn.WriteMessage(websocket.TextMessage, data); err != nil {
-				log.LogrusObj.Error(fmt.Sprintf("websocket conn write failed,cause: %v", err))
+				log.LogrusObj.Error(fmt.Errorf("websocket conn write failed,cause: %v", err))
 			}
 		} else {
 			break

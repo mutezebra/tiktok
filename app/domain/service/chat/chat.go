@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
+	"encoding/json"
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
@@ -12,6 +13,7 @@ import (
 	"github.com/Mutezebra/tiktok/pkg/log"
 	"github.com/hertz-contrib/websocket"
 	"github.com/pkg/errors"
+	"io"
 	"os"
 	"os/signal"
 	"sync"
@@ -89,26 +91,107 @@ func (s *Service) Unregister(client *Client) error {
 	return nil
 }
 
+// SendMsg if return error, the client will close the connection
 func (s *Service) SendMsg(msg *Message) error {
 	var err error
 	switch msg.MsgType {
 	case consts.ChatTextMessage:
-		if err = s.Manager.Send([]byte(msg.Content), msg.To); errors.Is(err, NotOnlineError) {
-			s.Manager.SendNotOnlineTip(msg.From)
-		}
-		if err = s.writeMsgToMQ(msg); err != nil {
-			break
-		}
+		err = s.SendChatTextMessage(msg)
+		break
+
+	case consts.HistoryChatMessage:
+		err = s.SendHistoryChatMessage(msg)
+		break
+
+	case consts.NotReadMessage:
+		err = s.SendNotReadMessage(msg)
 		break
 
 	default:
-		return s.WriteToConn("not supported msg type", msg.From)
+		return s.WriteToConn([]byte("Manager: not supported msg type"), msg.From)
 	}
 	return err
 }
 
-func (s *Service) WriteToConn(message string, to int64) error {
-	return s.Manager.Send([]byte(message), to)
+// WriteToConn the only error is 'to' not online
+// so for some part, you can ignore him
+func (s *Service) WriteToConn(message []byte, to int64) error {
+	return s.Manager.Send(message, to)
+}
+
+func (s *Service) EnableSyncPersistence() {
+	s.EnableMQ()
+	go s.MessagePersistence(consts.ChatDefaultPersistenceGoroutineNum)
+}
+
+func (s *Service) SendChatTextMessage(msg *Message) error {
+	var err error
+	if result := msg.CheckMessageParams(); result != "" {
+		_ = s.WriteToConn([]byte(result), msg.From)
+		return nil
+	}
+
+	if err = s.Manager.Send([]byte(msg.Content), msg.To); errors.Is(err, NotOnlineError) {
+		s.Manager.SendNotOnlineTip(msg.From)
+	}
+	msg.HaveRead = true
+
+	if err = s.writeMsgToMQ(msg); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *Service) SendHistoryChatMessage(msg *Message) error {
+	if result := msg.CheckMessageParams(); result != "" {
+		_ = s.WriteToConn([]byte(result), msg.From)
+		return nil
+	}
+
+	req := msg.buildHistoryQueryReq()
+	repoMessages, err := s.repo.ChatMessageHistory(s.ctx, req)
+	if err != nil {
+		return errors.WithMessage(err, "failed to query chat message history")
+	}
+
+	if len(repoMessages) == 0 {
+		_ = s.WriteToConn([]byte("no chat history"), msg.From)
+		return nil
+	}
+
+	data, err := json.Marshal(repoMessages)
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal chat message history")
+	}
+
+	_ = s.Manager.Send(data, msg.From)
+	return nil
+}
+
+func (s *Service) SendNotReadMessage(msg *Message) error {
+	if result := msg.CheckMessageParams(); result != "" {
+		_ = s.WriteToConn([]byte(result), msg.From)
+		return nil
+	}
+
+	repoMessages, err := s.repo.NotReadMessage(s.ctx, msg.To, msg.From)
+	if err != nil {
+		return errors.WithMessage(err, "failed to find not read message")
+	}
+
+	if len(repoMessages) == 0 {
+		_ = s.Manager.Send([]byte("no unread message"), msg.From)
+		return nil
+	}
+
+	data, err := json.Marshal(repoMessages)
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal not read messages")
+	}
+
+	_ = s.Manager.Send(data, msg.From)
+	return nil
 }
 
 func (s *Service) getMsgBytes(msg *Message) ([]byte, error) {
@@ -134,7 +217,7 @@ func (s *Service) getMsgFromBytes(data []byte) (*Message, error) {
 
 	dec := gob.NewDecoder(buf)
 	msg := &Message{}
-	if err := dec.Decode(msg); err != nil {
+	if err := dec.Decode(msg); err != nil && err != io.EOF {
 		return nil, errors.Wrap(err, "gob decoder decode msg failed")
 	}
 
@@ -151,24 +234,9 @@ func (s *Service) putBuffer(buf *bytes.Buffer) {
 	s.bufferPool.Put(buf)
 }
 
-func (s *Service) EnableSyncPersistence() {
-	s.EnableMQ()
-	go s.MessagePersistence(consts.ChatDefaultPersistenceGoroutineNum)
-}
-
 func (s *Service) MessagePersistence(asyncNumber int) {
 	interrupt := make(chan os.Signal)
 	signal.Notify(interrupt, os.Interrupt)
-
-	var convert = func(message *Message) *repository.Message {
-		return &repository.Message{
-			UID:        message.From,
-			ReceiverID: message.To,
-			Content:    message.Content,
-			CreateAt:   message.CreateAt,
-			DeleteAt:   0,
-		}
-	}
 
 	chs := make([]chan *repository.Message, 0, asyncNumber)
 	for i := 0; i < asyncNumber; i++ {
@@ -179,10 +247,13 @@ func (s *Service) MessagePersistence(asyncNumber int) {
 			for {
 				msg, err := s.readMsgFromMQ()
 				if err != nil {
+					if errors.Is(err, io.EOF) {
+						return
+					}
 					log.LogrusObj.Error(errors.WithMessage(err, "message persistence failed when read msg From mq"))
 					return
 				}
-				repoMsg := convert(msg)
+				repoMsg := msg.buildRepoMessage()
 				ch <- repoMsg
 			}
 		}()

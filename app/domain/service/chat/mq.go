@@ -4,6 +4,7 @@ import (
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/pkg/log"
 	"github.com/pkg/errors"
+	"io"
 )
 
 const (
@@ -32,6 +33,9 @@ func (s *Service) writeMsgToMQ(msg *Message) error {
 }
 
 func (s *Service) readMsgFromMQ() (*Message, error) {
-	data := <-s.mqReadCh
+	data, ok := <-s.mqReadCh
+	if !ok {
+		return nil, io.EOF
+	}
 	return s.getMsgFromBytes(data)
 }

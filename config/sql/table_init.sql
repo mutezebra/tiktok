@@ -65,5 +65,6 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     content varchar(255) NOT NULL DEFAULT '' COMMENT 'message内容',
     create_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'message创建时间',
     delete_at BIGINT UNSIGNED DEFAULT NULL COMMENT 'message删除时间',
+    have_read BOOLEAN NOT NULL DEFAULT false COMMENT '已读',
     PRIMARY KEY chat_message_pk(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评论表' ;

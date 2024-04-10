@@ -46,6 +46,7 @@ var (
 	NotOnline      = []byte("the user is not online,you can leave a message")
 )
 
+// SendNotOnlineTip will send not online tip to user,just one time
 func (m *Manager) SendNotOnlineTip(to int64) {
 	if _, ok := m.notOnlineTip[to]; ok {
 		return

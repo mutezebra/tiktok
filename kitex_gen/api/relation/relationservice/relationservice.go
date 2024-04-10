@@ -13,13 +13,6 @@ import (
 var errInvalidMessageType = errors.New("invalid message type for service method handler")
 
 var serviceMethods = map[string]kitex.MethodInfo{
-	"CreateChatGroup": kitex.NewMethodInfo(
-		createChatGroupHandler,
-		newRelationServiceCreateChatGroupArgs,
-		newRelationServiceCreateChatGroupResult,
-		false,
-		kitex.WithStreamingMode(kitex.StreamingNone),
-	),
 	"Follow": kitex.NewMethodInfo(
 		followHandler,
 		newRelationServiceFollowArgs,
@@ -114,24 +107,6 @@ func newServiceInfo(hasStreaming bool, keepStreamingMethods bool, keepNonStreami
 	return svcInfo
 }
 
-func createChatGroupHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*relation.RelationServiceCreateChatGroupArgs)
-	realResult := result.(*relation.RelationServiceCreateChatGroupResult)
-	success, err := handler.(relation.RelationService).CreateChatGroup(ctx, realArg.Req)
-	if err != nil {
-		return err
-	}
-	realResult.Success = success
-	return nil
-}
-func newRelationServiceCreateChatGroupArgs() interface{} {
-	return relation.NewRelationServiceCreateChatGroupArgs()
-}
-
-func newRelationServiceCreateChatGroupResult() interface{} {
-	return relation.NewRelationServiceCreateChatGroupResult()
-}
-
 func followHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*relation.RelationServiceFollowArgs)
 	realResult := result.(*relation.RelationServiceFollowResult)
@@ -212,16 +187,6 @@ func newServiceClient(c client.Client) *kClient {
 	return &kClient{
 		c: c,
 	}
-}
-
-func (p *kClient) CreateChatGroup(ctx context.Context, req *relation.CreateChatGroupReq) (r *relation.CreateChatGroupResp, err error) {
-	var _args relation.RelationServiceCreateChatGroupArgs
-	_args.Req = req
-	var _result relation.RelationServiceCreateChatGroupResult
-	if err = p.c.Call(ctx, "CreateChatGroup", &_args, &_result); err != nil {
-		return
-	}
-	return _result.GetSuccess(), nil
 }
 
 func (p *kClient) Follow(ctx context.Context, req *relation.FollowReq) (r *relation.FollowResp, err error) {

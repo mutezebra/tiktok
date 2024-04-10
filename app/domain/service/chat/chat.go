@@ -121,6 +121,8 @@ func (s *Service) WriteToConn(message []byte, to int64) error {
 	return s.Manager.Send(message, to)
 }
 
+// EnableSyncPersistence enable message async persistence.
+// kafka consumes the Message object and sends it to the goroutine repository via a channel
 func (s *Service) EnableSyncPersistence() {
 	s.EnableMQ()
 	go s.MessagePersistence(consts.ChatDefaultPersistenceGoroutineNum)
@@ -196,6 +198,7 @@ func (s *Service) SendNotReadMessage(msg *Message) error {
 	return nil
 }
 
+// getMsgBytes format Message to bytes
 func (s *Service) getMsgBytes(msg *Message) ([]byte, error) {
 	buf := s.getBuffer()
 	defer s.putBuffer(buf)
@@ -209,6 +212,7 @@ func (s *Service) getMsgBytes(msg *Message) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+// getMsgFromBytes format bytes to Message
 func (s *Service) getMsgFromBytes(data []byte) (*Message, error) {
 	buf := s.getBuffer()
 	defer s.putBuffer(buf)
@@ -236,6 +240,7 @@ func (s *Service) putBuffer(buf *bytes.Buffer) {
 	s.bufferPool.Put(buf)
 }
 
+// MessagePersistence read message from mq and write to db
 func (s *Service) MessagePersistence(asyncNumber int) {
 	interrupt := make(chan os.Signal)
 	signal.Notify(interrupt, os.Interrupt)

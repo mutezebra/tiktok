@@ -11,7 +11,6 @@ import (
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
-	CreateChatGroup(ctx context.Context, req *relation.CreateChatGroupReq, callOptions ...callopt.Option) (r *relation.CreateChatGroupResp, err error)
 	Follow(ctx context.Context, req *relation.FollowReq, callOptions ...callopt.Option) (r *relation.FollowResp, err error)
 	GetFollowList(ctx context.Context, req *relation.GetFollowListReq, callOptions ...callopt.Option) (r *relation.GetFollowListResp, err error)
 	GetFansList(ctx context.Context, req *relation.GetFansListReq, callOptions ...callopt.Option) (r *relation.GetFansListResp, err error)
@@ -45,11 +44,6 @@ func MustNewClient(destService string, opts ...client.Option) Client {
 
 type kRelationServiceClient struct {
 	*kClient
-}
-
-func (p *kRelationServiceClient) CreateChatGroup(ctx context.Context, req *relation.CreateChatGroupReq, callOptions ...callopt.Option) (r *relation.CreateChatGroupResp, err error) {
-	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.CreateChatGroup(ctx, req)
 }
 
 func (p *kRelationServiceClient) Follow(ctx context.Context, req *relation.FollowReq, callOptions ...callopt.Option) (r *relation.FollowResp, err error) {

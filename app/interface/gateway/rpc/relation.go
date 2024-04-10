@@ -5,11 +5,6 @@ import (
 	"github.com/Mutezebra/tiktok/kitex_gen/api/relation"
 )
 
-func CreateChatGroup(ctx context.Context, req *relation.CreateChatGroupReq) (r *relation.CreateChatGroupResp, err error) {
-	r, err = RelationClient.CreateChatGroup(ctx, req)
-	return
-}
-
 func Follow(ctx context.Context, req *relation.FollowReq) (r *relation.FollowResp, err error) {
 	r, err = RelationClient.Follow(ctx, req)
 	return

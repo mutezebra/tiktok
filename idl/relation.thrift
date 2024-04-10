@@ -1,13 +1,5 @@
 namespace go api.relation
 
-struct CreateChatGroupReq {
-    1: optional string GroupName (go.tag="form:\"group_name,required\"")
-    2: optional i64 UID
-}
-
-struct CreateChatGroupResp {
-    1: optional i64 GroupID  (go.tag="json:\"group_id\"")
-}
 
 struct FollowReq {
     1: optional i64 FollowerID (go.tag="form:\"follower_id,required\"")
@@ -45,7 +37,6 @@ struct GetFriendsListResp {
 }
 
 service RelationService {
-    CreateChatGroupResp CreateChatGroup(1: CreateChatGroupReq req)
     FollowResp Follow(1: FollowReq req)
     GetFollowListResp GetFollowList(1: GetFollowListReq req)
     GetFansListResp GetFansList(1: GetFansListReq req)

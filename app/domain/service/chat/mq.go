@@ -17,6 +17,7 @@ const (
 	readerNum          = consts.ChatMQPersiReaderGroupNumber
 )
 
+// EnableMQ create the topic, start the writer, and start the consumer group
 func (s *Service) EnableMQ() {
 	if err := s.mq.CreateTopic(topicName, partitions, replicationFactors); err != nil {
 		log.LogrusObj.Panic(errors.Wrap(err, "create topic failed"))

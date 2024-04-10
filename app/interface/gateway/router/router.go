@@ -75,7 +75,6 @@ func NewRouter() *server.Hertz {
 		auth.Use(middleware.JWT())
 		{
 			auth.GET("/chat", handler.ChatHandler())
-			auth.POST("/create-group", handler.CreateChatGroupHandler())
 			auth.POST("/follow", handler.FollowHandler())
 			auth.GET("/follow-list", handler.FollowListHandler())
 			auth.GET("/fans-list", handler.FansListHandler())

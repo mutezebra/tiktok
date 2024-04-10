@@ -67,6 +67,7 @@ func (c *Client) Read() {
 					break
 				}
 				continue
+
 			default:
 				if err = c.Conn.WriteMessage(websocket.CloseMessage, []byte("closed")); err != nil {
 					log.LogrusObj.Error(err)

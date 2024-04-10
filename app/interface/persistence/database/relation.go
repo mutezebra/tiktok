@@ -14,30 +14,6 @@ func NewRelationRepository() *RelationRepository {
 	return &RelationRepository{_db}
 }
 
-func (repo *RelationRepository) CheckGroupExist(ctx context.Context, name string) (bool, error) {
-	var exist bool
-	err := repo.db.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM chat_groups WHERE name=?)", name).Scan(&exist)
-	if err != nil {
-		return exist, errors.Wrap(err, "check group exist failed")
-	}
-
-	return exist, nil
-}
-
-func (repo *RelationRepository) CreateChatGroup(ctx context.Context, name string) (int64, error) {
-	res, err := repo.db.ExecContext(ctx, "INSERT INTO chat_groups(name) VALUES (?)", name)
-	if err != nil {
-		return -1, errors.Wrap(err, "insert to chat_groups failed")
-	}
-
-	id, err := res.LastInsertId()
-	if err != nil {
-		return -1, errors.Wrap(err, "get last insert id failed")
-	}
-
-	return id, nil
-}
-
 func (repo *RelationRepository) WhetherFollowExist(ctx context.Context, uid, followerID int64) (bool, error) {
 	var exist bool
 	err := repo.db.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM follow_table WHERE user_id=? AND follow_id=?)", uid, followerID).Scan(&exist)

@@ -11,28 +11,6 @@ import (
 	"strconv"
 )
 
-func CreateChatGroupHandler() app.HandlerFunc {
-	return func(ctx context.Context, c *app.RequestContext) {
-		var req relation.CreateChatGroupReq
-		if err := c.BindAndValidate(&req); err != nil {
-			pack.SendFailedResponse(c, pack.ReturnError(errno.InvalidParamErrno, err))
-			return
-		}
-
-		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
-
-		resp, err := rpc.CreateChatGroup(ctx, &req)
-		if err != nil {
-			pack.SendFailedResponse(c, err)
-			return
-		}
-
-		pack.SendResponse(c, resp)
-		return
-	}
-}
-
 func FollowHandler() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		var req relation.FollowReq

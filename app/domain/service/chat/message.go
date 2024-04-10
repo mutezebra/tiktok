@@ -17,6 +17,7 @@ type Message struct {
 	TimeEnd   string `json:"time_end"`
 	timeSince int64
 	timeEnd   int64
+	GroupID   int64 `json:"group_id"`
 	From      int64
 	To        int64
 	CreateAt  int64
@@ -33,6 +34,7 @@ const (
 	UnSupportedType = "unsupported msg type"
 )
 
+// CheckMessageParams check the message params
 func (m *Message) CheckMessageParams() (result string) {
 	switch m.MsgType {
 	case consts.ChatTextMessage:
@@ -64,11 +66,11 @@ func (m *Message) CheckMessageParams() (result string) {
 			return TimeEndError
 		}
 		m.timeEnd = t.Unix()
-
 		break
 
 	case consts.NotReadMessage:
 		break
+
 	default:
 		return UnSupportedType
 	}
@@ -76,6 +78,7 @@ func (m *Message) CheckMessageParams() (result string) {
 	return ""
 }
 
+// buildHistoryQueryReq build the msg history query req for repository
 func (m *Message) buildHistoryQueryReq() *repository.HistoryQueryReq {
 	return &repository.HistoryQueryReq{
 		From:     m.From,
@@ -87,6 +90,7 @@ func (m *Message) buildHistoryQueryReq() *repository.HistoryQueryReq {
 	}
 }
 
+// buildRepoMessage convert the message to repository message
 func (m *Message) buildRepoMessage() *repository.Message {
 	return &repository.Message{
 		UID:        m.From,

@@ -18,26 +18,6 @@ func NewRelationCase(service *relationService.Service, repo repository.RelationR
 	return &RelationCase{service: service, repo: repo}
 }
 
-func (re *RelationCase) CreateChatGroup(ctx context.Context, req *relation.CreateChatGroupReq) (r *relation.CreateChatGroupResp, err error) {
-	if err = re.service.CheckNameLength(req.GetGroupName()); err != nil {
-		return nil, pack.ReturnError(errno.GroupNameTooLangError, err)
-	}
-
-	if exist, err := re.repo.CheckGroupExist(ctx, req.GetGroupName()); err != nil || exist {
-		return nil, pack.ReturnError(errno.GroupAlreadyExistError, err)
-	}
-
-	var id int64
-	if id, err = re.repo.CreateChatGroup(ctx, req.GetGroupName()); err != nil {
-		return nil, pack.ReturnError(errno.DatabaseCreateChatGroupError, err)
-	}
-
-	r = new(relation.CreateChatGroupResp)
-	r.SetGroupID(&id)
-
-	return r, nil
-}
-
 func (re *RelationCase) Follow(ctx context.Context, req *relation.FollowReq) (r *relation.FollowResp, err error) {
 	if err = re.service.CheckUserExist(ctx, req.GetFollowerID()); err != nil {
 		return nil, pack.ReturnError(errno.UserNotExistError, err)

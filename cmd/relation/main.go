@@ -2,6 +2,11 @@ package main
 
 import (
 	"context"
+	"net"
+
+	"github.com/cloudwego/kitex/pkg/transmeta"
+	"github.com/cloudwego/kitex/server"
+
 	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
 	"github.com/Mutezebra/tiktok/cmd/relation/pack"
 	"github.com/Mutezebra/tiktok/config"
@@ -9,9 +14,6 @@ import (
 	"github.com/Mutezebra/tiktok/kitex_gen/api/relation/relationservice"
 	"github.com/Mutezebra/tiktok/pkg/inject"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/cloudwego/kitex/pkg/transmeta"
-	"github.com/cloudwego/kitex/server"
-	"net"
 )
 
 func main() {

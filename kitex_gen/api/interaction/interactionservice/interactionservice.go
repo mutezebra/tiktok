@@ -5,9 +5,11 @@ package interactionservice
 import (
 	"context"
 	"errors"
-	interaction "github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
+
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
+
+	interaction "github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
 )
 
 var errInvalidMessageType = errors.New("invalid message type for service method handler")

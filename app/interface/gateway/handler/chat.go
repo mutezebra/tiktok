@@ -2,9 +2,10 @@ package handler
 
 import (
 	"context"
+	"strconv"
+
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
-	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/websocket"

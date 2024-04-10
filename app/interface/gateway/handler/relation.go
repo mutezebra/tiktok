@@ -2,13 +2,15 @@ package handler
 
 import (
 	"context"
+	"strconv"
+
+	"github.com/cloudwego/hertz/pkg/app"
+
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/rpc"
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/relation"
-	"github.com/cloudwego/hertz/pkg/app"
-	"strconv"
 )
 
 func FollowHandler() app.HandlerFunc {

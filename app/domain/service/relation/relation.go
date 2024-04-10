@@ -2,8 +2,10 @@ package relation
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/app/domain/repository"
+
 	"github.com/pkg/errors"
+
+	"github.com/Mutezebra/tiktok/app/domain/repository"
 )
 
 type Service struct {

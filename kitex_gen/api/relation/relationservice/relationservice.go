@@ -5,9 +5,11 @@ package relationservice
 import (
 	"context"
 	"errors"
-	relation "github.com/Mutezebra/tiktok/kitex_gen/api/relation"
+
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
+
+	relation "github.com/Mutezebra/tiktok/kitex_gen/api/relation"
 )
 
 var errInvalidMessageType = errors.New("invalid message type for service method handler")

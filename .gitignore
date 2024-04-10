@@ -21,6 +21,6 @@
 go.work
 .idea
 logs
-config/config.yaml
+#config/config.yaml
 test
 bin

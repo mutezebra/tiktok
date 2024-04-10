@@ -5,9 +5,11 @@ package interaction
 import (
 	"context"
 	"fmt"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/video"
-	"github.com/apache/thrift/lib/go/thrift"
 	"strings"
+
+	"github.com/apache/thrift/lib/go/thrift"
+
+	"github.com/Mutezebra/tiktok/kitex_gen/api/video"
 )
 
 type CommentInfo struct {

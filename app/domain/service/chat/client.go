@@ -6,6 +6,7 @@ import (
 	"github.com/Mutezebra/tiktok/pkg/log"
 	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/hertz-contrib/websocket"
+	"time"
 )
 
 type Client struct {
@@ -45,12 +46,18 @@ func (c *Client) Read() {
 			case websocket.TextMessage:
 				var msg Message
 				if err = json.Unmarshal(data, &msg); err != nil {
-					if err = c.srv.WriteError("you message format is wrong", c.From); err != nil {
+					log.LogrusObj.Error(err)
+
+					if err = c.srv.WriteErrorToConn("you message format is wrong", c.From); err != nil {
 						log.LogrusObj.Error(err)
 					}
 					break
 				}
-				if err = c.srv.Send(&msg, c.From, c.To); err != nil {
+				msg.From = c.From
+				msg.To = c.To
+				msg.CreateAt = time.Now().Unix()
+
+				if err = c.srv.SendMsg(&msg); err != nil {
 					log.LogrusObj.Error(err)
 					break
 				}

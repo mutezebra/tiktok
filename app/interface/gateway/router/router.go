@@ -2,7 +2,6 @@ package router
 
 import (
 	"context"
-
 	"github.com/Mutezebra/tiktok/app/interface/gateway/middleware"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -16,7 +15,8 @@ import (
 func NewRouter() *server.Hertz {
 	h := server.Default(
 		server.WithHostPorts(config.Conf.Service[consts.GatewayServiceKey].Address),
-		server.WithMaxRequestBodySize(100*consts.MB),
+		server.WithMaxRequestBodySize(consts.GatewayMaxRequestBodySize),
+		server.WithExitWaitTime(consts.GatewayExitWaitTime),
 	)
 
 	h.GET("/ping", func(ctx context.Context, c *app.RequestContext) {

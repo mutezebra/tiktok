@@ -1,7 +1,11 @@
 package consts
 
+import "time"
+
 const (
-	GatewayServiceKey = "gateway"
+	GatewayServiceKey         = "gateway"
+	GatewayExitWaitTime       = 5 * time.Second
+	GatewayMaxRequestBodySize = 100 * MB
 
 	HeaderUserIdKey           = "User-ID"
 	HeaderUserNameKey         = "User-Name"

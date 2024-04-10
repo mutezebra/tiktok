@@ -99,4 +99,14 @@ type Comment struct {
 
 type ChatRepository interface {
 	WhetherExistUser(ctx context.Context, uid int64) (bool, error)
+	CreateMessageWithChannel(ctx context.Context, msgs chan *Message)
+}
+
+type Message struct {
+	ID         int64  `db:"id"`
+	UID        int64  `db:"uid"`
+	ReceiverID int64  `db:"receiver_id"`
+	Content    string `db:"content"`
+	CreateAt   int64  `db:"create_at"`
+	DeleteAt   int64  `db:"delete_at"`
 }

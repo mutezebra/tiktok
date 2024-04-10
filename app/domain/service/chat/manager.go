@@ -15,7 +15,7 @@ type Manager struct {
 	mu      sync.RWMutex
 }
 
-func (m *Manager) Send(message []byte, to int64) error {
+func (m *Manager) Send(content []byte, to int64) error {
 	m.mu.RLock()
 	ch, ok := m.msgChan[to]
 	m.mu.RUnlock()
@@ -23,7 +23,7 @@ func (m *Manager) Send(message []byte, to int64) error {
 		return errors.New(fmt.Sprintf("could not find %d`s channel", to))
 	}
 
-	ch <- message
+	ch <- content
 	return nil
 }
 

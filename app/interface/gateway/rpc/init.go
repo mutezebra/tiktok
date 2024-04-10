@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Mutezebra/tiktok/kitex_gen/api/relation/relationservice"
+
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/transport"
 
@@ -32,6 +34,7 @@ var (
 	VideoClient       videoservice.Client
 	VideoStreamClient videoservice.StreamClient
 	InteractionClient interactionservice.Client
+	RelationClient    relationservice.Client
 )
 
 func Init() {
@@ -42,8 +45,9 @@ func Init() {
 	}
 
 	initClient(consts.UserServiceName)
-	initClient(consts.VideoServiceName)
-	initClient(consts.InteractionServiceName)
+	//initClient(consts.VideoServiceName)
+	//initClient(consts.InteractionServiceName)
+	initClient(consts.RelationServiceName)
 }
 
 func initClient(serviceName string) {
@@ -66,6 +70,12 @@ func initClient(serviceName string) {
 			client.WithHostPorts(discovery(serviceName)...),
 			client.WithTransportProtocol(transport.TTHeader),
 			client.WithMetaHandler(transmeta.ClientTTHeaderHandler))
+	case consts.RelationServiceName:
+		RelationClient = relationservice.MustNewClient(serviceName,
+			client.WithHostPorts(discovery(serviceName)...),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
+		)
 	}
 }
 

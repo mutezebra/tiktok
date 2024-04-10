@@ -96,3 +96,36 @@ type Comment struct {
 	CreateAt int64  `db:"create_at"`
 	DeleteAt int64  `db:"delete_at"`
 }
+
+type ChatRepository interface {
+	WhetherExistUser(ctx context.Context, uid int64) (bool, error)
+	CreateMessageWithChannel(ctx context.Context, msgs chan *Message)
+	ChatMessageHistory(ctx context.Context, req *HistoryQueryReq) ([]Message, error)
+	NotReadMessage(ctx context.Context, uid int64, receiverID int64) ([]Message, error)
+}
+
+type Message struct {
+	ID         int64  `db:"id" json:"id,omitempty"`
+	UID        int64  `db:"uid" json:"uid,omitempty"`
+	ReceiverID int64  `db:"receiver_id" json:"receiver_id,omitempty"`
+	Content    string `db:"content" json:"content,omitempty"`
+	HaveRead   bool   `db:"have_read" json:"have_read,omitempty"`
+	CreateAt   int64  `db:"create_at" json:"create_at,omitempty"`
+	DeleteAt   *int64 `db:"delete_at" json:"delete_at,omitempty"`
+}
+
+type HistoryQueryReq struct {
+	PageSize   int8
+	PageNum    int32
+	Start, End int64
+	From, To   int64
+}
+
+type RelationRepository interface {
+	Follow(ctx context.Context, uid, followerID int64) error
+	WhetherFollowExist(ctx context.Context, uid, followerID int64) (bool, error)
+	GetFollowList(ctx context.Context, uid int64) ([]int64, error)
+	GetFansList(ctx context.Context, uid int64) ([]int64, error)
+	GetFriendList(ctx context.Context, uid int64) ([]int64, error)
+	WhetherUserExist(ctx context.Context, uid int64) bool
+}

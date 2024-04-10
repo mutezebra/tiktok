@@ -1,10 +1,7 @@
 package log
 
 import (
-	"fmt"
 	"os"
-	"path"
-	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -32,10 +29,6 @@ func InitLog() {
 
 	logger.SetFormatter(&logrus.TextFormatter{
 		TimestampFormat: "2006-01-02 15:04:05",
-		CallerPrettyfier: func(frame *runtime.Frame) (function string, file string) {
-			fileName := path.Base(frame.File)
-			return frame.Function, fmt.Sprintf("%s:%d", fileName, frame.Line)
-		},
 	})
 
 	LogrusObj = &Logger{

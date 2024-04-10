@@ -2,6 +2,7 @@ package inject
 
 import (
 	"github.com/Mutezebra/tiktok/app/domain/service/interaction"
+	"github.com/Mutezebra/tiktok/app/domain/service/relation"
 	"github.com/Mutezebra/tiktok/app/domain/service/user"
 	"github.com/Mutezebra/tiktok/app/domain/service/video"
 	"github.com/Mutezebra/tiktok/app/interface/persistence/cache"
@@ -44,4 +45,10 @@ func ApplyInteraction() *usecase.InteractionCase {
 		Repo: repo,
 	}
 	return usecase.NewInteractionCase(repo, interaction.NewService(service))
+}
+
+func ApplyRelation() *usecase.RelationCase {
+	repo := database.NewRelationRepository()
+	service := relation.NewService(repo)
+	return usecase.NewRelationCase(service, repo)
 }

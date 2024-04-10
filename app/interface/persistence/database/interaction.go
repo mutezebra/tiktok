@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+
 	"github.com/pkg/errors"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"

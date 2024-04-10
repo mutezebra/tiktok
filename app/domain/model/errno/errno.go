@@ -2,6 +2,7 @@ package errno
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/kitex/pkg/kerrors"
 )
 

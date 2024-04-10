@@ -8,7 +8,7 @@ import (
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	interactionService "github.com/Mutezebra/tiktok/app/domain/service/interaction"
-	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
+	"github.com/Mutezebra/tiktok/app/usecase/pack"
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/video"
@@ -92,6 +92,7 @@ func (i *InteractionCase) Dislike(ctx context.Context, req *interaction.DislikeR
 			return nil, pack.ReturnError(errno.DatabaseDislikeVideoError, err)
 		}
 	}
+
 	return nil, nil
 }
 
@@ -110,6 +111,7 @@ func (i *InteractionCase) LikeList(ctx context.Context, req *interaction.LikeLis
 	count := int32(len(videos))
 	r.SetCount(&count)
 	r.SetItems(result)
+
 	return r, nil
 }
 
@@ -143,6 +145,7 @@ func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentR
 			return nil, pack.ReturnError(errno.DatabaseCreateCommentError, err)
 		}
 	}
+
 	return nil, nil
 }
 
@@ -168,6 +171,7 @@ func (i *InteractionCase) CommentList(ctx context.Context, req *interaction.Comm
 	length := int32(len(comments))
 	r.SetCount(&length)
 	r.SetItems(commentInfos)
+
 	return r, nil
 }
 
@@ -175,6 +179,7 @@ func (i *InteractionCase) DeleteComment(ctx context.Context, req *interaction.De
 	if err = i.repo.DeleteComment(ctx, req.GetUID(), req.GetCommentID()); err != nil {
 		return nil, pack.ReturnError(errno.DatabaseDeleteCommentError, err)
 	}
+
 	return nil, nil
 }
 

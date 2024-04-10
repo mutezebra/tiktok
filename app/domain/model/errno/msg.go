@@ -87,3 +87,25 @@ var (
 
 	DatabaseDeleteCommentError = New(DatabaseDeleteComment, "database delete comment failed")
 )
+
+// chat
+var (
+	ChatRegisterError = New(ChatRegister, "chat register failed")
+)
+
+// relation
+var (
+	GroupNameTooLangError        = New(GroupNameTooLang, "group name too lang")
+	GroupAlreadyExistError       = New(GroupAlreadyExist, "group already exist")
+	DatabaseCreateChatGroupError = New(DatabaseCreateChatGroup, "database create chat group failed")
+
+	UserNotExistError       = New(UserNotExist, "user not exist")
+	DatabaseFollowError     = New(DatabaseFollow, "database follow failed")
+	FollowAlreadyExistError = New(FollowAlreadyExist, "follow already exist")
+
+	DatabaseGetFollowListError = New(DatabaseGetFollowList, "database get follow list failed")
+
+	DatabaseGetFansListError = New(DatabaseGetFansList, "database get fans list failed")
+
+	DatabaseGetFriendsListError = New(DatabaseGetFriendsList, "database get friends list failed")
+)

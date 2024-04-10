@@ -15,6 +15,7 @@ type Config struct {
 	Etcd    *Etcd               `yaml:"etcd"`
 	QiNiu   *QiNiu              `yaml:"qiniu"`
 	Redis   *Redis              `yaml:"redis"`
+	Kafka   *Kafka              `yaml:"kafka"`
 }
 
 type System struct {
@@ -61,6 +62,11 @@ type Redis struct {
 	Database int    `yaml:"database" mapstructure:"database"`
 	Network  string `yaml:"network" mapstructure:"network"`
 	Password string `yaml:"password" mapstructure:"password"`
+}
+
+type Kafka struct {
+	Address string `yaml:"address"`
+	Network string `yaml:"network"`
 }
 
 // InitConfig initializes the configuration for the project

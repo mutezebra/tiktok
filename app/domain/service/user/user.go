@@ -3,10 +3,11 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"net/mail"
 	"path/filepath"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	"golang.org/x/crypto/bcrypt"
 

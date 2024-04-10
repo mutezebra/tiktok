@@ -16,7 +16,8 @@ import (
 func NewRouter() *server.Hertz {
 	h := server.Default(
 		server.WithHostPorts(config.Conf.Service[consts.GatewayServiceKey].Address),
-		server.WithMaxRequestBodySize(100*consts.MB),
+		server.WithMaxRequestBodySize(consts.GatewayMaxRequestBodySize),
+		server.WithExitWaitTime(consts.GatewayExitWaitTime),
 	)
 
 	h.GET("/ping", func(ctx context.Context, c *app.RequestContext) {
@@ -67,5 +68,19 @@ func NewRouter() *server.Hertz {
 			auth.POST("delete-comment", handler.DeleteCommentHandler())
 		}
 	}
+
+	relation := v1.Group("/relation")
+	{
+		auth := relation.Group("/auth")
+		auth.Use(middleware.JWT())
+		{
+			auth.GET("/chat", handler.ChatHandler())
+			auth.POST("/follow", handler.FollowHandler())
+			auth.GET("/follow-list", handler.FollowListHandler())
+			auth.GET("/fans-list", handler.FansListHandler())
+			auth.GET("/friends-list", handler.FriendsListHandler())
+		}
+	}
+
 	return h
 }

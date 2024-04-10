@@ -27,7 +27,9 @@ func SendResponse(c *app.RequestContext, data any) {
 			200,
 			"operate success",
 		},
-		Data: data,
+	}
+	if data != nil {
+		resp.Data = data
 	}
 
 	c.JSON(http.StatusOK, resp)

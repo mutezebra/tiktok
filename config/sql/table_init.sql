@@ -48,12 +48,50 @@ CREATE TABLE IF NOT EXISTS comment (
     PRIMARY KEY pk_comment(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评论表' ;
 
-CREATE TABLE user_video_likes (
+
+CREATE TABLE IF NOT EXISTS user_video_likes (
     user_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'user_id',
     video_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'video_id'
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户喜欢视频列表' ;
 
-CREATE TABLE user_comment_likes (
+
+CREATE TABLE IF NOT EXISTS user_comment_likes (
     user_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'user_id',
     comment_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'comment_id'
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户喜欢评论列表' ;
+
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id BIGINT UNSIGNED AUTO_INCREMENT COMMENT 'PK',
+    uid BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'sender_id',
+    receiver_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'receiver_id',
+    content varchar(255) NOT NULL DEFAULT '' COMMENT 'message内容',
+    create_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'message创建时间',
+    delete_at BIGINT UNSIGNED DEFAULT NULL COMMENT 'message删除时间',
+    have_read BOOLEAN NOT NULL DEFAULT false COMMENT '已读',
+    PRIMARY KEY chat_message_pk(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='聊天信息表' ;
+
+
+CREATE TABLE IF NOT EXISTS follow_table (
+    user_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'user_id',
+    follow_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'follow_id'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='关注表' ;
+
+
+CREATE TABLE IF NOT EXISTS chat_groups (
+    id BIGINT UNSIGNED AUTO_INCREMENT COMMENT 'PK',
+    name varchar(255) UNIQUE NOT NULL DEFAULT '' COMMENT '群组名称，唯一',
+    PRIMARY KEY pk_chat_groups(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='群组表' ;
+
+
+CREATE TABLE IF NOT EXISTS chat_group_messages (
+    id BIGINT UNSIGNED AUTO_INCREMENT COMMENT 'PK',
+    uid BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'sender_id',
+    group_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'group_id',
+    content varchar(255) NOT NULL DEFAULT '' COMMENT 'message内容',
+    create_at BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'message创建时间',
+    delete_at BIGINT UNSIGNED DEFAULT NULL COMMENT 'message删除时间',
+    PRIMARY KEY chat_group_message_pk(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='群聊天信息表' ;

@@ -3,9 +3,10 @@ package cache
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"strconv"
 	"sync"
+
+	"github.com/pkg/errors"
 
 	"github.com/redis/go-redis/v9"
 

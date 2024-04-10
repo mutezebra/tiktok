@@ -2,6 +2,7 @@ package chat
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/Mutezebra/tiktok/pkg/log"
 	"github.com/cloudwego/hertz/pkg/common/json"
@@ -36,6 +37,11 @@ func (c *Client) Read() {
 		for {
 			mt, data, err := c.Conn.ReadMessage()
 			if err != nil {
+				var e *websocket.CloseError
+				if errors.As(err, &e) && e.Code == websocket.CloseNormalClosure {
+					break
+				}
+
 				log.LogrusObj.Error(err)
 				break
 			}
@@ -48,7 +54,7 @@ func (c *Client) Read() {
 				if err = json.Unmarshal(data, &msg); err != nil {
 					log.LogrusObj.Error(err)
 
-					if err = c.srv.WriteErrorToConn("you message format is wrong", c.From); err != nil {
+					if err = c.srv.WriteToConn("you message format is wrong", c.From); err != nil {
 						log.LogrusObj.Error(err)
 					}
 					break

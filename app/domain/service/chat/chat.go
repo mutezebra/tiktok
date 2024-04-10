@@ -36,9 +36,9 @@ func DefaultService() *Service {
 	once.Do(func() {
 		defaultService = &Service{
 			Manager: &Manager{
-				connMap: make(map[int64]*websocket.Conn),
-				msgChan: make(map[int64]chan []byte),
-				repo:    database.NewChatRepository(),
+				connMap:      make(map[int64]*websocket.Conn),
+				msgChan:      make(map[int64]chan []byte),
+				notOnlineTip: make(map[int64]struct{}),
 			},
 			repo: database.NewChatRepository(),
 
@@ -93,21 +93,22 @@ func (s *Service) SendMsg(msg *Message) error {
 	var err error
 	switch msg.MsgType {
 	case consts.ChatTextMessage:
-		if err = s.Manager.Send([]byte(msg.Content), msg.To); err != nil {
-			break
+		if err = s.Manager.Send([]byte(msg.Content), msg.To); errors.Is(err, NotOnlineError) {
+			s.Manager.SendNotOnlineTip(msg.From)
 		}
 		if err = s.writeMsgToMQ(msg); err != nil {
 			break
 		}
 		break
+
 	default:
-		return s.WriteErrorToConn("not supported msg type", msg.From)
+		return s.WriteToConn("not supported msg type", msg.From)
 	}
 	return err
 }
 
-func (s *Service) WriteErrorToConn(error string, to int64) error {
-	return s.Manager.Send([]byte(error), to)
+func (s *Service) WriteToConn(message string, to int64) error {
+	return s.Manager.Send([]byte(message), to)
 }
 
 func (s *Service) getMsgBytes(msg *Message) ([]byte, error) {

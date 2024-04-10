@@ -120,3 +120,14 @@ type HistoryQueryReq struct {
 	Start, End int64
 	From, To   int64
 }
+
+type RelationRepository interface {
+	CheckGroupExist(ctx context.Context, name string) (bool, error)
+	CreateChatGroup(ctx context.Context, name string) (int64, error)
+	Follow(ctx context.Context, uid, followerID int64) error
+	WhetherFollowExist(ctx context.Context, uid, followerID int64) (bool, error)
+	GetFollowList(ctx context.Context, uid int64) ([]int64, error)
+	GetFansList(ctx context.Context, uid int64) ([]int64, error)
+	GetFriendList(ctx context.Context, uid int64) ([]int64, error)
+	WhetherUserExist(ctx context.Context, uid int64) bool
+}

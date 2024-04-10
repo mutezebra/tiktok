@@ -6,9 +6,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"strings"
-
 	"github.com/apache/thrift/lib/go/thrift"
+	"strings"
 )
 
 type UserInfo struct {

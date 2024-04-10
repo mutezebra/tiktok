@@ -1,10 +1,12 @@
 package chat
 
 import (
+	"io"
+
+	"github.com/pkg/errors"
+
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/pkg/errors"
-	"io"
 )
 
 const (

@@ -3,10 +3,11 @@ package log
 import (
 	errors2 "errors"
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"strings"
 	"sync"
+
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type Logger struct {

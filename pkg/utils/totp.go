@@ -3,8 +3,9 @@ package utils
 import (
 	"bytes"
 	base "encoding/base64"
-	"github.com/pkg/errors"
 	"image/png"
+
+	"github.com/pkg/errors"
 
 	"github.com/pquerna/otp/totp"
 )

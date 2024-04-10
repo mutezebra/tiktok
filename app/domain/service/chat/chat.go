@@ -5,18 +5,20 @@ import (
 	"context"
 	"encoding/gob"
 	"encoding/json"
+	"io"
+	"os"
+	"os/signal"
+	"sync"
+
+	"github.com/hertz-contrib/websocket"
+	"github.com/pkg/errors"
+
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/pkg/kafka"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/hertz-contrib/websocket"
-	"github.com/pkg/errors"
-	"io"
-	"os"
-	"os/signal"
-	"sync"
 )
 
 type Service struct {

@@ -3,10 +3,12 @@ package database
 import (
 	"context"
 	"database/sql"
+	"strings"
+
+	"github.com/pkg/errors"
+
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/pkg/errors"
-	"strings"
 )
 
 type ChatRepository struct {

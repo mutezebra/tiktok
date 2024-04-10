@@ -1,9 +1,10 @@
 package chat
 
 import (
+	"time"
+
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/consts"
-	"time"
 )
 
 type Message struct {

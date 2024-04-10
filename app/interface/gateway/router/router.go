@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+
 	"github.com/Mutezebra/tiktok/app/interface/gateway/middleware"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -68,13 +69,19 @@ func NewRouter() *server.Hertz {
 		}
 	}
 
-	social := v1.Group("/social")
+	relation := v1.Group("/relation")
 	{
-		auth := social.Group("/auth")
+		auth := relation.Group("/auth")
 		auth.Use(middleware.JWT())
 		{
 			auth.GET("/chat", handler.ChatHandler())
+			auth.POST("/create-group", handler.CreateChatGroupHandler())
+			auth.POST("/follow", handler.FollowHandler())
+			auth.GET("/follow-list", handler.FollowListHandler())
+			auth.GET("/fans-list", handler.FansListHandler())
+			auth.GET("/friends-list", handler.FriendsListHandler())
 		}
 	}
+
 	return h
 }

@@ -2,8 +2,9 @@ package chat
 
 import (
 	"fmt"
-	"github.com/hertz-contrib/websocket"
 	"sync"
+
+	"github.com/hertz-contrib/websocket"
 )
 
 type Manager struct {

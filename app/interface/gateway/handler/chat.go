@@ -2,12 +2,15 @@ package handler
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/app/usecase"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/Mutezebra/tiktok/app/domain/model/errno"
+	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
+	"strconv"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/websocket"
-	"strconv"
+
+	"github.com/Mutezebra/tiktok/app/usecase"
+	"github.com/Mutezebra/tiktok/consts"
 )
 
 func ChatHandler() app.HandlerFunc {
@@ -19,13 +22,13 @@ func ChatHandler() app.HandlerFunc {
 		toS := c.Query("to")
 		to, err := strconv.ParseInt(toS, 10, 64)
 		if err != nil {
-			c.JSON(200, "to format error")
+			pack.SendFailedResponse(c, pack.ReturnError(errno.InvalidParamErrno, err))
 			return
 		}
+
 		err = upgrader.Upgrade(c, usecase.ChatHandler(ctx, UID, to))
 		if err != nil {
-			log.LogrusObj.Errorf("in front failed %v", err)
-			c.JSON(200, err)
+			pack.SendFailedResponse(c, pack.ReturnError(errno.InternalServerErrorErrno, err))
 			return
 		}
 	}

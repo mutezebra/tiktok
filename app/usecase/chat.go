@@ -2,10 +2,12 @@ package usecase
 
 import (
 	"context"
+
+	"github.com/hertz-contrib/websocket"
+
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/domain/service/chat"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
-	"github.com/hertz-contrib/websocket"
 )
 
 func ChatHandler(ctx context.Context, from, to int64) func(conn *websocket.Conn) {

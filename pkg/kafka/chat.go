@@ -2,14 +2,16 @@ package kafka
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/pkg/errors"
-	"github.com/segmentio/kafka-go"
 	"io"
 	"os"
 	"os/signal"
+
+	"github.com/pkg/errors"
+	"github.com/segmentio/kafka-go"
+
+	"github.com/Mutezebra/tiktok/config"
+	"github.com/Mutezebra/tiktok/consts"
+	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 type MQModel struct {

@@ -1,11 +1,13 @@
 package kafka
 
 import (
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"sync"
+
 	"github.com/pkg/errors"
 	"github.com/segmentio/kafka-go"
-	"sync"
+
+	"github.com/Mutezebra/tiktok/config"
+	"github.com/Mutezebra/tiktok/pkg/log"
 )
 
 func InitKafka() {

@@ -10,7 +10,7 @@ tiktok是基于接口定义实现相对应功能的微服务项目
 1. 棕色线条是依赖指向，在整洁架构中内层(高层)不得依赖于外层(低层)
 2. 红色线条指向接口的具体实现
 
-![tiktok-structure.png](docs/tiktok-structure.png)
+![tiktok-structure.png](./docs/tiktok-structure.png)
 
 
 # 项目结构

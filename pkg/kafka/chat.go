@@ -42,7 +42,7 @@ func (m *MQModel) CreateTopic(topic string, partitions int, replicationFactors i
 
 func (m *MQModel) RunGroupReader(ctx context.Context, topic string, groupID string, readerNumber int, ch chan []byte) {
 	defer close(ch)
-	interrupt := make(chan os.Signal)
+	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
 
 	closeFns := make([]func(), 0, readerNumber)
@@ -73,12 +73,11 @@ func (m *MQModel) RunGroupReader(ctx context.Context, topic string, groupID stri
 	}
 
 	<-interrupt
-	return
 }
 
 func (m *MQModel) RunWriter(ctx context.Context, topic string, ch chan []byte) {
 	defer close(ch)
-	interrupt := make(chan os.Signal)
+	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
 
 	closeFns := make([]func(), 0, 1)
@@ -110,5 +109,4 @@ func (m *MQModel) RunWriter(ctx context.Context, topic string, ch chan []byte) {
 	}()
 
 	<-interrupt
-	return
 }

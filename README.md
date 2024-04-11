@@ -56,14 +56,14 @@ tiktok是基于接口定义实现相对应功能的微服务项目
 │  └─script
 ├─kitex_gen
 ├─pkg
-├─discovery              # 服务注册
-├─inject                 # 依赖注入
-├─kafka
-├─log
-├─oss
-├─registry               # 服务发现
-├─snowflake
-└─utils
+    ├─discovery          # 服务注册
+    ├─inject             # 依赖注入
+    ├─kafka
+    ├─log
+    ├─oss
+    ├─registry           # 服务发现
+    ├─snowflake
+    └─utils
 
 
 ```

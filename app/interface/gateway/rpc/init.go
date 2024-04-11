@@ -80,9 +80,8 @@ func initClient(serviceName string) {
 }
 
 func discovery(serviceName string) []string {
-	addr := make([]string, 0)
 	prefix := Conf.Etcd.ServicePrefix + Conf.Service[serviceName].ServiceName
-	addr, err = Resolver.ResolveWithPrefix(context.Background(), prefix)
+	addr, err := Resolver.ResolveWithPrefix(context.Background(), prefix)
 	fmt.Println(addr)
 	if err != nil {
 		log.LogrusObj.Panic(err)

@@ -22,11 +22,11 @@ func CheckAndUpdateToken(aToken, rToken string) (claim *Claims, err error, count
 
 	aClaims, err, aValid := ParseToken(aToken)
 	if err != nil {
-		return
+		return claim, err, 0
 	}
 	rClaims, err, rValid := ParseToken(rToken)
 	if err != nil {
-		return
+		return claim, err, 1
 	}
 
 	if aClaims.ID != rClaims.ID || aClaims.UserName != rClaims.UserName {

@@ -81,7 +81,6 @@ func (m *MQModel) RunWriter(ctx context.Context, topic string, ch chan []byte) {
 	signal.Notify(interrupt, os.Interrupt)
 
 	closeFns := make([]func(), 0, 1)
-	defer closeAllConn(closeFns)
 
 	w := &kafka.Writer{
 		Addr:                   kafka.TCP(config.Conf.Kafka.Address),
@@ -109,4 +108,5 @@ func (m *MQModel) RunWriter(ctx context.Context, topic string, ch chan []byte) {
 	}()
 
 	<-interrupt
+	closeAllConn(closeFns)
 }

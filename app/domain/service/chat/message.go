@@ -41,7 +41,6 @@ func (m *Message) CheckMessageParams() (result string) {
 		if m.Content == "" {
 			return ContentEmptyError
 		}
-		break
 
 	case consts.HistoryChatMessage:
 		if m.PageNum < 1 {
@@ -66,10 +65,8 @@ func (m *Message) CheckMessageParams() (result string) {
 			return TimeEndError
 		}
 		m.timeEnd = t.Unix()
-		break
 
 	case consts.NotReadMessage:
-		break
 
 	default:
 		return UnSupportedType

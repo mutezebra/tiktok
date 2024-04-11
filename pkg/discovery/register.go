@@ -21,7 +21,7 @@ type Registry struct {
 	keepAliveChan <-chan *etcd.LeaseKeepAliveResponse
 }
 
-func NewRegistry(addr string, key string, TTL int64, prefix ...string) (*Registry, error) {
+func NewRegistry(addr string, key string, ttl int64, prefix ...string) (*Registry, error) {
 	if len(prefix) > 1 {
 		return nil, errors.New("the size of prefix must be 0 or 1")
 	}
@@ -32,8 +32,8 @@ func NewRegistry(addr string, key string, TTL int64, prefix ...string) (*Registr
 			pre += "/"
 		}
 	}
-	if TTL == 0 {
-		TTL = 15
+	if ttl == 0 {
+		ttl = 15
 	}
 	client, err := newClient()
 	if err != nil {
@@ -41,7 +41,7 @@ func NewRegistry(addr string, key string, TTL int64, prefix ...string) (*Registr
 	}
 	return &Registry{
 		Addr:          addr,
-		TTL:           TTL,
+		TTL:           ttl,
 		Key:           key,
 		Prefix:        pre,
 		leaseID:       0,

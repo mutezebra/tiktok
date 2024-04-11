@@ -30,7 +30,6 @@ func ChatHandler() app.HandlerFunc {
 		err = upgrader.Upgrade(c, usecase.ChatHandler(ctx, UID, to))
 		if err != nil {
 			pack.SendFailedResponse(c, pack.ReturnError(errno.InternalServerErrorErrno, err))
-			return
 		}
 	}
 }

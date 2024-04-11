@@ -26,7 +26,7 @@ func VideoFeedHandler() app.HandlerFunc {
 		c.Header("Content-Type", "video/mp4")
 		c.Header("Transfer-Encoding", "chunked")
 
-		ch := make(chan []byte)
+		ch := make(chan []byte, 1)
 		defer close(ch)
 
 		go func(ch chan []byte) {
@@ -47,8 +47,6 @@ func VideoFeedHandler() app.HandlerFunc {
 			pack.SendFailedResponse(c, err)
 			return
 		}
-
-		return
 	}
 }
 
@@ -63,8 +61,6 @@ func VideoPopularHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
-
 	}
 }
 
@@ -83,8 +79,6 @@ func VideoSearchHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
-
 	}
 }
 
@@ -153,7 +147,6 @@ func VideoPublishHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -185,6 +178,5 @@ func VideoListHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }

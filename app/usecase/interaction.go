@@ -151,11 +151,12 @@ func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentR
 
 func (i *InteractionCase) CommentList(ctx context.Context, req *interaction.CommentListReq) (r *interaction.CommentListResp, err error) {
 	var comments []repository.Comment
-	if req.VideoID != nil {
+	switch {
+	case req.VideoID != nil:
 		comments, err = i.repo.GetVideoDirectCommentList(ctx, req.GetVideoID(), req.GetPageNum(), req.GetPageSize())
-	} else if req.CommentID != nil {
+	case req.CommentID != nil:
 		comments, err = i.repo.GetCommentList(ctx, req.GetCommentID(), req.GetPageNum(), req.GetPageSize())
-	} else {
+	default:
 		return nil, err
 	}
 	if err != nil {

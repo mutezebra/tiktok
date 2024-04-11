@@ -64,7 +64,7 @@ func (s *Service) NewClient(from, to int64, conn *websocket.Conn) *Client {
 		srv:     s,
 		From:    from,
 		To:      to,
-		Channel: make(chan []byte),
+		Channel: make(chan []byte, 1),
 		Conn:    conn,
 	}
 }
@@ -99,15 +99,12 @@ func (s *Service) SendMsg(msg *Message) error {
 	switch msg.MsgType {
 	case consts.ChatTextMessage:
 		err = s.SendChatTextMessage(msg)
-		break
 
 	case consts.HistoryChatMessage:
 		err = s.SendHistoryChatMessage(msg)
-		break
 
 	case consts.NotReadMessage:
 		err = s.SendNotReadMessage(msg)
-		break
 
 	default:
 		return s.WriteToConn([]byte("Manager: not supported msg type"), msg.From)
@@ -242,12 +239,12 @@ func (s *Service) putBuffer(buf *bytes.Buffer) {
 
 // MessagePersistence read message from mq and write to db
 func (s *Service) MessagePersistence(asyncNumber int) {
-	interrupt := make(chan os.Signal)
+	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
 
 	chs := make([]chan *repository.Message, 0, asyncNumber)
 	for i := 0; i < asyncNumber; i++ {
-		ch := make(chan *repository.Message)
+		ch := make(chan *repository.Message, 1)
 		chs = append(chs, ch)
 		go func() {
 			go s.repo.CreateMessageWithChannel(s.ctx, ch)
@@ -270,5 +267,4 @@ func (s *Service) MessagePersistence(asyncNumber int) {
 	for _, ch := range chs {
 		close(ch)
 	}
-	return
 }

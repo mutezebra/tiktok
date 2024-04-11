@@ -38,7 +38,7 @@ func CheckAndUpdateToken(aToken, rToken string) (claim *Claims, err error, count
 	// 如果两者都没过期就不更新
 	if aValid && rValid {
 		count = 0
-		return
+		return claim, nil, count
 	}
 
 	// 如果两者都过期
@@ -51,10 +51,10 @@ func CheckAndUpdateToken(aToken, rToken string) (claim *Claims, err error, count
 	if !aValid && rValid {
 		claim.AccessToken, err = GenerateAccessToken(aClaims.UserName, aClaims.ID)
 		count = 1
-		return
+		return claim, err, count
 	}
 	// 原则上不允许r的时间小于a的两倍，所以没有第四种情况了吧，我想
-	return
+	return claim, nil, count
 }
 
 // GenerateToken 登陆时签发Token

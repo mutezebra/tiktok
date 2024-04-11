@@ -22,15 +22,15 @@ func CheckAndUpdateToken(aToken, rToken string) (claim *Claims, err error, count
 
 	aClaims, err, aValid := ParseToken(aToken)
 	if err != nil {
-		return claim, err, 0
+		return claim, err, count
 	}
 	rClaims, err, rValid := ParseToken(rToken)
 	if err != nil {
-		return claim, err, 1
+		return claim, err, count
 	}
 
 	if aClaims.ID != rClaims.ID || aClaims.UserName != rClaims.UserName {
-		return nil, errors.New("unsampled token"), 0
+		return nil, errors.New("unsampled token"), count
 	}
 	claim.ID = aClaims.ID
 	claim.UserName = aClaims.UserName
@@ -44,7 +44,7 @@ func CheckAndUpdateToken(aToken, rToken string) (claim *Claims, err error, count
 	// 如果两者都过期
 	if !aValid && !rValid {
 		err = errors.New("token expired,please login again")
-		return
+		return claim, err, count
 	}
 
 	// 如果a过期但是r没过期就只更新a

@@ -65,9 +65,9 @@ func (v *VideoCase) VideoFeed(req *video.VideoFeedReq, stream video.VideoService
 			resp.Video = data[begin:]
 		} else {
 			resp.Video = data[begin : begin+offset]
-			begin = begin + offset
+			begin += offset
 		}
-		remain = remain - offset
+		remain -= offset
 		err = stream.Send(resp)
 		if err != nil {
 			return pack.ReturnError(errno.VideoFeedStreamSendError, err)

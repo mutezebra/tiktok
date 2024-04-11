@@ -55,7 +55,6 @@ func CheckAndUpdateToken(aToken, rToken string) (claim *Claims, err error, count
 	}
 	// 原则上不允许r的时间小于a的两倍，所以没有第四种情况了吧，我想
 	return
-
 }
 
 // GenerateToken 登陆时签发Token
@@ -117,7 +116,6 @@ func GenerateRefreshToken(userName string, id int64) (refreshToken string, err e
 
 // ParseToken 解析token并判断其有没有过期
 func ParseToken(token string) (*Claims, error, bool) {
-
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(consts.JwtSecret), nil
 	})

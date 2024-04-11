@@ -6,3 +6,4 @@ goimports  -local github.com/Mutezebra -w .
 
 # format go.mod
 go mod tidy
+

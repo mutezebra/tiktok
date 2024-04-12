@@ -127,9 +127,6 @@ func (s *Service) EnableSyncPersistence() {
 	go s.MessagePersistence(consts.ChatDefaultPersistenceGoroutineNum)
 }
 
-var storeTimes = 0
-var storeTime = int64(0)
-
 func (s *Service) SendChatTextMessage(msg *Message) error {
 	var err error
 	if result := msg.CheckMessageParams(); result != "" {

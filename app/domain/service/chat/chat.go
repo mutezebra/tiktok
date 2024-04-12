@@ -15,7 +15,6 @@ import (
 
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
-	"github.com/Mutezebra/tiktok/app/interface/persistence/database"
 	"github.com/Mutezebra/tiktok/consts"
 	"github.com/Mutezebra/tiktok/pkg/kafka"
 	"github.com/Mutezebra/tiktok/pkg/log"
@@ -36,7 +35,7 @@ type Service struct {
 var once sync.Once
 var defaultService *Service
 
-func DefaultService() *Service {
+func DefaultService(repo repository.ChatRepository, asyncPersistence bool) *Service {
 	once.Do(func() {
 		defaultService = &Service{
 			Manager: &Manager{
@@ -44,7 +43,7 @@ func DefaultService() *Service {
 				msgChan:      make(map[int64]chan []byte),
 				notOnlineTip: make(map[int64]struct{}),
 			},
-			repo: database.NewChatRepository(),
+			repo: repo,
 
 			mq:        &kafka.MQModel{},
 			mqReadCh:  make(chan []byte, consts.ChatMQReadChSize),
@@ -53,8 +52,9 @@ func DefaultService() *Service {
 			ctx:        context.Background(),
 			bufferPool: sync.Pool{New: func() any { return new(bytes.Buffer) }},
 		}
-
-		defaultService.EnableSyncPersistence()
+		if asyncPersistence {
+			defaultService.EnableSyncPersistence()
+		}
 	})
 	return defaultService
 }

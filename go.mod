@@ -3,6 +3,7 @@ module github.com/Mutezebra/tiktok
 go 1.20
 
 require (
+	github.com/agiledragon/gomonkey v2.0.2+incompatible
 	github.com/apache/thrift v0.16.0
 	github.com/cloudwego/hertz v0.8.1
 	github.com/cloudwego/kitex v0.9.1
@@ -11,11 +12,13 @@ require (
 	github.com/hertz-contrib/websocket v0.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/pquerna/otp v1.4.0
+	github.com/prashantv/gostub v1.1.0
 	github.com/qiniu/go-sdk/v7 v7.19.1
 	github.com/redis/go-redis/v9 v9.5.1
 	github.com/sarulabs/di v2.0.0+incompatible
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/sirupsen/logrus v1.9.3
+	github.com/smartystreets/goconvey v1.8.1
 	github.com/spf13/viper v1.18.2
 	go.etcd.io/etcd/client/v3 v3.5.10
 	golang.org/x/crypto v0.21.0
@@ -47,12 +50,14 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/pprof v0.0.0-20230509042627-b1315fad0c5a // indirect
+	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jhump/protoreflect v1.8.2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
@@ -67,6 +72,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
+	github.com/smarty/assertions v1.15.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect

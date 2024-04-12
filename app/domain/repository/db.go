@@ -99,6 +99,7 @@ type Comment struct {
 
 type ChatRepository interface {
 	WhetherExistUser(ctx context.Context, uid int64) (bool, error)
+	CreateMessage(ctx context.Context, msg *Message) error
 	CreateMessageWithChannel(ctx context.Context, msgs chan *Message)
 	ChatMessageHistory(ctx context.Context, req *HistoryQueryReq) ([]Message, error)
 	NotReadMessage(ctx context.Context, uid int64, receiverID int64) ([]Message, error)

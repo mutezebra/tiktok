@@ -23,6 +23,14 @@ func (repo *ChatRepository) WhetherExistUser(ctx context.Context, uid int64) (bo
 	return exist, err
 }
 
+func (repo *ChatRepository) CreateMessage(ctx context.Context, msg *repository.Message) error {
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO chat_messages(uid, receiver_id, content, create_at,have_read) VALUES(?,?,?,?,?)", msg.UID, msg.ReceiverID, msg.Content, msg.CreateAt, msg.HaveRead)
+	if err != nil {
+		return errors.Wrap(err, "failed to create msg item")
+	}
+	return nil
+}
+
 func (repo *ChatRepository) CreateMessageWithChannel(ctx context.Context, msgs chan *repository.Message) {
 	stmt, err := repo.db.PrepareContext(ctx, "INSERT INTO chat_messages(uid, receiver_id, content, create_at,have_read) VALUES(?,?,?,?,?)")
 	if err != nil {

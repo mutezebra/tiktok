@@ -2,9 +2,10 @@ package chat
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/hertz-contrib/websocket"
@@ -35,8 +36,11 @@ func (c *Client) Read() {
 				log.LogrusObj.Error(err)
 			}
 		}()
-
+		times := 0
+		allTime := int64(0)
 		for {
+			times++
+			now := time.Now().UnixNano()
 			mt, data, err := c.Conn.ReadMessage()
 			if err != nil {
 				var e *websocket.CloseError
@@ -44,7 +48,7 @@ func (c *Client) Read() {
 					break
 				}
 
-				log.LogrusObj.Error(err)
+				log.LogrusObj.Error(errors.Wrap(err, "websocket conn read failed"))
 				break
 			}
 
@@ -54,7 +58,8 @@ func (c *Client) Read() {
 			case websocket.TextMessage:
 				var msg Message
 				if err = json.Unmarshal(data, &msg); err != nil {
-					log.LogrusObj.Error(err)
+					log.LogrusObj.Error(errors.Wrap(err, "json unmarshal failed"))
+
 					_ = c.srv.WriteToConn([]byte("Manager: you message format is wrong"), c.From)
 					continue
 				}
@@ -65,6 +70,10 @@ func (c *Client) Read() {
 				if err = c.srv.SendMsg(&msg); err != nil {
 					log.LogrusObj.Error(err)
 					break
+				}
+				allTime += time.Now().UnixNano() - now
+				if times++; times == 1000 {
+					log.LogrusObj.Info("read and write msg average time:", allTime/1000)
 				}
 				continue
 

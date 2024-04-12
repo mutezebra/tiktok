@@ -28,14 +28,15 @@ type Service struct {
 	mqReadCh  chan []byte
 	mqWriteCh chan []byte
 
-	ctx        context.Context
-	bufferPool sync.Pool
+	ctx                    context.Context
+	bufferPool             sync.Pool
+	enableAsyncPersistence bool
 }
 
 var once sync.Once
 var defaultService *Service
 
-func DefaultService(repo repository.ChatRepository, asyncPersistence bool) *Service {
+func DefaultService(repo repository.ChatRepository, enableAsyncPersistence bool) *Service {
 	once.Do(func() {
 		defaultService = &Service{
 			Manager: &Manager{
@@ -49,10 +50,11 @@ func DefaultService(repo repository.ChatRepository, asyncPersistence bool) *Serv
 			mqReadCh:  make(chan []byte, consts.ChatMQReadChSize),
 			mqWriteCh: make(chan []byte, consts.ChatMQWriteChSize),
 
-			ctx:        context.Background(),
-			bufferPool: sync.Pool{New: func() any { return new(bytes.Buffer) }},
+			ctx:                    context.Background(),
+			bufferPool:             sync.Pool{New: func() any { return new(bytes.Buffer) }},
+			enableAsyncPersistence: enableAsyncPersistence,
 		}
-		if asyncPersistence {
+		if defaultService.enableAsyncPersistence {
 			defaultService.EnableSyncPersistence()
 		}
 	})
@@ -133,11 +135,21 @@ func (s *Service) SendChatTextMessage(msg *Message) error {
 	}
 
 	if err = s.Manager.Send([]byte(msg.Content), msg.To); errors.Is(err, NotOnlineError) {
+		msg.HaveRead = false
 		s.Manager.SendNotOnlineTip(msg.From)
+	} else {
+		msg.HaveRead = true
 	}
-	msg.HaveRead = true
 
-	if err = s.writeMsgToMQ(msg); err != nil {
+	if s.enableAsyncPersistence {
+		if err = s.writeMsgToMQ(msg); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	err = s.StoreMessage(msg)
+	if err != nil {
 		return err
 	}
 
@@ -195,6 +207,42 @@ func (s *Service) SendNotReadMessage(msg *Message) error {
 	return nil
 }
 
+func (s *Service) StoreMessage(msg *Message) error {
+	return s.repo.CreateMessage(s.ctx, msg.buildRepoMessage())
+}
+
+// MessagePersistence read message from mq and write to db
+func (s *Service) MessagePersistence(asyncNumber int) {
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt)
+
+	chs := make([]chan *repository.Message, 0, asyncNumber)
+	for i := 0; i < asyncNumber; i++ {
+		ch := make(chan *repository.Message, 1)
+		chs = append(chs, ch)
+		go func() {
+			go s.repo.CreateMessageWithChannel(s.ctx, ch)
+			for {
+				msg, err := s.readMsgFromMQ()
+				if err != nil {
+					if errors.Is(err, io.EOF) {
+						return
+					}
+					log.LogrusObj.Error(errors.WithMessage(err, "message persistence failed when read msg From mq"))
+					return
+				}
+				repoMsg := msg.buildRepoMessage()
+				ch <- repoMsg
+			}
+		}()
+	}
+
+	<-interrupt
+	for _, ch := range chs {
+		close(ch)
+	}
+}
+
 // getMsgBytes format Message to bytes
 func (s *Service) getMsgBytes(msg *Message) ([]byte, error) {
 	buf := s.getBuffer()
@@ -235,36 +283,4 @@ func (s *Service) getBuffer() *bytes.Buffer {
 
 func (s *Service) putBuffer(buf *bytes.Buffer) {
 	s.bufferPool.Put(buf)
-}
-
-// MessagePersistence read message from mq and write to db
-func (s *Service) MessagePersistence(asyncNumber int) {
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt)
-
-	chs := make([]chan *repository.Message, 0, asyncNumber)
-	for i := 0; i < asyncNumber; i++ {
-		ch := make(chan *repository.Message, 1)
-		chs = append(chs, ch)
-		go func() {
-			go s.repo.CreateMessageWithChannel(s.ctx, ch)
-			for {
-				msg, err := s.readMsgFromMQ()
-				if err != nil {
-					if errors.Is(err, io.EOF) {
-						return
-					}
-					log.LogrusObj.Error(errors.WithMessage(err, "message persistence failed when read msg From mq"))
-					return
-				}
-				repoMsg := msg.buildRepoMessage()
-				ch <- repoMsg
-			}
-		}()
-	}
-
-	<-interrupt
-	for _, ch := range chs {
-		close(ch)
-	}
 }

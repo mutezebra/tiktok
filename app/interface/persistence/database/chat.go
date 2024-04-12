@@ -3,9 +3,8 @@ package database
 import (
 	"context"
 	"database/sql"
-	"strings"
-
 	"github.com/pkg/errors"
+	"strings"
 
 	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/pkg/log"
@@ -21,6 +20,14 @@ func (repo *ChatRepository) WhetherExistUser(ctx context.Context, uid int64) (bo
 	var exist bool
 	err := repo.db.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM user WHERE id=?)", uid).Scan(&exist)
 	return exist, err
+}
+
+func (repo *ChatRepository) CreateMessage(ctx context.Context, msg *repository.Message) error {
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO chat_messages(uid, receiver_id, content, create_at,have_read) VALUES(?,?,?,?,?)", msg.UID, msg.ReceiverID, msg.Content, msg.CreateAt, msg.HaveRead)
+	if err != nil {
+		return errors.Wrap(err, "failed to create msg item")
+	}
+	return nil
 }
 
 func (repo *ChatRepository) CreateMessageWithChannel(ctx context.Context, msgs chan *repository.Message) {

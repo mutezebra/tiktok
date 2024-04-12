@@ -9,6 +9,7 @@ require (
 	github.com/cloudwego/kitex v0.9.1
 	github.com/go-sql-driver/mysql v1.8.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/gorilla/websocket v1.5.1
 	github.com/hertz-contrib/websocket v0.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/pquerna/otp v1.4.0

@@ -9,11 +9,11 @@ const (
 	ChatMQReadChSize              = 100
 	ChatMQWriteChSize             = 100
 	ChatMQPersiTopicName          = "chat-msg-topic"
-	ChatMQPersiTopicPartitions    = 3
+	ChatMQPersiTopicPartitions    = 10
 	ChatMQPersiReplicationFactors = 1
 
 	ChatMQPersiReaderGroupName   = "chat-msg-reader-group"
-	ChatMQPersiReaderGroupNumber = 3
+	ChatMQPersiReaderGroupNumber = 10
 
 	ChatDefaultPersistenceGoroutineNum = 10
 )

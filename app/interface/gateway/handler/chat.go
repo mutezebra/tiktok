@@ -15,7 +15,11 @@ import (
 )
 
 func ChatHandler() app.HandlerFunc {
-	var upgrader = websocket.HertzUpgrader{} // use default options
+	var upgrader = websocket.HertzUpgrader{
+		CheckOrigin: func(ctx *app.RequestContext) bool {
+			return true
+		},
+	} // use default options
 
 	return func(ctx context.Context, c *app.RequestContext) {
 		UID, _ := strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)

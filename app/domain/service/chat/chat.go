@@ -5,13 +5,12 @@ import (
 	"context"
 	"encoding/gob"
 	"encoding/json"
+	"github.com/hertz-contrib/websocket"
+	"github.com/pkg/errors"
 	"io"
 	"os"
 	"os/signal"
 	"sync"
-
-	"github.com/hertz-contrib/websocket"
-	"github.com/pkg/errors"
 
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"
@@ -127,6 +126,9 @@ func (s *Service) EnableSyncPersistence() {
 	go s.MessagePersistence(consts.ChatDefaultPersistenceGoroutineNum)
 }
 
+var storeTimes = 0
+var storeTime = int64(0)
+
 func (s *Service) SendChatTextMessage(msg *Message) error {
 	var err error
 	if result := msg.CheckMessageParams(); result != "" {
@@ -152,7 +154,6 @@ func (s *Service) SendChatTextMessage(msg *Message) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 

@@ -31,7 +31,6 @@ func LikeHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -53,7 +52,6 @@ func DisLikeHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -75,7 +73,6 @@ func LikeListHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -97,7 +94,6 @@ func CommentHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -116,7 +112,6 @@ func CommentListHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -138,6 +133,5 @@ func DeleteCommentHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }

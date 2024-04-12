@@ -18,7 +18,6 @@ func InitOSS() {
 // or download needed
 type PutRet struct {
 	Hash string
-	key  string
 }
 
 // getOSS return the oss`s max,bucket and domain

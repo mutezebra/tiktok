@@ -31,7 +31,6 @@ func FollowHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -48,7 +47,6 @@ func FollowListHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -65,7 +63,6 @@ func FansListHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -82,6 +79,5 @@ func FriendsListHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }

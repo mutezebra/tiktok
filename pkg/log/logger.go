@@ -18,16 +18,14 @@ type Logger struct {
 // Panic refactors the panic function within logrus. It records
 // the stack info and outputs it to logrus`s 'Out'
 func (l *Logger) Panic(v any) {
-	var str *string
-	str = l.formatCallStack(v)
+	str := l.formatCallStack(v)
 	l.Logger.Panic(*str)
 }
 
 // Error refactors the error function within logrus. It records
 // the stack info and outputs it to logrus`s 'Out'
 func (l *Logger) Error(v any) {
-	var str *string
-	str = l.formatCallStack(v)
+	str := l.formatCallStack(v)
 	l.Logger.Error(*str)
 }
 

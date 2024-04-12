@@ -29,7 +29,6 @@ func UserRegisterHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -48,7 +47,6 @@ func UserLoginHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -70,7 +68,6 @@ func UserInfoHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -112,7 +109,6 @@ func UploadAvatarHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -130,7 +126,6 @@ func DownloadAvatarHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -150,7 +145,6 @@ func TotpQRCodeHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }
 
@@ -172,6 +166,5 @@ func EnableTotpHandler() app.HandlerFunc {
 		}
 
 		pack.SendResponse(c, resp)
-		return
 	}
 }

@@ -10,7 +10,11 @@ tiktok是基于接口定义实现相对应功能的微服务项目
 1. 棕色线条是依赖指向，在整洁架构中内层(高层)不得依赖于外层(低层)
 2. 红色线条指向接口的具体实现
 
+<<<<<<< HEAD
 ![tiktok-structure](docs/tiktok-structure.png)
+=======
+![tiktok-structure.png](./docs/tiktok-structure.png)
+>>>>>>> 721b249a8fa2b4c685910f3f338008dac5d6a16b
 
 
 # 项目结构
@@ -56,14 +60,14 @@ tiktok是基于接口定义实现相对应功能的微服务项目
 │  └─script
 ├─kitex_gen
 ├─pkg
-├─discovery              # 服务注册
-├─inject                 # 依赖注入
-├─kafka
-├─log
-├─oss
-├─registry               # 服务发现
-├─snowflake
-└─utils
+    ├─discovery          # 服务注册
+    ├─inject             # 依赖注入
+    ├─kafka
+    ├─log
+    ├─oss
+    ├─registry           # 服务发现
+    ├─snowflake
+    └─utils
 
 
 ```

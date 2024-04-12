@@ -1,8 +1,9 @@
 package user
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestService_VerifyEmail(t *testing.T) {

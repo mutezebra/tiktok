@@ -1,8 +1,9 @@
 package video
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestService_IsImage(t *testing.T) {

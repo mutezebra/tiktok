@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/gorilla/websocket"
-	web2 "github.com/hertz-contrib/websocket"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"strconv"
 	"testing"
+
+	"github.com/gorilla/websocket"
+	web2 "github.com/hertz-contrib/websocket"
 )
 
 func BenchmarkChatHandler(b *testing.B) {

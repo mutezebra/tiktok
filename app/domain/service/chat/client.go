@@ -3,8 +3,9 @@ package chat
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/hertz-contrib/websocket"

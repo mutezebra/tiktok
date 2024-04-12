@@ -5,12 +5,13 @@ import (
 	"context"
 	"encoding/gob"
 	"encoding/json"
-	"github.com/hertz-contrib/websocket"
-	"github.com/pkg/errors"
 	"io"
 	"os"
 	"os/signal"
 	"sync"
+
+	"github.com/hertz-contrib/websocket"
+	"github.com/pkg/errors"
 
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/app/domain/repository"

@@ -2,9 +2,10 @@ package relation
 
 import (
 	"fmt"
-	. "github.com/smartystreets/goconvey/convey"
 	"strings"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestService_CheckNameLength(t *testing.T) {

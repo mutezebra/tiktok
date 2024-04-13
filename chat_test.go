@@ -12,7 +12,6 @@ import (
 	"testing"
 
 	"github.com/gorilla/websocket"
-	web2 "github.com/hertz-contrib/websocket"
 )
 
 func BenchmarkChatHandler(b *testing.B) {
@@ -22,7 +21,7 @@ func BenchmarkChatHandler(b *testing.B) {
 
 	msg := "{\n    \"msg_type\":1,\n    \"content\":\"just for test\"\n}"
 	for i := 0; i < b.N; i++ {
-		err := conn.WriteMessage(web2.TextMessage, []byte(msg))
+		err := conn.WriteMessage(websocket.TextMessage, []byte(msg))
 		if err != nil {
 			b.Error(err)
 			return

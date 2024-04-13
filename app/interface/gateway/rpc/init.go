@@ -40,9 +40,9 @@ func Init() {
 	}
 
 	initClient(consts.UserServiceName)
-	// initClient(consts.VideoServiceName)
-	// initClient(consts.InteractionServiceName)
-	//initClient(consts.RelationServiceName)
+	initClient(consts.VideoServiceName)
+	initClient(consts.InteractionServiceName)
+	initClient(consts.RelationServiceName)
 }
 
 func initClient(serviceName string) {

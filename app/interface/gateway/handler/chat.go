@@ -2,8 +2,9 @@ package handler
 
 import (
 	"context"
-	"github.com/Mutezebra/tiktok/pkg/inject"
 	"strconv"
+
+	"github.com/Mutezebra/tiktok/pkg/inject"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"

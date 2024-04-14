@@ -36,11 +36,7 @@ func (c *Client) Read() {
 				log.LogrusObj.Error(err)
 			}
 		}()
-		times := 0
-		allTime := int64(0)
 		for {
-			times++
-			now := time.Now().UnixNano()
 			mt, data, err := c.Conn.ReadMessage()
 			if err != nil {
 				var e *websocket.CloseError
@@ -70,10 +66,6 @@ func (c *Client) Read() {
 				if err = c.srv.SendMsg(&msg); err != nil {
 					log.LogrusObj.Error(err)
 					break
-				}
-				allTime += time.Now().UnixNano() - now
-				if times++; times == 1000 {
-					log.LogrusObj.Info("read and write msg average time:", allTime/1000)
 				}
 				continue
 

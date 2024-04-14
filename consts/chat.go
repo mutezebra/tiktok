@@ -6,8 +6,8 @@ const (
 	HistoryChatMessage = 2
 	NotReadMessage     = 3
 
-	ChatMQReadChSize              = 100
-	ChatMQWriteChSize             = 100
+	ChatMQReadChSize              = 10
+	ChatMQWriteChSize             = 10
 	ChatMQPersiTopicName          = "chat-msg-topic"
 	ChatMQPersiTopicPartitions    = 10
 	ChatMQPersiReplicationFactors = 1

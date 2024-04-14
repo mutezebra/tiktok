@@ -1,6 +1,7 @@
 package inject
 
 import (
+	"github.com/Mutezebra/tiktok/app/domain/repository"
 	"github.com/Mutezebra/tiktok/app/domain/service/interaction"
 	"github.com/Mutezebra/tiktok/app/domain/service/relation"
 	"github.com/Mutezebra/tiktok/app/domain/service/user"
@@ -51,4 +52,8 @@ func ApplyRelation() *usecase.RelationCase {
 	repo := database.NewRelationRepository()
 	service := relation.NewService(repo)
 	return usecase.NewRelationCase(service, repo)
+}
+
+func AppleGateway() repository.ChatRepository {
+	return database.NewChatRepository()
 }

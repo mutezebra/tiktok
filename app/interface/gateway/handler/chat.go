@@ -6,12 +6,12 @@ import (
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
+	"github.com/Mutezebra/tiktok/app/usecase"
+	"github.com/Mutezebra/tiktok/consts"
+	"github.com/Mutezebra/tiktok/pkg/inject"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/websocket"
-
-	"github.com/Mutezebra/tiktok/app/usecase"
-	"github.com/Mutezebra/tiktok/consts"
 )
 
 func ChatHandler() app.HandlerFunc {
@@ -31,7 +31,7 @@ func ChatHandler() app.HandlerFunc {
 			return
 		}
 
-		err = upgrader.Upgrade(c, usecase.ChatHandler(ctx, UID, to))
+		err = upgrader.Upgrade(c, usecase.ChatHandler(ctx, UID, to, inject.AppleGateway()))
 		if err != nil {
 			pack.SendFailedResponse(c, pack.ReturnError(errno.InternalServerErrorErrno, err))
 		}

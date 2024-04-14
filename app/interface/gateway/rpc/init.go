@@ -4,23 +4,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Mutezebra/tiktok/kitex_gen/api/relation/relationservice"
-
+	"github.com/cloudwego/kitex/client"
+	"github.com/cloudwego/kitex/client/streamclient"
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/transport"
-
-	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction/interactionservice"
-
-	"github.com/cloudwego/kitex/client/streamclient"
-
-	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
-
-	"github.com/cloudwego/kitex/client"
 
 	"github.com/Mutezebra/tiktok/app/domain/model"
 	"github.com/Mutezebra/tiktok/config"
 	"github.com/Mutezebra/tiktok/consts"
+	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction/interactionservice"
+	"github.com/Mutezebra/tiktok/kitex_gen/api/relation/relationservice"
 	"github.com/Mutezebra/tiktok/kitex_gen/api/user/userservice"
+	"github.com/Mutezebra/tiktok/kitex_gen/api/video/videoservice"
 	"github.com/Mutezebra/tiktok/pkg/inject"
 	"github.com/Mutezebra/tiktok/pkg/log"
 )
@@ -45,8 +40,8 @@ func Init() {
 	}
 
 	initClient(consts.UserServiceName)
-	// initClient(consts.VideoServiceName)
-	// initClient(consts.InteractionServiceName)
+	initClient(consts.VideoServiceName)
+	initClient(consts.InteractionServiceName)
 	initClient(consts.RelationServiceName)
 }
 

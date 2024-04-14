@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"github.com/Mutezebra/tiktok/pkg/inject"
 	"strconv"
 
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
@@ -31,7 +32,7 @@ func ChatHandler() app.HandlerFunc {
 			return
 		}
 
-		err = upgrader.Upgrade(c, usecase.ChatHandler(ctx, UID, to))
+		err = upgrader.Upgrade(c, usecase.ChatHandler(ctx, UID, to, inject.AppleGateway()))
 		if err != nil {
 			pack.SendFailedResponse(c, pack.ReturnError(errno.InternalServerErrorErrno, err))
 		}

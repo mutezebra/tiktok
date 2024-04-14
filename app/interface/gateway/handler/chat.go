@@ -4,16 +4,14 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/Mutezebra/tiktok/pkg/inject"
-
 	"github.com/Mutezebra/tiktok/app/domain/model/errno"
 	"github.com/Mutezebra/tiktok/app/interface/gateway/pack"
+	"github.com/Mutezebra/tiktok/app/usecase"
+	"github.com/Mutezebra/tiktok/consts"
+	"github.com/Mutezebra/tiktok/pkg/inject"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/websocket"
-
-	"github.com/Mutezebra/tiktok/app/usecase"
-	"github.com/Mutezebra/tiktok/consts"
 )
 
 func ChatHandler() app.HandlerFunc {

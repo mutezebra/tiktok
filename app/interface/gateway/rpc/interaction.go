@@ -6,6 +6,7 @@ import (
 	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
 )
 
+// rpc client
 func Like(ctx context.Context, req *interaction.LikeReq) (r *interaction.LikeResp, err error) {
 	r, err = InteractionClient.Like(ctx, req)
 	return

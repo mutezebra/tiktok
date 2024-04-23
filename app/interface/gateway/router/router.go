@@ -45,6 +45,8 @@ func NewRouter() *server.Hertz {
 	{
 		video.GET("/feed", handler.VideoFeedHandler())
 		video.GET("/popular", handler.VideoPopularHandler())
+		video.GET("/popular", handler.VideoPopularHandler())
+		video.GET("/popular", handler.VideoPopularHandler())
 		video.POST("/search", handler.VideoSearchHandler())
 
 		auth := video.Group("/auth")

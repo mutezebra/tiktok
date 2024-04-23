@@ -23,6 +23,7 @@ func ApplyUser() *usecase.UserCase {
 		MFA:  mfaModel,
 		OSS:  ossModel,
 	}
+
 	return usecase.NewUserUseCase(repo, user.NewService(service))
 }
 

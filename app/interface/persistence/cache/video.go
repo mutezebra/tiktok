@@ -86,6 +86,7 @@ func (cache *VideoCacheRepo) ViewKeyExist(vid int64) bool {
 	return cache.client.Exists(cache.ctx, fmt.Sprintf("%s%d", consts.CacheVideoViewKeyPrefix, vid)).Val() != 0
 }
 
+// ViewsKVS 返回所有的在redis中的view
 func (cache *VideoCacheRepo) ViewsKVS() map[int64]int32 {
 	var cursor uint64
 	result := make(map[int64]int32)

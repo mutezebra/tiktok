@@ -142,10 +142,7 @@ func (s *Service) SendChatTextMessage(msg *Message) error {
 	}
 
 	if s.enableAsyncPersistence {
-		if err = s.writeMsgToMQ(msg); err != nil {
-			return err
-		}
-		return nil
+		return s.writeMsgToMQ(msg)
 	}
 
 	err = s.StoreMessage(msg)

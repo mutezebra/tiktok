@@ -14,7 +14,7 @@ import (
 type popularRankModel struct {
 	enablePopularRanking bool
 	rankKey              string
-	maxSizeOfPopularSet  int32 // 建议不要超过128，可以使用redis使用ziplist结构来保证更高的效率
+	maxSizeOfPopularSet  int32 // 建议不要超过128，可以使redis使用ziplist结构来保证更高的效率
 	minPopularVideoViews int32
 	refreshInterval      time.Duration
 	popularVids          []int64 // 最多不能超过127
@@ -23,6 +23,7 @@ type popularRankModel struct {
 	mu                   sync.RWMutex
 }
 
+// AddToRank 将view参与到排行中
 func (p *popularRankModel) AddToRank(vid int64, views int32) {
 	if views <= p.minPopularVideoViews {
 		return
@@ -56,12 +57,14 @@ func (p *popularRankModel) AddToRank(vid int64, views int32) {
 	}
 }
 
+// GetPopularVids 获取最热门的视频id
 func (p *popularRankModel) GetPopularVids() []int64 {
 	vids := make([]int64, len(p.popularVids))
 	copy(vids, p.popularVids)
 	return vids
 }
 
+// TimedRefresh 定时刷新最热门的视频id列表
 func (p *popularRankModel) TimedRefresh() {
 	interval := p.refreshInterval
 	for {
@@ -70,6 +73,7 @@ func (p *popularRankModel) TimedRefresh() {
 	}
 }
 
+// updatePopularVids 同上
 func (p *popularRankModel) updatePopularVids() {
 	result, err := p.client.ZRevRange(p.ctx, p.rankKey, 0, 49).Result()
 	p.handleError("get popular vids failed cause:", err)

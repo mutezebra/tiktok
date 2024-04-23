@@ -36,8 +36,6 @@ func BenchmarkChatHandler(b *testing.B) {
 	_ = conn.Close()
 }
 
-var key = 15
-
 type LoginResp struct {
 	Base interface{} `json:"base"`
 	Data struct {
@@ -50,11 +48,10 @@ func loginUsers(b *testing.B) *LoginResp {
 	b.Helper()
 	url := "http://192.168.84.7:4000/api/user/login"
 	method := "POST"
-	id := strconv.Itoa(key)
 
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
-	_ = writer.WriteField("user_name", "user"+id)
+	_ = writer.WriteField("user_name", "test")
 	_ = writer.WriteField("password", "123456")
 	_ = writer.Close()
 
@@ -85,9 +82,11 @@ func loginUsers(b *testing.B) *LoginResp {
 	return &info
 }
 
+var id = 15
+
 func getWsConn(b *testing.B, info *LoginResp) *websocket.Conn {
 	b.Helper()
-	url := "ws://192.168.84.7:4000/api/relation/auth/chat?to=4480054134837248"
+	url := "ws://192.168.84.7:4000/api/relation/auth/chat?to=" + strconv.Itoa(id)
 	header := http.Header{}
 	header.Add("Access-Token", info.Data.AccessToken)
 	header.Add("Refresh-Token", info.Data.RefreshToken)

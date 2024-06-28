@@ -115,7 +115,7 @@ func (i *InteractionCase) LikeList(ctx context.Context, req *interaction.LikeLis
 	return r, nil
 }
 
-func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentReq) (r *interaction.CommentResp, err error) {
+func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentReq) (*interaction.CommentResp, error) {
 	dto := &commentDTO{
 		cid:     i.service.GenerateID(),
 		uid:     req.GetUID(),
@@ -141,7 +141,7 @@ func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentR
 		dto.replyID = 0
 		dto.cid = cid
 		dto.rootID = 0
-		if err = i.repo.CreateComment(ctx, dtoC2Repo(dto)); err != nil {
+		if err := i.repo.CreateComment(ctx, dtoC2Repo(dto)); err != nil {
 			return nil, pack.ReturnError(model.DatabaseCreateCommentError, err)
 		}
 	}

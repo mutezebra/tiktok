@@ -4,13 +4,15 @@ package videoservice
 
 import (
 	"context"
-	video "github.com/Mutezebra/tiktok/kitex_gen/api/video"
+
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
 	"github.com/cloudwego/kitex/client/callopt/streamcall"
 	"github.com/cloudwego/kitex/client/streamclient"
 	streaming "github.com/cloudwego/kitex/pkg/streaming"
 	transport "github.com/cloudwego/kitex/transport"
+
+	video "github.com/Mutezebra/tiktok/kitex_gen/api/video"
 )
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.

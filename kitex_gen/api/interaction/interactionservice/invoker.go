@@ -3,8 +3,9 @@
 package interactionservice
 
 import (
-	interaction "github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
 	server "github.com/cloudwego/kitex/server"
+
+	interaction "github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
 )
 
 // NewInvoker creates a server.Invoker with the given handler and options.

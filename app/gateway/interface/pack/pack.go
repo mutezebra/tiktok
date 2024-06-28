@@ -4,9 +4,10 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/cloudwego/hertz/pkg/app"
+
 	"github.com/Mutezebra/tiktok/pkg/errno"
 	"github.com/Mutezebra/tiktok/pkg/log"
-	"github.com/cloudwego/hertz/pkg/app"
 )
 
 type Response struct {

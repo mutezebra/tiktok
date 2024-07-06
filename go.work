@@ -1,0 +1,11 @@
+go 1.22
+
+use (
+	.
+	./app/gateway
+	./app/interaction
+	./app/relation
+	./app/user
+	./app/video
+	pkg
+)

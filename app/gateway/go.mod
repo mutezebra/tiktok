@@ -1,6 +1,6 @@
 module github.com/mutezebra/tiktok/gateway
 
-go 1.22.0
+go 1.22
 
 require (
 	github.com/bytedance/gopkg v0.0.0-20240514070511-01b2cbcf35e1

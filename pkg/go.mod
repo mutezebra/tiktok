@@ -1,6 +1,6 @@
 module github.com/mutezebra/tiktok/pkg
 
-go 1.22.0
+go 1.22
 
 require (
 	github.com/apache/thrift v0.20.0

@@ -7,13 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Mutezebra/tiktok/app/video/domain/model"
-	"github.com/Mutezebra/tiktok/app/video/domain/repository"
-
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/log"
-
-	"github.com/Mutezebra/tiktok/pkg/snowflake"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/snowflake"
+	"github.com/mutezebra/tiktok/video/config"
+	"github.com/mutezebra/tiktok/video/domain/model"
+	"github.com/mutezebra/tiktok/video/domain/repository"
 )
 
 type Service struct {
@@ -67,7 +66,7 @@ func (s *Service) IsImage(filename string) bool {
 }
 
 func (s *Service) GenerateID() int64 {
-	return snowflake.GenerateID()
+	return snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 }
 
 func (s *Service) UploadVideo(ctx context.Context, name string, data []byte) (err error, url string) {

@@ -8,13 +8,13 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 type popularRankModel struct {
 	enablePopularRanking bool
 	rankKey              string
-	maxSizeOfPopularSet  int32 // 建议不要超过128，可以使用redis使用ziplist结构来保证更高的效率
+	maxSizeOfPopularSet  int32 // 建议不要超过128，可以使redis使用ziplist结构来保证更高的效率
 	minPopularVideoViews int32
 	refreshInterval      time.Duration
 	popularVids          []int64 // 最多不能超过127
@@ -37,11 +37,8 @@ func (p *popularRankModel) AddToRank(vid int64, views int32) {
 	defer p.mu.Unlock()
 
 	pipe := p.client.TxPipeline()
-
 	pipe.ZAdd(p.ctx, p.rankKey, member)
-
 	zcard := pipe.ZCard(p.ctx, p.rankKey)
-
 	_, err := pipe.Exec(p.ctx)
 	p.handleError("execute transaction failed cause:", err)
 

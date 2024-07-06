@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 
-	"github.com/Mutezebra/tiktok/consts"
+	"github.com/mutezebra/tiktok/pkg/consts"
 )
 
 type Claims struct {
@@ -78,7 +78,7 @@ func GenerateAccessToken(userName string, id int64) (accessToken string, err err
 		UserName: userName,
 		ID:       id,
 		StandardClaims: jwt.StandardClaims{
-			Issuer:    "Mutezebra",
+			Issuer:    "mutezebra",
 			Subject:   userName,
 			ExpiresAt: accessTokenExpireTime,
 		},
@@ -100,7 +100,7 @@ func GenerateRefreshToken(userName string, id int64) (refreshToken string, err e
 		UserName: userName,
 		ID:       id,
 		StandardClaims: jwt.StandardClaims{
-			Issuer:    "Mutezebra",
+			Issuer:    "mutezebra",
 			Subject:   userName,
 			ExpiresAt: refreshTokenExpireTime,
 		},

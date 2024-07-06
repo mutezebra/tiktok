@@ -3,15 +3,15 @@ package kafka
 import (
 	"sync"
 
-	"github.com/pkg/errors"
 	"github.com/segmentio/kafka-go"
 
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/pkg/errors"
+
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
-func InitKafka() {
-	conn, err := kafka.Dial(config.Conf.Kafka.Network, config.Conf.Kafka.Address)
+func InitKafka(network, address string) {
+	conn, err := kafka.Dial(network, address)
 	if err != nil {
 		log.LogrusObj.Panic(errors.Wrap(err, "connect to kafka failed, cause: %s"))
 	}

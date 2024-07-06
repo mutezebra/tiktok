@@ -11,8 +11,8 @@ type Resolver struct {
 	client *etcd.Client
 }
 
-func NewResolver() (*Resolver, error) {
-	client, err := newClient()
+func NewResolver(endpoint string) (*Resolver, error) {
+	client, err := newClient(endpoint)
 	if err != nil {
 		return nil, errors.WithMessage(err, "failed to create the etcd client")
 	}

@@ -4,15 +4,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/consts"
+	"github.com/mutezebra/tiktok/pkg/consts"
 )
 
 var snow *snowflake
 var once sync.Once
 
-func GenerateID() int64 {
-	once.Do(initSnow)
+func GenerateID(workerID int64, centerID int64) int64 {
+	once.Do(initSnow(workerID, centerID))
 	return snow.generateID()
 }
 
@@ -51,20 +50,22 @@ func (s *snowflake) generateID() int64 {
 	return id
 }
 
-func initSnow() {
-	workerID := config.Conf.System.WorkerID
-	if workerID > consts.WorkerIDMax {
-		panic("workerID exceeds its maximum value")
-	}
-	dataCenterID := config.Conf.System.WorkerID
-	if dataCenterID > consts.WorkerIDMax {
-		panic("dataCenterID exceeds its maximum value")
-	}
-	snow = &snowflake{
-		Mutex:        sync.Mutex{},
-		timestamp:    0,
-		workerID:     workerID,
-		dataCenterID: dataCenterID,
-		sequence:     0,
+func initSnow(wid, cid int64) func() {
+	return func() {
+		workerID := wid
+		if workerID > consts.WorkerIDMax {
+			panic("workerID exceeds its maximum value")
+		}
+		dataCenterID := cid
+		if dataCenterID > consts.WorkerIDMax {
+			panic("dataCenterID exceeds its maximum value")
+		}
+		snow = &snowflake{
+			Mutex:        sync.Mutex{},
+			timestamp:    0,
+			workerID:     workerID,
+			dataCenterID: dataCenterID,
+			sequence:     0,
+		}
 	}
 }

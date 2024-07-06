@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 	etcd "go.etcd.io/etcd/client/v3"
 
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 type Registry struct {
@@ -21,21 +21,18 @@ type Registry struct {
 	keepAliveChan <-chan *etcd.LeaseKeepAliveResponse
 }
 
-func NewRegistry(addr string, key string, ttl int64, prefix ...string) (*Registry, error) {
-	if len(prefix) > 1 {
+func NewRegistry(addr string, key string, ttl int64, endPoint string, prefix string) (*Registry, error) {
+	if len(prefix) < 1 {
 		return nil, errors.New("the size of prefix must be 0 or 1")
 	}
-	pre := ""
-	if prefix != nil {
-		pre = prefix[0]
-		if pre[len(pre)-1] != '/' {
-			pre += "/"
-		}
+	pre := prefix
+	if prefix[len(prefix)-1] != '/' {
+		pre += "/"
 	}
 	if ttl == 0 {
 		ttl = 15
 	}
-	client, err := newClient()
+	client, err := newClient(endPoint)
 	if err != nil {
 		return nil, errors.WithMessage(err, "failed to create the etcd client")
 	}
@@ -62,12 +59,11 @@ func (r *Registry) Register(ctx context.Context) error {
 
 	putCtx, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
-	key := ""
+	key := r.Key
 	if r.Prefix != "" {
 		key = r.Prefix + r.Key
 	}
 	_, err = r.client.Put(putCtx, key, r.Addr, etcd.WithLease(r.leaseID))
-
 	if err != nil {
 		_ = r.client.Close()
 		return errors.WithMessage(err, "etcd client put server failed")
@@ -78,7 +74,7 @@ func (r *Registry) Register(ctx context.Context) error {
 
 func (r *Registry) MustRegister(ctx context.Context) {
 	if err := r.Register(ctx); err != nil {
-		panic(err)
+		log.LogrusObj.Panic(err)
 	}
 }
 

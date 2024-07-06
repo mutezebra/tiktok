@@ -8,22 +8,29 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/Mutezebra/tiktok/consts"
+	"github.com/mutezebra/tiktok/pkg/consts"
 
 	"github.com/qiniu/go-sdk/v7/storage"
 )
 
 type Model struct {
+	avatarPath string
+	videoPath  string
+	coverPath  string
 }
 
-func NewOssModel() *Model {
-	return &Model{}
+func NewOssModel(avatarPath, videoPath, coverPath string) *Model {
+	return &Model{
+		avatarPath: avatarPath,
+		videoPath:  videoPath,
+		coverPath:  coverPath,
+	}
 }
 
 // UploadAvatar from the oss
 func (m *Model) UploadAvatar(ctx context.Context, name string, data []byte) (err error, path string) {
 	mac, bucket, _ := getOSS()
-	path = conf.AvatarPath + name
+	path = m.avatarPath + name
 
 	putPolicy := storage.PutPolicy{
 		Scope: fmt.Sprintf("%s:%s", bucket, path),
@@ -53,7 +60,7 @@ func (m *Model) DownloadAvatar(ctx context.Context, path string) string {
 
 func (m *Model) UploadVideo(ctx context.Context, name string, data []byte) (err error, path string) {
 	mac, bucket, _ := getOSS()
-	path = conf.VideoPath + name
+	path = m.videoPath + name
 
 	putPolicy := storage.PutPolicy{
 		Scope: fmt.Sprintf("%s:%s", bucket, path),
@@ -81,7 +88,7 @@ func (m *Model) DownloadVideo(ctx context.Context, path string) string {
 
 func (m *Model) VideoFeed(name string) ([]byte, error) {
 	mac, bucket, domain := getOSS()
-	key := conf.VideoPath + name
+	key := m.videoPath + name
 	bm := storage.NewBucketManager(mac, &storage.Config{
 		Region: &storage.ZoneHuadong,
 	})
@@ -105,7 +112,7 @@ func (m *Model) VideoFeed(name string) ([]byte, error) {
 
 func (m *Model) UploadVideoCover(ctx context.Context, name string, data []byte) (err error, path string) {
 	mac, bucket, _ := getOSS()
-	path = conf.CoverPath + name
+	path = m.coverPath + name
 
 	putPolicy := storage.PutPolicy{
 		Scope: fmt.Sprintf("%s:%s", bucket, path),

@@ -4,13 +4,11 @@ import (
 	"time"
 
 	etcd "go.etcd.io/etcd/client/v3"
-
-	"github.com/Mutezebra/tiktok/config"
 )
 
-func newClient() (*etcd.Client, error) {
+func newClient(endpoint string) (*etcd.Client, error) {
 	client, err := etcd.New(etcd.Config{
-		Endpoints:   []string{config.Conf.Etcd.Endpoint},
+		Endpoints:   []string{endpoint},
 		DialTimeout: 5 * time.Second,
 	})
 	if err != nil {

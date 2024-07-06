@@ -7,21 +7,19 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/Mutezebra/tiktok/config"
 )
 
 var LogrusObj *Logger
 
 // InitLog initializes a logger and continuously updates its output
-func InitLog() {
+func InitLog(status string, system string) {
 	logger := logrus.New()
-	src, err := setOutPutFile()
+	src, err := setOutPutFile(system)
 	if err != nil {
 		panic(err)
 	}
 	logger.Out = src
-	if config.Conf.System.Status == "debug" {
+	if status == "debug" {
 		logger.SetLevel(logrus.DebugLevel)
 	} else {
 		logger.SetLevel(logrus.WarnLevel)
@@ -40,14 +38,14 @@ func InitLog() {
 		},
 	}
 
-	go updateLogger()
+	go updateLogger(system)
 }
 
-func setOutPutFile() (*os.File, error) {
+func setOutPutFile(system string) (*os.File, error) {
 	now := time.Now()
 	logFilePath := ""
 	if dir, err := os.Getwd(); err == nil {
-		if config.Conf.System.OS == "windows" {
+		if system == "windows" {
 			logFilePath = dir + "\\logs\\"
 		} else {
 			logFilePath = dir + "/logs/"
@@ -75,12 +73,12 @@ func setOutPutFile() (*os.File, error) {
 }
 
 // updateLogger update the output file for LogrusObj
-func updateLogger() {
+func updateLogger(system string) {
 	oneday := int64(3600 * 24)
 	for {
 		now := time.Now().Unix()
 		remain := oneday - (now % oneday)
-		src, _ := setOutPutFile()
+		src, _ := setOutPutFile(system)
 		LogrusObj.Out = src
 		time.Sleep(time.Duration(remain))
 	}

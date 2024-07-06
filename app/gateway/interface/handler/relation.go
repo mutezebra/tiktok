@@ -1,86 +1,83 @@
 package handler
 
 import (
-	"context"
+    "context"
+    "strconv"
 
-	"github.com/Mutezebra/tiktok/app/gateway/interface/pack"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/rpc"
+    "github.com/cloudwego/hertz/pkg/app"
 
-	"github.com/Mutezebra/tiktok/app/gateway/domain/model"
-
-	"strconv"
-
-	"github.com/cloudwego/hertz/pkg/app"
-
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/relation"
+    "github.com/mutezebra/tiktok/gateway/domain/model"
+    "github.com/mutezebra/tiktok/gateway/interface/pack"
+    "github.com/mutezebra/tiktok/gateway/interface/rpc"
+    "github.com/mutezebra/tiktok/pkg/consts"
+    "github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
 )
 
 func FollowHandler() app.HandlerFunc {
-	return func(ctx context.Context, c *app.RequestContext) {
-		var req relation.FollowReq
-		if err := c.BindAndValidate(&req); err != nil {
-			pack.SendFailedResponse(c, pack.ReturnError(model.InvalidParamErrno, err))
-			return
-		}
+    return func(ctx context.Context, c *app.RequestContext) {
+        var req relation.FollowReq
+        if err := c.BindAndValidate(&req); err != nil {
+            pack.SendFailedResponse(c, pack.ReturnError(model.InvalidParamErrno, err))
+            return
+        }
 
-		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+        req.UID = new(int64)
+        *req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
 
-		resp, err := rpc.Follow(ctx, &req)
-		if err != nil {
-			pack.SendFailedResponse(c, err)
-			return
-		}
+        resp, err := rpc.Follow(ctx, &req)
+        if err != nil {
+            pack.SendFailedResponse(c, err)
+            return
+        }
 
-		pack.SendResponse(c, resp)
-	}
+        pack.SendResponse(c, resp)
+    }
 }
 
 func FollowListHandler() app.HandlerFunc {
-	return func(ctx context.Context, c *app.RequestContext) {
-		var req relation.GetFollowListReq
-		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+    return func(ctx context.Context, c *app.RequestContext) {
+        var req relation.GetFollowListReq
+        req.UID = new(int64)
+        *req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
 
-		resp, err := rpc.GetFollowList(ctx, &req)
-		if err != nil {
-			pack.SendFailedResponse(c, err)
-			return
-		}
+        resp, err := rpc.GetFollowList(ctx, &req)
+        if err != nil {
+            pack.SendFailedResponse(c, err)
+            return
+        }
 
-		pack.SendResponse(c, resp)
-	}
+        pack.SendResponse(c, resp)
+    }
 }
 
 func FansListHandler() app.HandlerFunc {
-	return func(ctx context.Context, c *app.RequestContext) {
-		var req relation.GetFansListReq
-		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+    return func(ctx context.Context, c *app.RequestContext) {
+        var req relation.GetFansListReq
+        req.UID = new(int64)
+        *req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
 
-		resp, err := rpc.GetFansList(ctx, &req)
-		if err != nil {
-			pack.SendFailedResponse(c, err)
-			return
-		}
+        resp, err := rpc.GetFansList(ctx, &req)
+        if err != nil {
+            pack.SendFailedResponse(c, err)
+            return
+        }
 
-		pack.SendResponse(c, resp)
-	}
+        pack.SendResponse(c, resp)
+    }
 }
 
 func FriendsListHandler() app.HandlerFunc {
-	return func(ctx context.Context, c *app.RequestContext) {
-		var req relation.GetFriendsListReq
-		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+    return func(ctx context.Context, c *app.RequestContext) {
+        var req relation.GetFriendsListReq
+        req.UID = new(int64)
+        *req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
 
-		resp, err := rpc.GetFriendsList(ctx, &req)
-		if err != nil {
-			pack.SendFailedResponse(c, err)
-			return
-		}
+        resp, err := rpc.GetFriendsList(ctx, &req)
+        if err != nil {
+            pack.SendFailedResponse(c, err)
+            return
+        }
 
-		pack.SendResponse(c, resp)
-	}
+        pack.SendResponse(c, resp)
+    }
 }

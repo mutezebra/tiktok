@@ -3,7 +3,7 @@ package rpc
 import (
 	"context"
 
-	"github.com/Mutezebra/tiktok/kitex_gen/api/relation"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
 )
 
 func Follow(ctx context.Context, req *relation.FollowReq) (r *relation.FollowResp, err error) {

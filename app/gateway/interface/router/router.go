@@ -3,14 +3,13 @@ package router
 import (
 	"context"
 
-	"github.com/Mutezebra/tiktok/app/gateway/interface/handler"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/middleware"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/consts"
+	"github.com/mutezebra/tiktok/gateway/config"
+	"github.com/mutezebra/tiktok/gateway/interface/handler"
+	"github.com/mutezebra/tiktok/gateway/interface/middleware"
+	"github.com/mutezebra/tiktok/pkg/consts"
 )
 
 func NewRouter() *server.Hertz {
@@ -23,6 +22,8 @@ func NewRouter() *server.Hertz {
 	h.GET("/ping", func(ctx context.Context, c *app.RequestContext) {
 		c.String(200, "pong")
 	})
+
+	h.Use(middleware.TraceMiddleware())
 	v1 := h.Group("/api")
 
 	user := v1.Group("/user")

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/Mutezebra/tiktok/types"
+	"github.com/mutezebra/tiktok/pkg/types"
 )
 
 type Message types.Message

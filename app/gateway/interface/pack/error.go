@@ -1,8 +1,8 @@
 package pack
 
 import (
-	errno2 "github.com/Mutezebra/tiktok/pkg/errno"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	errno2 "github.com/mutezebra/tiktok/pkg/errno"
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 // ReturnError records the detailed error information in the log

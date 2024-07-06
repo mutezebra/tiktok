@@ -4,14 +4,13 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/Mutezebra/tiktok/app/gateway/domain/model"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/pack"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/rpc"
-
 	"github.com/cloudwego/hertz/pkg/app"
 
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
+	"github.com/mutezebra/tiktok/gateway/domain/model"
+	"github.com/mutezebra/tiktok/gateway/interface/pack"
+	"github.com/mutezebra/tiktok/gateway/interface/rpc"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 )
 
 func LikeHandler() app.HandlerFunc {

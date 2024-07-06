@@ -31,14 +31,14 @@ etcd:
   for_text: "text"
 
 qiniu:
-  access_key: "arrYDT0NDeGuTqcxfm9eLSTdL8wzzZL7IiXgaebC"
-  secret_key: "g9ov1pzWwOSIbNOc6KJkXvAqJmzqrp6fcCGWLtJe"
+  access_key: ""
+  secret_key: ""
   avatar_path: "static/avatars/"
   video_path: "static/videos/"
   cover_path: "static/videos/covers/"
   default_avatar_path: "static/avatars/default.jpg"
   bucket: "mutezebra-tiktok"
-  domain: "https://portal.qiniu.com/cdn/domain/sfu3m5zsz.hd-bkt.clouddn.com"
+  domain: ""
 
 jaeger:
   collector_endpoint: "http://127.0.0.1:14268/api/traces"

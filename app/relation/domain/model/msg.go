@@ -1,6 +1,6 @@
 package model
 
-import "github.com/Mutezebra/tiktok/pkg/errno"
+import "github.com/mutezebra/tiktok/pkg/errno"
 
 // relation
 var (

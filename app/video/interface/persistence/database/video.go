@@ -7,8 +7,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/Mutezebra/tiktok/app/video/domain/repository"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/video/domain/repository"
 )
 
 type VideoRepository struct {

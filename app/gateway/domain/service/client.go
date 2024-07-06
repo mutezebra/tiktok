@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/hertz-contrib/websocket"
+	"github.com/pkg/errors"
 
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 type Client struct {

@@ -3,11 +3,11 @@ package usecase
 import (
 	"context"
 
-	"github.com/Mutezebra/tiktok/app/relation/domain/model"
-	"github.com/Mutezebra/tiktok/app/relation/domain/repository"
-	relationService "github.com/Mutezebra/tiktok/app/relation/domain/service"
-	"github.com/Mutezebra/tiktok/app/relation/usecase/pack"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/relation"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
+	"github.com/mutezebra/tiktok/relation/domain/model"
+	"github.com/mutezebra/tiktok/relation/domain/repository"
+	relationService "github.com/mutezebra/tiktok/relation/domain/service"
+	"github.com/mutezebra/tiktok/relation/usecase/pack"
 )
 
 type RelationCase struct {

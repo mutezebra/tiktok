@@ -4,14 +4,13 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/Mutezebra/tiktok/app/gateway/domain/model"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/pack"
-	"github.com/Mutezebra/tiktok/pkg/errno"
-
 	"github.com/cloudwego/hertz/pkg/app"
 
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/utils"
+	"github.com/mutezebra/tiktok/gateway/domain/model"
+	"github.com/mutezebra/tiktok/gateway/interface/pack"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/errno"
+	"github.com/mutezebra/tiktok/pkg/utils"
 )
 
 func JWT() app.HandlerFunc {
@@ -36,6 +35,7 @@ func JWT() app.HandlerFunc {
 		c.Header(consts.HeaderTokenUpdateCountKey, strconv.Itoa(count))
 		if count == 0 {
 			c.Next(ctx)
+			return
 		}
 		c.Header(consts.HeaderAccessTokenKey, claim.AccessToken)
 		c.Next(ctx)

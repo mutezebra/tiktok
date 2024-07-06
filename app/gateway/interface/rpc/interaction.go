@@ -3,7 +3,7 @@ package rpc
 import (
 	"context"
 
-	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 )
 
 // rpc client

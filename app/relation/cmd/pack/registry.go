@@ -1,19 +1,25 @@
 package pack
 
 import (
-	relation "github.com/Mutezebra/tiktok/app/relation/domain/service"
-	"github.com/Mutezebra/tiktok/app/relation/interface/persistence/database"
-	"github.com/Mutezebra/tiktok/app/relation/usecase"
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/inject"
+	"fmt"
+
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/inject"
+	"github.com/mutezebra/tiktok/pkg/snowflake"
+	"github.com/mutezebra/tiktok/relation/config"
+	relation "github.com/mutezebra/tiktok/relation/domain/service"
+	"github.com/mutezebra/tiktok/relation/interface/persistence/database"
+	"github.com/mutezebra/tiktok/relation/usecase"
 )
 
 func RelationRegistry() *inject.Registry {
+	id := snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 	return &inject.Registry{
-		Addr:   config.Conf.Service[consts.RelationServiceName].Address,
-		Key:    config.Conf.Service[consts.RelationServiceName].ServiceName + "/" + config.Conf.Service[consts.RelationServiceName].Address,
-		Prefix: config.Conf.Etcd.ServicePrefix}
+		Addr:     config.Conf.Service[consts.RelationServiceName].SvcAddress,
+		Key:      config.Conf.Service[consts.RelationServiceName].ServiceName + fmt.Sprintf("/%d", id),
+		Prefix:   config.Conf.Etcd.ServicePrefix,
+		EndPoint: config.Conf.Etcd.Endpoint,
+	}
 }
 
 func ApplyRelation() *usecase.RelationCase {

@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 const (

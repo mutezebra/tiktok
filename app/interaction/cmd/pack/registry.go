@@ -1,20 +1,26 @@
 package pack
 
 import (
-	interaction "github.com/Mutezebra/tiktok/app/interaction/domain/service"
-	"github.com/Mutezebra/tiktok/app/interaction/interface/persistence/database"
+	"fmt"
 
-	"github.com/Mutezebra/tiktok/app/interaction/usecase"
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/inject"
+	interaction "github.com/mutezebra/tiktok/interaction/domain/service"
+	"github.com/mutezebra/tiktok/interaction/interface/persistence/database"
+	"github.com/mutezebra/tiktok/pkg/snowflake"
+
+	"github.com/mutezebra/tiktok/interaction/config"
+	"github.com/mutezebra/tiktok/interaction/usecase"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/inject"
 )
 
 func InteractionRegistry() *inject.Registry {
+	id := snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 	return &inject.Registry{
-		Addr:   config.Conf.Service[consts.InteractionServiceName].Address,
-		Key:    config.Conf.Service[consts.InteractionServiceName].ServiceName + "/" + config.Conf.Service[consts.InteractionServiceName].Address,
-		Prefix: config.Conf.Etcd.ServicePrefix}
+		Addr:     config.Conf.Service[consts.InteractionServiceName].SvcAddress,
+		Key:      config.Conf.Service[consts.InteractionServiceName].ServiceName + fmt.Sprintf("/%d", id),
+		Prefix:   config.Conf.Etcd.ServicePrefix,
+		EndPoint: config.Conf.Etcd.Endpoint,
+	}
 }
 
 func ApplyInteraction() *usecase.InteractionCase {

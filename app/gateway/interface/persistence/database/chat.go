@@ -7,8 +7,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/Mutezebra/tiktok/app/gateway/domain/repository"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/gateway/domain/repository"
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 type ChatRepository struct {

@@ -5,8 +5,8 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/video/config"
 )
 
 var RedisClient *redis.Client

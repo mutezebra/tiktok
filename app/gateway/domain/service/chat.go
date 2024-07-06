@@ -13,11 +13,11 @@ import (
 	"github.com/hertz-contrib/websocket"
 	"github.com/pkg/errors"
 
-	"github.com/Mutezebra/tiktok/app/gateway/domain/model"
-	"github.com/Mutezebra/tiktok/app/gateway/domain/repository"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/kafka"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/gateway/domain/model"
+	"github.com/mutezebra/tiktok/gateway/domain/repository"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/kafka"
+	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 type Service struct {

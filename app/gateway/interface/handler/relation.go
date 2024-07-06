@@ -2,18 +2,15 @@ package handler
 
 import (
 	"context"
-
-	"github.com/Mutezebra/tiktok/app/gateway/interface/pack"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/rpc"
-
-	"github.com/Mutezebra/tiktok/app/gateway/domain/model"
-
 	"strconv"
 
 	"github.com/cloudwego/hertz/pkg/app"
 
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/relation"
+	"github.com/mutezebra/tiktok/gateway/domain/model"
+	"github.com/mutezebra/tiktok/gateway/interface/pack"
+	"github.com/mutezebra/tiktok/gateway/interface/rpc"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
 )
 
 func FollowHandler() app.HandlerFunc {

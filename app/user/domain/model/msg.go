@@ -1,6 +1,6 @@
 package model
 
-import errno2 "github.com/Mutezebra/tiktok/pkg/errno"
+import errno2 "github.com/mutezebra/tiktok/pkg/errno"
 
 // User errno msgs
 var (
@@ -15,8 +15,13 @@ var (
 	CheckPasswordError           = errno2.New(CheckPassword, "checkout password failed")
 	GenerateTokenError           = errno2.New(GenerateToken, "generate token failed")
 
-	UserInfoError    = errno2.New(UserInfo, "")
-	GetUserInfoError = errno2.New(GetUserInfo, "get user info failed")
+	UserInfoError      = errno2.New(UserInfo, "")
+	GetUserInfoError   = errno2.New(GetUserInfo, "get user info failed")
+	GetFriendListError = errno2.New(GetFriendList, "get friend list failed")
+	GetFansListError   = errno2.New(GetFansList, "get fans list failed")
+	GetFollowListError = errno2.New(GetFollowList, "get follow list failed")
+	GetVideoListError  = errno2.New(GetVideoList, "get video list failed")
+	GetLikeListError   = errno2.New(GetLikeList, "get like list failed")
 
 	UserUploadAvatarError         = errno2.New(UserUploadAvatar, "")
 	GetAvatarNameError            = errno2.New(GetAvatarName, "get avatar name failed")

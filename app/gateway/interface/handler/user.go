@@ -4,15 +4,13 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/Mutezebra/tiktok/app/gateway/domain/model"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/pack"
-	"github.com/Mutezebra/tiktok/app/gateway/interface/rpc"
-
-	"github.com/Mutezebra/tiktok/consts"
-
 	"github.com/cloudwego/hertz/pkg/app"
 
-	"github.com/Mutezebra/tiktok/kitex_gen/api/user"
+	"github.com/mutezebra/tiktok/gateway/domain/model"
+	"github.com/mutezebra/tiktok/gateway/interface/pack"
+	"github.com/mutezebra/tiktok/gateway/interface/rpc"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/user"
 )
 
 func UserRegisterHandler() app.HandlerFunc {
@@ -62,6 +60,7 @@ func UserInfoHandler() app.HandlerFunc {
 			req.UID = new(int64)
 			*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
 		}
+
 		resp, err := rpc.Info(ctx, &req)
 		if err != nil {
 			pack.SendFailedResponse(c, err)

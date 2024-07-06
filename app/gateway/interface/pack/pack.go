@@ -4,15 +4,18 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/mutezebra/tiktok/pkg/errno"
 
-	"github.com/Mutezebra/tiktok/pkg/errno"
-	"github.com/Mutezebra/tiktok/pkg/log"
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 type Response struct {
 	Base Base `json:"base"`
 	Data any  `json:"data,omitempty"`
+}
+
+type ResponseNoData struct {
+	Base Base `json:"base"`
 }
 
 type Base struct {
@@ -21,7 +24,12 @@ type Base struct {
 }
 
 func SendResponse(c *app.RequestContext, data any) {
-	resp := &Response{
+	if data == nil {
+		c.JSON(http.StatusOK, ResponseNoData{Base{200, "operate success"}})
+		return
+	}
+
+	resp := Response{
 		Base: Base{
 			200,
 			"operate success",
@@ -33,14 +41,13 @@ func SendResponse(c *app.RequestContext, data any) {
 }
 
 func SendFailedResponse(c *app.RequestContext, err error) {
-	log.LogrusObj.Error(err)
 	var e errno.Errno
 	ok := errors.As(err, &e)
 	if !ok {
 		e = errno.Convert(err)
 	}
 
-	resp := &Response{
+	resp := &ResponseNoData{
 		Base: Base{
 			e.BizStatusCode(),
 			e.BizMessage(),

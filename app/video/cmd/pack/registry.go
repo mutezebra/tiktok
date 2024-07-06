@@ -1,26 +1,32 @@
 package pack
 
 import (
-	video "github.com/Mutezebra/tiktok/app/video/domain/service"
-	"github.com/Mutezebra/tiktok/app/video/interface/persistence/cache"
-	"github.com/Mutezebra/tiktok/app/video/interface/persistence/database"
-	"github.com/Mutezebra/tiktok/app/video/usecase"
-	"github.com/Mutezebra/tiktok/config"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/pkg/inject"
-	"github.com/Mutezebra/tiktok/pkg/oss"
+	"fmt"
+
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/inject"
+	"github.com/mutezebra/tiktok/pkg/oss"
+	"github.com/mutezebra/tiktok/pkg/snowflake"
+	"github.com/mutezebra/tiktok/video/config"
+	video "github.com/mutezebra/tiktok/video/domain/service"
+	"github.com/mutezebra/tiktok/video/interface/persistence/cache"
+	"github.com/mutezebra/tiktok/video/interface/persistence/database"
+	"github.com/mutezebra/tiktok/video/usecase"
 )
 
 func VideoRegistry() *inject.Registry {
+	id := snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 	return &inject.Registry{
-		Addr:   config.Conf.Service[consts.VideoServiceName].Address,
-		Key:    config.Conf.Service[consts.VideoServiceName].ServiceName + "/" + config.Conf.Service[consts.VideoServiceName].Address,
-		Prefix: config.Conf.Etcd.ServicePrefix}
+		Addr:     config.Conf.Service[consts.VideoServiceName].SvcAddress,
+		Key:      config.Conf.Service[consts.VideoServiceName].ServiceName + fmt.Sprintf("/%d", id),
+		Prefix:   config.Conf.Etcd.ServicePrefix,
+		EndPoint: config.Conf.Etcd.Endpoint,
+	}
 }
 
 func ApplyVideo() *usecase.VideoCase {
 	repo := database.NewVideoRepository()
-	ossModel := oss.NewOssModel()
+	ossModel := oss.NewOssModel(config.Conf.QiNiu.AvatarPath, config.Conf.QiNiu.VideoPath, config.Conf.QiNiu.CoverPath)
 	cacheRepo := cache.NewVideoCacheRepo()
 	service := &video.Service{
 		EnablePopularVideoRank:  true,

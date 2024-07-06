@@ -4,7 +4,7 @@ import (
 	"context"
 	"io"
 
-	idl "github.com/Mutezebra/tiktok/kitex_gen/api/video"
+	idl "github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
 )
 
 func VideoFeed(ctx context.Context, req *idl.VideoFeedReq, ch chan []byte) (err error) {

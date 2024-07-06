@@ -7,20 +7,37 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Mutezebra/tiktok/app/user/domain/model"
-	"github.com/Mutezebra/tiktok/app/user/domain/repository"
+	"github.com/bytedance/gopkg/cloud/metainfo"
 
+	"github.com/cloudwego/kitex/client"
+	"github.com/cloudwego/kitex/client/streamclient"
+	"github.com/cloudwego/kitex/pkg/transmeta"
+	"github.com/cloudwego/kitex/transport"
 	"github.com/pkg/errors"
-
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/Mutezebra/tiktok/pkg/snowflake"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction/interactionservice"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation/relationservice"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/user/userservice"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video/videoservice"
+	"github.com/mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/snowflake"
+	"github.com/mutezebra/tiktok/pkg/trace"
+	"github.com/mutezebra/tiktok/user/config"
+	"github.com/mutezebra/tiktok/user/domain/model"
+	"github.com/mutezebra/tiktok/user/domain/repository"
 )
 
 type Service struct {
-	Repo repository.UserRepository
-	OSS  model.OSS
-	MFA  model.MFA
+	Repo               repository.UserRepository
+	OSS                model.OSS
+	MFA                model.MFA
+	Resolver           model.Resolver
+	lastServiceAddress map[string]string // service_name -> service_address
 }
 
 func NewService(service *Service) *Service {
@@ -33,11 +50,15 @@ func NewService(service *Service) *Service {
 	if service.MFA == nil {
 		panic("user service.MFA should not be nil")
 	}
+	if service.Resolver == nil {
+		panic("user resolver.Resolver should not be nil")
+	}
+	service.lastServiceAddress = make(map[string]string)
 	return service
 }
 
 func (srv *Service) GenerateID() int64 {
-	return snowflake.GenerateID()
+	return snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 }
 
 func (srv *Service) EncryptPassword(password string) (string, error) {
@@ -93,4 +114,145 @@ func (srv *Service) GenerateTotp(userName string) (secret string, base64 string,
 
 func (srv *Service) VerifyOtp(token string, secret string) bool {
 	return srv.MFA.VerifyOtp(token, secret)
+}
+
+func (srv *Service) Discovery(serviceName string) string {
+	prefix := config.Conf.Etcd.ServicePrefix + config.Conf.Service[serviceName].ServiceName
+	addr, err := srv.Resolver.ResolveWithPrefix(context.Background(), prefix)
+	if err != nil {
+		log.LogrusObj.Panic(err)
+	}
+	log.LogrusObj.Infof("get the %s service address %s", serviceName, addr[0])
+	return addr[0]
+}
+
+var (
+	userClient        userservice.Client
+	videoClient       videoservice.Client
+	videoStreamClient videoservice.StreamClient
+	interactionClient interactionservice.Client
+	relationClient    relationservice.Client
+)
+
+func (srv *Service) GetClient(serviceName string) any {
+	equal := func() bool {
+		newName := srv.Discovery(serviceName)
+		if _, ok := srv.lastServiceAddress[serviceName]; !ok {
+			srv.lastServiceAddress[serviceName] = newName
+			return false
+		}
+		if newName == srv.lastServiceAddress[serviceName] {
+			return true
+		}
+		srv.lastServiceAddress[serviceName] = newName
+		return false
+	}
+
+	switch serviceName {
+	case consts.UserServiceName:
+		if equal() {
+			return userClient
+		}
+		srv.initClient(serviceName)
+		return userClient
+	case consts.VideoServiceName:
+		if equal() {
+			return videoClient
+		}
+		srv.initClient(serviceName)
+		return videoClient
+	case consts.InteractionServiceName:
+		if equal() {
+			return interactionClient
+		}
+		srv.initClient(serviceName)
+		return interactionClient
+	case consts.RelationServiceName:
+		if equal() {
+			return relationClient
+		}
+		srv.initClient(serviceName)
+		return relationClient
+	}
+	log.LogrusObj.Panic("not supported service")
+	return nil
+}
+
+func (srv *Service) initClient(serviceName string) {
+	switch serviceName {
+	case consts.UserServiceName:
+		userClient = userservice.MustNewClient(serviceName,
+			client.WithHostPorts(srv.Discovery(serviceName)),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
+			client.WithMiddleware(trace.ClientTraceMiddleware("user-userClient")),
+		)
+	case consts.VideoServiceName:
+		videoClient = videoservice.MustNewClient(serviceName,
+			client.WithHostPorts(srv.Discovery(serviceName)),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
+			client.WithMiddleware(trace.ClientTraceMiddleware("user-videoClient")))
+		videoStreamClient = videoservice.MustNewStreamClient(serviceName,
+			streamclient.WithHostPorts(srv.Discovery(serviceName)),
+			streamclient.WithMetaHandler(transmeta.ClientTTHeaderHandler),
+			streamclient.WithMiddleware(trace.ClientTraceMiddleware("user-videoStreamClient")))
+	case consts.InteractionServiceName:
+		interactionClient = interactionservice.MustNewClient(serviceName,
+			client.WithHostPorts(srv.Discovery(serviceName)),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
+			client.WithMiddleware(trace.ClientTraceMiddleware("user-interactionClient")))
+	case consts.RelationServiceName:
+		relationClient = relationservice.MustNewClient(serviceName,
+			client.WithHostPorts(srv.Discovery(serviceName)),
+			client.WithTransportProtocol(transport.TTHeader),
+			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
+			client.WithMiddleware(trace.ClientTraceMiddleware("user-relationClient")))
+	}
+}
+
+func (srv *Service) GetFriendsList(ctx context.Context, uid int64) (*relation.GetFriendsListResp, error) {
+	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "relationService.GetFriendsList")
+	c := srv.GetClient(consts.RelationServiceName).(relationservice.Client)
+	req := &relation.GetFriendsListReq{UID: &uid}
+	return c.GetFriendsList(ctx, req)
+}
+
+func (srv *Service) GetFansList(ctx context.Context, uid int64) (*relation.GetFansListResp, error) {
+	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "relationService.GetFansList")
+	c := srv.GetClient(consts.RelationServiceName).(relationservice.Client)
+	req := &relation.GetFansListReq{UID: &uid}
+	return c.GetFansList(ctx, req)
+}
+
+func (srv *Service) GetFollowList(ctx context.Context, uid int64) (*relation.GetFollowListResp, error) {
+	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "relationService.GetFollowsList")
+	c := srv.GetClient(consts.RelationServiceName).(relationservice.Client)
+	req := &relation.GetFollowListReq{UID: &uid}
+	return c.GetFollowList(ctx, req)
+}
+
+func (srv *Service) GetVideoList(ctx context.Context, uid int64) (*video.GetVideoListResp, error) {
+	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "videoService.GetVideoList")
+	c := srv.GetClient(consts.VideoServiceName).(videoservice.Client)
+	pages, size := int32(1), int8(10)
+	req := &video.GetVideoListReq{
+		UID:   &uid,
+		Pages: &pages,
+		Size:  &size,
+	}
+	return c.GetVideoList(ctx, req)
+}
+
+func (srv *Service) LikeList(ctx context.Context, uid int64) (*interaction.LikeListResp, error) {
+	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "interaction.GetLikeList")
+	c := srv.GetClient(consts.InteractionServiceName).(interactionservice.Client)
+	pages, size := int8(1), int8(10)
+	req := &interaction.LikeListReq{
+		UID:      &uid,
+		PageNum:  &pages,
+		PageSize: &size,
+	}
+	return c.LikeList(ctx, req)
 }

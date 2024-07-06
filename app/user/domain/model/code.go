@@ -13,8 +13,13 @@ const (
 	CheckPassword           = 10012
 	GenerateToken           = 10013
 
-	UserInfo    = 10020
-	GetUserInfo = 10021
+	UserInfo      = 10020
+	GetUserInfo   = 10021
+	GetFriendList = 10022
+	GetFansList   = 10023
+	GetFollowList = 10024
+	GetVideoList  = 10025
+	GetLikeList   = 10026
 
 	UserUploadAvatar         = 10030
 	GetAvatarName            = 10031

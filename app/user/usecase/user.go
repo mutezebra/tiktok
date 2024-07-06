@@ -5,14 +5,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Mutezebra/tiktok/app/user/domain/model"
-	"github.com/Mutezebra/tiktok/app/user/domain/repository"
-	"github.com/Mutezebra/tiktok/app/user/usecase/pack"
-
-	"github.com/Mutezebra/tiktok/pkg/utils"
-
-	userService "github.com/Mutezebra/tiktok/app/user/domain/service"
-	idl "github.com/Mutezebra/tiktok/kitex_gen/api/user"
+	idl "github.com/mutezebra/tiktok/pkg/kitex_gen/api/user"
+	"github.com/mutezebra/tiktok/pkg/trace"
+	"github.com/mutezebra/tiktok/pkg/utils"
+	"github.com/mutezebra/tiktok/user/domain/model"
+	"github.com/mutezebra/tiktok/user/domain/repository"
+	userService "github.com/mutezebra/tiktok/user/domain/service"
+	"github.com/mutezebra/tiktok/user/usecase/pack"
 )
 
 type UserCase struct {
@@ -47,8 +46,7 @@ func (u *UserCase) Register(ctx context.Context, req *idl.RegisterReq) (r *idl.R
 		return nil, pack.ReturnError(model.EncryptPasswordError, err)
 	}
 
-	var exist bool
-	if exist, err = u.repo.UserNameExists(ctx, dto.username); err != nil || exist {
+	if exist, err := u.repo.UserNameExists(ctx, dto.username); err != nil || exist {
 		return nil, pack.ReturnError(model.DatabaseUserNameExistsError, err)
 	}
 
@@ -83,13 +81,45 @@ func (u *UserCase) Login(ctx context.Context, req *idl.LoginReq) (r *idl.LoginRe
 }
 
 func (u *UserCase) Info(ctx context.Context, req *idl.InfoReq) (r *idl.InfoResp, err error) {
+	tag := trace.NewTags()
+	tag.SetSpanType("user-usecase")
+
 	user, err := u.repo.UserInfoByID(ctx, *req.UID)
 	if err != nil {
 		return nil, pack.ReturnError(model.GetUserInfoError, err)
 	}
-
 	r = new(idl.InfoResp)
 	r.Data = repoU2IDL(*user)
+
+	videoList, err := u.service.GetVideoList(ctx, req.GetUID())
+	if err != nil {
+		return nil, pack.ReturnError(model.GetVideoListError, err)
+	}
+	r.VideoList = videoList
+
+	friends, err := u.service.GetFriendsList(ctx, req.GetUID())
+	if err != nil {
+		return nil, pack.ReturnError(model.GetFriendListError, err)
+	}
+	r.Friends = friends
+
+	fans, err := u.service.GetFansList(ctx, req.GetUID())
+	if err != nil {
+		return nil, pack.ReturnError(model.GetFansListError, err)
+	}
+	r.Fans = fans
+
+	follows, err := u.service.GetFollowList(ctx, req.GetUID())
+	if err != nil {
+		return nil, pack.ReturnError(model.GetFollowListError, err)
+	}
+	r.Follows = follows
+
+	likeList, err := u.service.LikeList(ctx, req.GetUID())
+	if err != nil {
+		return nil, pack.ReturnError(model.GetLikeListError, err)
+	}
+	r.LikeList = likeList
 
 	return r, nil
 }

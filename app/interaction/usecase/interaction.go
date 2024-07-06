@@ -5,13 +5,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Mutezebra/tiktok/app/interaction/domain/model"
-	"github.com/Mutezebra/tiktok/app/interaction/domain/repository"
-	interactionService "github.com/Mutezebra/tiktok/app/interaction/domain/service"
-	"github.com/Mutezebra/tiktok/app/interaction/usecase/pack"
-	"github.com/Mutezebra/tiktok/consts"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/interaction"
-	"github.com/Mutezebra/tiktok/kitex_gen/api/video"
+	"github.com/mutezebra/tiktok/interaction/domain/model"
+	"github.com/mutezebra/tiktok/interaction/domain/repository"
+	interactionService "github.com/mutezebra/tiktok/interaction/domain/service"
+	"github.com/mutezebra/tiktok/interaction/usecase/pack"
+	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
+	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
 )
 
 type InteractionCase struct {
@@ -115,7 +115,7 @@ func (i *InteractionCase) LikeList(ctx context.Context, req *interaction.LikeLis
 	return r, nil
 }
 
-func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentReq) (*interaction.CommentResp, error) {
+func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentReq) (r *interaction.CommentResp, err error) {
 	dto := &commentDTO{
 		cid:     i.service.GenerateID(),
 		uid:     req.GetUID(),
@@ -141,7 +141,7 @@ func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentR
 		dto.replyID = 0
 		dto.cid = cid
 		dto.rootID = 0
-		if err := i.repo.CreateComment(ctx, dtoC2Repo(dto)); err != nil {
+		if err = i.repo.CreateComment(ctx, dtoC2Repo(dto)); err != nil {
 			return nil, pack.ReturnError(model.DatabaseCreateCommentError, err)
 		}
 	}

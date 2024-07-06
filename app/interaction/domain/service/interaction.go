@@ -1,8 +1,9 @@
 package interaction
 
 import (
-	"github.com/Mutezebra/tiktok/app/interaction/domain/repository"
-	"github.com/Mutezebra/tiktok/pkg/snowflake"
+	"github.com/mutezebra/tiktok/interaction/config"
+	"github.com/mutezebra/tiktok/interaction/domain/repository"
+	"github.com/mutezebra/tiktok/pkg/snowflake"
 )
 
 type Service struct {
@@ -17,5 +18,5 @@ func NewService(service *Service) *Service {
 }
 
 func (srv *Service) GenerateID() int64 {
-	return snowflake.GenerateID()
+	return snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 }

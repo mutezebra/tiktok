@@ -2,9 +2,11 @@ package trace
 
 import (
 	"context"
-	"github.com/bytedance/gopkg/cloud/metainfo"
-	"github.com/mutezebra/tiktok/pkg/consts"
 	"log"
+
+	"github.com/bytedance/gopkg/cloud/metainfo"
+
+	"github.com/mutezebra/tiktok/pkg/consts"
 
 	"github.com/cloudwego/kitex/pkg/endpoint"
 	"github.com/opentracing/opentracing-go"

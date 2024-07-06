@@ -5,8 +5,10 @@ package relationservice
 import (
 	"context"
 	"errors"
+
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
+
 	relation "github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
 )
 

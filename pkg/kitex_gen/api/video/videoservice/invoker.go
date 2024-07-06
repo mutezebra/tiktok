@@ -4,6 +4,7 @@ package videoservice
 
 import (
 	server "github.com/cloudwego/kitex/server"
+
 	video "github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
 )
 

@@ -4,6 +4,7 @@ package userservice
 
 import (
 	server "github.com/cloudwego/kitex/server"
+
 	user "github.com/mutezebra/tiktok/pkg/kitex_gen/api/user"
 )
 

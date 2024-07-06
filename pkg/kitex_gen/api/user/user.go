@@ -6,11 +6,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/apache/thrift/lib/go/thrift"
+
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
-	"strings"
 )
 
 type UserInfo struct {

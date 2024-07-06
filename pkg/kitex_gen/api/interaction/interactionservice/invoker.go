@@ -4,6 +4,7 @@ package interactionservice
 
 import (
 	server "github.com/cloudwego/kitex/server"
+
 	interaction "github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 )
 

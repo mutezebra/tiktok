@@ -4,6 +4,7 @@ package relationservice
 
 import (
 	server "github.com/cloudwego/kitex/server"
+
 	relation "github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
 )
 

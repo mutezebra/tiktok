@@ -60,9 +60,9 @@ func (t *tags) SetKV(k string, v interface{}) {
 }
 
 func (t *tags) DelKV(k string) {
-    if _,ok := t.kvs[k];ok {
-        delete(t.kvs,k)
-    }
+	if _, ok := t.kvs[k]; ok {
+		delete(t.kvs, k)
+	}
 }
 
 func (t *tags) SetKVS(kvs map[string]interface{}) {

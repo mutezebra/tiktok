@@ -12,10 +12,10 @@ import (
 	"github.com/mutezebra/tiktok/pkg/log"
 )
 
-func ServerTraceMiddleware(ServiceName string) endpoint.Middleware {
+func ServerTraceMiddleware(serviceName string) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, req, resp interface{}) (err error) {
-			tracer, closer, _ := NewTracer(ServiceName, "http://127.0.0.1:14268/api/traces", "127.0.0.1:5775")
+			tracer, closer, _ := NewTracer(serviceName, "http://127.0.0.1:14268/api/traces", "127.0.0.1:5775")
 			defer closer.Close()
 			method, ok := metainfo.GetPersistentValue(ctx, consts.TracingRpcMethod)
 			if !ok {

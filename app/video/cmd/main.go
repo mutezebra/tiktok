@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"net"
-	"os"
-	"runtime/pprof"
 
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 
@@ -29,8 +27,6 @@ func main() {
 	registry := inject.NewRegistry(pack.VideoRegistry())
 	defer registry.Close()
 	registry.MustRegister(context.Background())
-	//tracer, closer, err := trace.NewTracer(consts.VideoServiceName, config.Conf.Jaeger.CollectorEndpoint, config.Conf.Jaeger.AgentHostPort)
-	//defer closer.Close()
 
 	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.VideoServiceName].Address)
 	srv := videoservice.NewServer(pack.ApplyVideo(),
@@ -39,22 +35,6 @@ func main() {
 		server.WithMetaHandler(transmeta.ServerTTHeaderHandler),
 		server.WithMiddleware(trace.ServerTraceMiddleware(consts.VideoServiceName)),
 	)
-
-	f, err := os.Create("../datas/video-cpu.pprof")
-	if err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	if err = pprof.StartCPUProfile(f); err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	defer pprof.StopCPUProfile()
-	memFile, err := os.Create("../datas/video-mem.pprof")
-	if err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	if err = pprof.WriteHeapProfile(memFile); err != nil {
-		log.LogrusObj.Fatal(err)
-	}
 
 	if err := srv.Run(); err != nil {
 		log.LogrusObj.Panic(err)

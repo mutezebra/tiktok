@@ -126,7 +126,8 @@ func (i *InteractionCase) Comment(ctx context.Context, req *interaction.CommentR
 	cid := i.service.GenerateID()
 	if req.CommentID != nil { // 说明是对评论的评论
 		dto.replyID = req.GetCommentID()
-		rootId, err := i.repo.GetCommentRootID(ctx, dto.replyID)
+		var rootId int64
+		rootId, err = i.repo.GetCommentRootID(ctx, dto.replyID)
 		if err != nil {
 			return nil, pack.ReturnError(model.DatabaseGetCommentRootIDError, err)
 		}

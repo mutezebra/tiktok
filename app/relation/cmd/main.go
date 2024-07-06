@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"net"
-	"os"
-	"runtime/pprof"
 
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 
@@ -35,22 +33,6 @@ func main() {
 		server.WithMetaHandler(transmeta.ServerTTHeaderHandler),
 		server.WithMiddleware(trace.ServerTraceMiddleware(consts.RelationServiceName)),
 	)
-
-	f, err := os.Create("../datas/relation-cpu.pprof")
-	if err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	if err = pprof.StartCPUProfile(f); err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	defer pprof.StopCPUProfile()
-	memFile, err := os.Create("../datas/relation-mem.pprof")
-	if err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	if err = pprof.WriteHeapProfile(memFile); err != nil {
-		log.LogrusObj.Fatal(err)
-	}
 
 	if err := srv.Run(); err != nil {
 		log.LogrusObj.Panic(err)

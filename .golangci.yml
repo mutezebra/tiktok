@@ -27,7 +27,6 @@ linters-settings:
     require-specific: true
 
   govet:
-    check-shadowing: true
     check-unreachable: true
     check-reangeloops: true
     check-copylocks: true

@@ -46,7 +46,8 @@ func (u *UserCase) Register(ctx context.Context, req *idl.RegisterReq) (r *idl.R
 		return nil, pack.ReturnError(model.EncryptPasswordError, err)
 	}
 
-	if exist, err := u.repo.UserNameExists(ctx, dto.username); err != nil || exist {
+	var exist bool
+	if exist, err = u.repo.UserNameExists(ctx, dto.username); err != nil || exist {
 		return nil, pack.ReturnError(model.DatabaseUserNameExistsError, err)
 	}
 

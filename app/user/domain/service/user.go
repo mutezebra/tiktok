@@ -10,7 +10,6 @@ import (
 	"github.com/bytedance/gopkg/cloud/metainfo"
 
 	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/client/streamclient"
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/transport"
 	"github.com/pkg/errors"
@@ -129,7 +128,6 @@ func (srv *Service) Discovery(serviceName string) string {
 var (
 	userClient        userservice.Client
 	videoClient       videoservice.Client
-	videoStreamClient videoservice.StreamClient
 	interactionClient interactionservice.Client
 	relationClient    relationservice.Client
 )
@@ -193,10 +191,6 @@ func (srv *Service) initClient(serviceName string) {
 			client.WithTransportProtocol(transport.TTHeader),
 			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 			client.WithMiddleware(trace.ClientTraceMiddleware("user-videoClient")))
-		videoStreamClient = videoservice.MustNewStreamClient(serviceName,
-			streamclient.WithHostPorts(srv.Discovery(serviceName)),
-			streamclient.WithMetaHandler(transmeta.ClientTTHeaderHandler),
-			streamclient.WithMiddleware(trace.ClientTraceMiddleware("user-videoStreamClient")))
 	case consts.InteractionServiceName:
 		interactionClient = interactionservice.MustNewClient(serviceName,
 			client.WithHostPorts(srv.Discovery(serviceName)),

@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"net"
-	"net/http"
-	"os"
-	"runtime/pprof"
 
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/transmeta"
@@ -39,30 +36,6 @@ func main() {
 		server.WithMiddleware(trace.ServerTraceMiddleware("user")),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: consts.UserServiceName}),
 		server.WithMetaHandler(transmeta.ServerTTHeaderHandler))
-
-	go func() {
-		// 启动一个 http server，注意 pprof 相关的 handler 已经自动注册过了
-		if err := http.ListenAndServe(":6060", nil); err != nil {
-			log.LogrusObj.Panic(err)
-		}
-		os.Exit(0)
-	}()
-
-	f, err := os.Create("../datas/user-cpu.pprof")
-	if err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	if err = pprof.StartCPUProfile(f); err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	defer pprof.StopCPUProfile()
-	memFile, err := os.Create("../datas/user-mem.pprof")
-	if err != nil {
-		log.LogrusObj.Fatal(err)
-	}
-	if err = pprof.WriteHeapProfile(memFile); err != nil {
-		log.LogrusObj.Fatal(err)
-	}
 
 	if err = srv.Run(); err != nil {
 		log.LogrusObj.Panic(err)

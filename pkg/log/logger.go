@@ -29,13 +29,6 @@ func (l *Logger) Error(v any) {
 	l.Logger.Error(*str)
 }
 
-func (l *Logger) Debug(v any) {
-	if l.Logger.IsLevelEnabled(logrus.DebugLevel) {
-		str := l.formatCallStack(v)
-		l.Logger.Debug(*str)
-	}
-}
-
 func (l *Logger) formatCallStack(v any) *string {
 	builder := l.get()
 	builder.WriteString(fmt.Sprintf("%v  \n", v))

@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+# 生成所需要的相关文件夹
 sudo mkdir -p /data/etcd
 
 sudo mkdir -p /data/gateway/mysql

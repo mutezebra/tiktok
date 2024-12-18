@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+# 相关操作注释请见 gateway.sh
 cd "$(dirname "$0")" || exit 1
 
 cd ..

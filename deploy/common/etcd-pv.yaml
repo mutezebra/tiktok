@@ -12,14 +12,6 @@ spec:
   storageClassName: local-path
   local:
     path: /data/etcd
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - k3s
 
 ---
 

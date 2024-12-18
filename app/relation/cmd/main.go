@@ -5,9 +5,6 @@ import (
 	"net"
 
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
-
-	"github.com/mutezebra/tiktok/pkg/trace"
-
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 
@@ -18,6 +15,7 @@ import (
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation/relationservice"
 	"github.com/mutezebra/tiktok/pkg/log"
+	"github.com/mutezebra/tiktok/pkg/trace"
 )
 
 func main() {

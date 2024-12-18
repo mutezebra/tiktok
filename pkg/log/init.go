@@ -78,8 +78,12 @@ func updateLogger(system string) {
 	for {
 		now := time.Now().Unix()
 		remain := oneday - (now % oneday)
-		src, _ := setOutPutFile(system)
+		time.Sleep(time.Duration(remain) * time.Second)
+
+		src, err := setOutPutFile(system)
+		if err != nil {
+			panic(err)
+		}
 		LogrusObj.Out = src
-		time.Sleep(time.Duration(remain))
 	}
 }

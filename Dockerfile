@@ -13,12 +13,10 @@ RUN mkdir -p /app
 RUN mkdir -p /app/publish
 
 WORKDIR /app
-# COPY
 COPY . .
 
 RUN go mod tidy
-
-RUN go build -ldflags="-w -s" -o ./main cmd/main.go
+RUN go build -ldflags="-w -s" -o ./main app/${SERVICE}/cmd/main.go
 
 WORKDIR /app
 RUN cp main publish/ && \
@@ -39,6 +37,7 @@ RUN apk update --no-cache && apk --no-cache add ca-certificates tzdata bash
 WORKDIR /app
 
 COPY --from=builder /app/publish .
+RUN mkdir -p "logs"
 
 # 指定运行时环境变量
 EXPOSE ${PORT}

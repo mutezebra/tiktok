@@ -41,6 +41,8 @@ function wait_for_pods_running() {
 
 cd "$(dirname "$0")" || exit 1
 
+sh pull_images.sh
+
 # 回到项目根目录
 cd ..
 

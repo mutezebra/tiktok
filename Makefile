@@ -9,10 +9,14 @@ deploy:
 	@echo "$(GREEN_COLOR_START) Common modules are being deployed $(COLOR_END)"
 	@sudo sh ./scripts/common.sh
 
-	@$(foreach script, dir gateway interaction relation user video, \
+	@$(foreach script, dir interaction relation user video gateway, \
 		echo "$(GREEN_COLOR_START) $(shell echo $(script) | tr '[:lower:]' '[:upper:]') modules are being deployed $(COLOR_END)"; \
 		sudo sh ./scripts/$(script).sh; \
 	)
+
+# 如果你的 k8s runtime 为 docker 的话可以手动进行这个操作. 事实上他会在 ./scripts/common.sh 中被自动执行
+.PHONY: pull
+	@sh ./scripts/pull_images.sh
 
 # 格式化代码，我们使用 gofumpt，是 fmt 的严格超集
 .PHONY: fmt
@@ -46,4 +50,3 @@ tidy:
 # 一键修正规范并执行代码检查
 .PHONY: verify
 verify: vet fmt import lint vulncheck tidy
-

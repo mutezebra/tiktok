@@ -5,13 +5,13 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/mutezebra/tiktok/app/user/domain/model"
+	"github.com/mutezebra/tiktok/app/user/domain/repository"
+	userService "github.com/mutezebra/tiktok/app/user/domain/service"
+	"github.com/mutezebra/tiktok/app/user/usecase/pack"
 	idl "github.com/mutezebra/tiktok/pkg/kitex_gen/api/user"
 	"github.com/mutezebra/tiktok/pkg/trace"
 	"github.com/mutezebra/tiktok/pkg/utils"
-	"github.com/mutezebra/tiktok/user/domain/model"
-	"github.com/mutezebra/tiktok/user/domain/repository"
-	userService "github.com/mutezebra/tiktok/user/domain/service"
-	"github.com/mutezebra/tiktok/user/usecase/pack"
 )
 
 type UserCase struct {

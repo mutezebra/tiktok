@@ -7,15 +7,15 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/websocket"
 
-	"github.com/mutezebra/tiktok/gateway/domain/model"
-	"github.com/mutezebra/tiktok/gateway/interface/pack"
-	"github.com/mutezebra/tiktok/gateway/interface/persistence/database"
-	"github.com/mutezebra/tiktok/gateway/usecase"
+	"github.com/mutezebra/tiktok/app/gateway/domain/model"
+	"github.com/mutezebra/tiktok/app/gateway/interface/pack"
+	"github.com/mutezebra/tiktok/app/gateway/interface/persistence/database"
+	"github.com/mutezebra/tiktok/app/gateway/usecase"
 	"github.com/mutezebra/tiktok/pkg/consts"
 )
 
 func ChatHandler() app.HandlerFunc {
-	var upgrader = websocket.HertzUpgrader{
+	upgrader := websocket.HertzUpgrader{
 		CheckOrigin: func(ctx *app.RequestContext) bool {
 			return true
 		},

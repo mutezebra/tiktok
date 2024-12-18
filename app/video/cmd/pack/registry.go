@@ -3,15 +3,15 @@ package pack
 import (
 	"fmt"
 
+	"github.com/mutezebra/tiktok/app/video/config"
+	video "github.com/mutezebra/tiktok/app/video/domain/service"
+	"github.com/mutezebra/tiktok/app/video/interface/persistence/cache"
+	"github.com/mutezebra/tiktok/app/video/interface/persistence/database"
+	"github.com/mutezebra/tiktok/app/video/usecase"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/oss"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
-	"github.com/mutezebra/tiktok/video/config"
-	video "github.com/mutezebra/tiktok/video/domain/service"
-	"github.com/mutezebra/tiktok/video/interface/persistence/cache"
-	"github.com/mutezebra/tiktok/video/interface/persistence/database"
-	"github.com/mutezebra/tiktok/video/usecase"
 )
 
 func VideoRegistry() *inject.Registry {

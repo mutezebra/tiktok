@@ -7,8 +7,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
+	"github.com/mutezebra/tiktok/app/relation/config"
 	"github.com/mutezebra/tiktok/pkg/log"
-	"github.com/mutezebra/tiktok/relation/config"
 )
 
 var _db *sql.DB

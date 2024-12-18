@@ -7,7 +7,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 
-	"github.com/mutezebra/tiktok/gateway/config"
+	"github.com/mutezebra/tiktok/app/gateway/config"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/trace"

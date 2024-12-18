@@ -4,15 +4,16 @@ import (
 	"os"
 	"runtime/pprof"
 
-	"github.com/mutezebra/tiktok/gateway/config"
-	"github.com/mutezebra/tiktok/gateway/interface/persistence/database"
-	"github.com/mutezebra/tiktok/gateway/interface/router"
-	"github.com/mutezebra/tiktok/gateway/interface/rpc"
+	"github.com/mutezebra/tiktok/app/gateway/config"
+	"github.com/mutezebra/tiktok/app/gateway/interface/persistence/database"
+	"github.com/mutezebra/tiktok/app/gateway/interface/router"
+	"github.com/mutezebra/tiktok/app/gateway/interface/rpc"
 	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 func main() {
 	GatewayInit()
+
 	h := router.NewRouter()
 
 	f, err := os.Create("../datas/gateway-cpu.pprof")

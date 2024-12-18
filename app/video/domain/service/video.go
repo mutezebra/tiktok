@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mutezebra/tiktok/app/video/config"
+	"github.com/mutezebra/tiktok/app/video/domain/model"
+	"github.com/mutezebra/tiktok/app/video/domain/repository"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
-	"github.com/mutezebra/tiktok/video/config"
-	"github.com/mutezebra/tiktok/video/domain/model"
-	"github.com/mutezebra/tiktok/video/domain/repository"
 )
 
 type Service struct {

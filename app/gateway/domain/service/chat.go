@@ -13,8 +13,8 @@ import (
 	"github.com/hertz-contrib/websocket"
 	"github.com/pkg/errors"
 
-	"github.com/mutezebra/tiktok/gateway/domain/model"
-	"github.com/mutezebra/tiktok/gateway/domain/repository"
+	"github.com/mutezebra/tiktok/app/gateway/domain/model"
+	"github.com/mutezebra/tiktok/app/gateway/domain/repository"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/kafka"
 	"github.com/mutezebra/tiktok/pkg/log"
@@ -33,8 +33,10 @@ type Service struct {
 	enableAsyncPersistence bool
 }
 
-var once sync.Once
-var defaultService *Service
+var (
+	once           sync.Once
+	defaultService *Service
+)
 
 func DefaultService(repo repository.ChatRepository, enableAsyncPersistence bool) *Service {
 	once.Do(func() {

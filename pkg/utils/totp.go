@@ -10,8 +10,7 @@ import (
 	"github.com/pquerna/otp/totp"
 )
 
-type MFAModel struct {
-}
+type MFAModel struct{}
 
 func NewMFAModel() *MFAModel {
 	return &MFAModel{}

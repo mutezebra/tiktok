@@ -11,9 +11,9 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 
-	"github.com/mutezebra/tiktok/interaction/cmd/pack"
-	"github.com/mutezebra/tiktok/interaction/config"
-	"github.com/mutezebra/tiktok/interaction/interface/persistence/database"
+	"github.com/mutezebra/tiktok/app/interaction/cmd/pack"
+	"github.com/mutezebra/tiktok/app/interaction/config"
+	"github.com/mutezebra/tiktok/app/interaction/interface/persistence/database"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction/interactionservice"

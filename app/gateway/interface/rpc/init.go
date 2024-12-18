@@ -9,8 +9,8 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/transport"
 
-	"github.com/mutezebra/tiktok/gateway/config"
-	"github.com/mutezebra/tiktok/gateway/domain/model"
+	"github.com/mutezebra/tiktok/app/gateway/config"
+	"github.com/mutezebra/tiktok/app/gateway/domain/model"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/errno"
 	"github.com/mutezebra/tiktok/pkg/inject"

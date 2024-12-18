@@ -11,13 +11,13 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 
+	"github.com/mutezebra/tiktok/app/relation/cmd/pack"
+	"github.com/mutezebra/tiktok/app/relation/config"
+	"github.com/mutezebra/tiktok/app/relation/interface/persistence/database"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation/relationservice"
 	"github.com/mutezebra/tiktok/pkg/log"
-	"github.com/mutezebra/tiktok/relation/cmd/pack"
-	"github.com/mutezebra/tiktok/relation/config"
-	"github.com/mutezebra/tiktok/relation/interface/persistence/database"
 )
 
 func main() {

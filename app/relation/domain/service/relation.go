@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/mutezebra/tiktok/relation/domain/repository"
+	"github.com/mutezebra/tiktok/app/relation/domain/repository"
 )
 
 type Service struct {

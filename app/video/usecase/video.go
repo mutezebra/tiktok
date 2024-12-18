@@ -7,12 +7,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/mutezebra/tiktok/app/video/domain/model"
+	"github.com/mutezebra/tiktok/app/video/domain/repository"
+	videoService "github.com/mutezebra/tiktok/app/video/domain/service"
+	"github.com/mutezebra/tiktok/app/video/usecase/pack"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
-	"github.com/mutezebra/tiktok/video/domain/model"
-	"github.com/mutezebra/tiktok/video/domain/repository"
-	videoService "github.com/mutezebra/tiktok/video/domain/service"
-	"github.com/mutezebra/tiktok/video/usecase/pack"
 )
 
 type VideoCase struct {

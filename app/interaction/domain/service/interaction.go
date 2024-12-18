@@ -1,8 +1,8 @@
 package interaction
 
 import (
-	"github.com/mutezebra/tiktok/interaction/config"
-	"github.com/mutezebra/tiktok/interaction/domain/repository"
+	"github.com/mutezebra/tiktok/app/interaction/config"
+	"github.com/mutezebra/tiktok/app/interaction/domain/repository"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
 )
 

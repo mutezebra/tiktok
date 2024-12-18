@@ -6,9 +6,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 
-	"github.com/mutezebra/tiktok/gateway/config"
-	"github.com/mutezebra/tiktok/gateway/interface/handler"
-	"github.com/mutezebra/tiktok/gateway/interface/middleware"
+	"github.com/mutezebra/tiktok/app/gateway/config"
+	"github.com/mutezebra/tiktok/app/gateway/interface/handler"
+	"github.com/mutezebra/tiktok/app/gateway/interface/middleware"
 	"github.com/mutezebra/tiktok/pkg/consts"
 )
 

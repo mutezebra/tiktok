@@ -9,7 +9,7 @@ COPY . /app
 RUN --mount=type=cache,mode=0777,id=go-mode,target=/go/pkg/mod \
     go mod tidy
 
-RUN CGO_ENABLED=0 GOOS=linux go build  -ldflags="-w -s" -o ./main cmd/main.go
+RUN go build  -ldflags="-w -s" -o ./main cmd/main.go
 
 WORKDIR /app
 RUN mkdir publish  \

@@ -53,7 +53,7 @@ func setOutPutFile(system string) (*os.File, error) {
 	}
 	_, err := os.Stat(logFilePath)
 	if os.IsNotExist(err) {
-		err = os.Mkdir(logFilePath, 0777)
+		err = os.Mkdir(logFilePath, 0o777)
 		if err != nil {
 			return nil, err
 		}

@@ -3,7 +3,7 @@ package chat
 import (
 	"time"
 
-	"github.com/mutezebra/tiktok/gateway/domain/repository"
+	"github.com/mutezebra/tiktok/app/gateway/domain/repository"
 	"github.com/mutezebra/tiktok/pkg/consts"
 )
 

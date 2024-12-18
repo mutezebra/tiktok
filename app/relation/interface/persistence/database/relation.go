@@ -68,6 +68,7 @@ func (repo *RelationRepository) GetFollowList(ctx context.Context, uid int64) ([
 
 	return ids, nil
 }
+
 func (repo *RelationRepository) GetFansList(ctx context.Context, uid int64) ([]int64, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT user_id FROM follow_table WHERE follow_id=?", uid)
 	if err != nil {
@@ -113,6 +114,7 @@ func (repo *RelationRepository) GetFriendList(ctx context.Context, uid int64) ([
 
 	return ids, nil
 }
+
 func (repo *RelationRepository) WhetherUserExist(ctx context.Context, uid int64) bool {
 	var exist bool
 	err := repo.db.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM user WHERE id=?)", uid).Scan(&exist)

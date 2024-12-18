@@ -7,8 +7,8 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/mutezebra/tiktok/app/video/domain/repository"
 	"github.com/mutezebra/tiktok/pkg/log"
-	"github.com/mutezebra/tiktok/video/domain/repository"
 )
 
 type VideoRepository struct {
@@ -41,7 +41,6 @@ func (repo *VideoRepository) GetVideoInfo(ctx context.Context, vid int64) (*repo
 		&video.Intro, &video.Title, &video.VideoExt, &video.CoverExt, &video.Starts,
 		&video.Likes, &video.Views, &video.CreateAt, &video.UpdateAt,
 		&video.DeleteAt)
-
 	if err != nil {
 		return nil, err
 	}

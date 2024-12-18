@@ -7,8 +7,10 @@ import (
 	"github.com/mutezebra/tiktok/pkg/consts"
 )
 
-var snow *snowflake
-var once sync.Once
+var (
+	snow *snowflake
+	once sync.Once
+)
 
 func GenerateID(workerID int64, centerID int64) int64 {
 	once.Do(initSnow(workerID, centerID))

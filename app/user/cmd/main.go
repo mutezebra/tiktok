@@ -8,15 +8,15 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 
+	"github.com/mutezebra/tiktok/app/user/cmd/pack"
+	"github.com/mutezebra/tiktok/app/user/config"
+	"github.com/mutezebra/tiktok/app/user/interface/persistence/database"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/user/userservice"
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/oss"
 	"github.com/mutezebra/tiktok/pkg/trace"
-	"github.com/mutezebra/tiktok/user/cmd/pack"
-	"github.com/mutezebra/tiktok/user/config"
-	"github.com/mutezebra/tiktok/user/interface/persistence/database"
 )
 
 func main() {

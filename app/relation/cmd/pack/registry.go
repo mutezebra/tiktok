@@ -3,13 +3,13 @@ package pack
 import (
 	"fmt"
 
+	"github.com/mutezebra/tiktok/app/relation/config"
+	relation "github.com/mutezebra/tiktok/app/relation/domain/service"
+	"github.com/mutezebra/tiktok/app/relation/interface/persistence/database"
+	"github.com/mutezebra/tiktok/app/relation/usecase"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
-	"github.com/mutezebra/tiktok/relation/config"
-	relation "github.com/mutezebra/tiktok/relation/domain/service"
-	"github.com/mutezebra/tiktok/relation/interface/persistence/database"
-	"github.com/mutezebra/tiktok/relation/usecase"
 )
 
 func RelationRegistry() *inject.Registry {

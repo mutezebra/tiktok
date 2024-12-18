@@ -3,12 +3,12 @@ package pack
 import (
 	"fmt"
 
-	interaction "github.com/mutezebra/tiktok/interaction/domain/service"
-	"github.com/mutezebra/tiktok/interaction/interface/persistence/database"
+	interaction "github.com/mutezebra/tiktok/app/interaction/domain/service"
+	"github.com/mutezebra/tiktok/app/interaction/interface/persistence/database"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
 
-	"github.com/mutezebra/tiktok/interaction/config"
-	"github.com/mutezebra/tiktok/interaction/usecase"
+	"github.com/mutezebra/tiktok/app/interaction/config"
+	"github.com/mutezebra/tiktok/app/interaction/usecase"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/inject"
 )

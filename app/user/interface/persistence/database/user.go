@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/mutezebra/tiktok/user/domain/repository"
+	"github.com/mutezebra/tiktok/app/user/domain/repository"
 
 	"github.com/pkg/errors"
 

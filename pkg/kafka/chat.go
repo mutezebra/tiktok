@@ -2,14 +2,12 @@ package kafka
 
 import (
 	"context"
-
-	"github.com/segmentio/kafka-go"
-
 	"io"
 	"os"
 	"os/signal"
 
 	"github.com/pkg/errors"
+	"github.com/segmentio/kafka-go"
 
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/log"

@@ -8,9 +8,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	hzresp "github.com/cloudwego/hertz/pkg/protocol/http1/resp"
 
-	"github.com/mutezebra/tiktok/gateway/domain/model"
-	"github.com/mutezebra/tiktok/gateway/interface/pack"
-	"github.com/mutezebra/tiktok/gateway/interface/rpc"
+	"github.com/mutezebra/tiktok/app/gateway/domain/model"
+	"github.com/mutezebra/tiktok/app/gateway/interface/pack"
+	"github.com/mutezebra/tiktok/app/gateway/interface/rpc"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	idl "github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
 )

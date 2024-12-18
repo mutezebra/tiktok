@@ -5,10 +5,10 @@ import (
 
 	"github.com/hertz-contrib/websocket"
 
-	"github.com/mutezebra/tiktok/gateway/domain/model"
-	"github.com/mutezebra/tiktok/gateway/domain/repository"
-	chat "github.com/mutezebra/tiktok/gateway/domain/service"
-	"github.com/mutezebra/tiktok/gateway/usecase/pack"
+	"github.com/mutezebra/tiktok/app/gateway/domain/model"
+	"github.com/mutezebra/tiktok/app/gateway/domain/repository"
+	chat "github.com/mutezebra/tiktok/app/gateway/domain/service"
+	"github.com/mutezebra/tiktok/app/gateway/usecase/pack"
 )
 
 func ChatHandler(ctx context.Context, from, to int64, repo repository.ChatRepository) func(conn *websocket.Conn) {

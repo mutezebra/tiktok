@@ -6,8 +6,8 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 
-	"github.com/mutezebra/tiktok/gateway/domain/model"
-	"github.com/mutezebra/tiktok/gateway/interface/pack"
+	"github.com/mutezebra/tiktok/app/gateway/domain/model"
+	"github.com/mutezebra/tiktok/app/gateway/interface/pack"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/errno"
 	"github.com/mutezebra/tiktok/pkg/utils"

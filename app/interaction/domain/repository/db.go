@@ -6,8 +6,10 @@ import (
 	"github.com/mutezebra/tiktok/pkg/types"
 )
 
-type Comment types.Comment
-type Video types.Video
+type (
+	Comment types.Comment
+	Video   types.Video
+)
 
 type InteractionRepository interface {
 	CreateComment(ctx context.Context, comment *Comment) error

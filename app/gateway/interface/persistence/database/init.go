@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/mutezebra/tiktok/gateway/config"
+	"github.com/mutezebra/tiktok/app/gateway/config"
 	"github.com/mutezebra/tiktok/pkg/log"
 )
 

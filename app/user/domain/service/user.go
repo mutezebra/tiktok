@@ -15,6 +15,9 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/mutezebra/tiktok/app/user/config"
+	"github.com/mutezebra/tiktok/app/user/domain/model"
+	"github.com/mutezebra/tiktok/app/user/domain/repository"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction/interactionservice"
@@ -26,9 +29,6 @@ import (
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
 	"github.com/mutezebra/tiktok/pkg/trace"
-	"github.com/mutezebra/tiktok/user/config"
-	"github.com/mutezebra/tiktok/user/domain/model"
-	"github.com/mutezebra/tiktok/user/domain/repository"
 )
 
 type Service struct {
@@ -62,7 +62,6 @@ func (srv *Service) GenerateID() int64 {
 
 func (srv *Service) EncryptPassword(password string) (string, error) {
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-
 	if err != nil {
 		return "nil", errors.Wrap(err, "failed to encrypt password")
 	}

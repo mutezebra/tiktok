@@ -3,16 +3,16 @@ package pack
 import (
 	"fmt"
 
+	"github.com/mutezebra/tiktok/app/user/config"
+	user "github.com/mutezebra/tiktok/app/user/domain/service"
+	"github.com/mutezebra/tiktok/app/user/interface/persistence/database"
+	"github.com/mutezebra/tiktok/app/user/usecase"
 	"github.com/mutezebra/tiktok/pkg/consts"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/oss"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
 	"github.com/mutezebra/tiktok/pkg/utils"
-	"github.com/mutezebra/tiktok/user/config"
-	user "github.com/mutezebra/tiktok/user/domain/service"
-	"github.com/mutezebra/tiktok/user/interface/persistence/database"
-	"github.com/mutezebra/tiktok/user/usecase"
 )
 
 func UserRegistry() *inject.Registry {

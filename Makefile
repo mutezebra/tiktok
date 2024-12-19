@@ -5,18 +5,28 @@ COLOR_END:=\033[0m
 # 一键部署
 .PHONY: deploy
 deploy:
-	@echo "$(RED_COLOR_START) deploy may last a long time, don't worry $(COLOR_END)"
-	@echo "$(GREEN_COLOR_START) Common modules are being deployed $(COLOR_END)"
-	@sudo sh ./scripts/common.sh
+	@echo "$(RED_COLOR_START) deploy may last a long time$(COLOR_END)"
+	@sh ./scripts/deploy.sh create
 
-	@$(foreach script, dir interaction relation user video gateway, \
-		echo "$(GREEN_COLOR_START) $(shell echo $(script) | tr '[:lower:]' '[:upper:]') modules are being deployed $(COLOR_END)"; \
-		sudo sh ./scripts/$(script).sh; \
-	)
+# 配置文件有改动的话可以使用这个.
+.PHONY: apply
+apply:
+	@sh ./scripts/deploy.sh apply
 
-# 如果你的 k8s runtime 为 docker 的话可以手动进行这个操作. 事实上他会在 ./scripts/common.sh 中被自动执行
-.PHONY: pull
-	@sh ./scripts/pull_images.sh
+# 删除所有环境, 不包括刚刚构建的镜像. 请自行删除
+.PHONY: down
+down:
+	@sh ./scripts/deploy.sh delete
+
+# 只有当你需要把数据挂载到本地时, 你才需要这条命令, 你还需要更改任何 pv 配置中的 nodeAffinity ,而且他需要运行在 make deploy 之前
+# 相关测试并不完善, 不建议使用.
+.PHONY: dir-create
+dir-create:
+	@sudo sh ./scripts/dir.sh create
+
+.PHONY: dir-delete
+dir-delete:
+	@sudo sh ./scripts/dir.sh delete
 
 # 格式化代码，我们使用 gofumpt，是 fmt 的严格超集
 .PHONY: fmt

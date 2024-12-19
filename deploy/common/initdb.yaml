@@ -12,7 +12,14 @@ spec:
   storageClassName: local-path
   local:
     path: /data/gateway/mysql
-
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
 ---
 
 apiVersion: v1

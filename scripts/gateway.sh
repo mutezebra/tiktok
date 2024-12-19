@@ -1,36 +1,39 @@
 #!/usr/bin/bash
 
-cd "$(dirname "$0")" || exit 1
+WORK_DIR=$(dirname "$0")
+MODULE="gateway"
+PORT="4000"
 
-# 回到项目根目录
-cd ..
-
-# 将 gateway 模块构建为镜像
-sudo docker build -t mutezebra/tiktok-gateway:2.0 --build-arg SERVICE=gateway --build-arg PORT=4000 .
-
-# 检查容器运行时是否为 docker
-runtime=$(kubectl get nodes -o jsonpath='{.items[0].status.nodeInfo.containerRuntimeVersion}')
-
-# 判断运行时是否是 docker
-if [[ "$runtime" != docker://* ]]; then
-  cd scripts/images || exit
-
-  # 将刚刚构建好的镜像保存为 tar 格式
-  sudo docker save -o gateway.tar mutezebra/tiktok-gateway:2.0
-
-  # 将 tar 格式的镜像文件导入到 k8s 中
-  sudo ctr -n=k8s.io i import gateway.tar
-
-  sudo rm -f gateway.tar
-
-  # 回到项目根目录
-  cd ../..
+# 判断这个文件是否存在
+if [ -f "$WORK_DIR/functions.sh" ]; then
+    source "$WORK_DIR/functions.sh" > /dev/null 2>&1
+else
+    echo "ERROR: $WORK_DIR/functions.sh NOT EXIST"
+    exit 1
 fi
 
-# shellcheck disable=SC2164
-sudo kubectl delete -f deploy/gateway/gateway.yaml
-sudo kubectl apply -f deploy/gateway/config.yaml
+CONFIG_PATHS=(gateway/config.yaml gateway/kafka-pv.yaml)
+MIDDLEWARE_PATHS=(gateway/kafka.yaml gateway/kafka-ui.yaml)
+SERVICE_PATHS=(gateway/gateway.yaml)
 
-# 等待相关配置的部署
-sleep 2
-sudo kubectl apply -f deploy/gateway/gateway.yaml
+# 根据不同的 option 选择去如何操作
+OPTION=$1
+if [ "$OPTION" == "apply" ]; then
+    fn_apply "${CONFIG_PATHS[@]}"
+    sleep 2
+    fn_apply "${MIDDLEWARE_PATHS[@]}"
+    fn_apply "${SERVICE_PATHS[@]}"
+elif [ "$OPTION" == "create" ]; then
+    fn_apply "${CONFIG_PATHS[@]}"
+    fn_apply "${MIDDLEWARE_PATHS[@]}"
+    wait_for_pods_running "app=gateway-kafka-pod,app=kafka-ui" 5 100 "$MODULE"
+
+    build_image_and_import "$MODULE" "$PORT"
+    fn_apply "${SERVICE_PATHS[@]}"
+elif  [ "$OPTION" == "delete" ]; then
+    fn_delete "${SERVICE_PATHS[@]}"
+    fn_delete "${MIDDLEWARE_PATHS[@]}"
+    fn_delete "${CONFIG_PATHS[@]}"
+else
+    echo_red "Only supported apply, create or delete"
+fi

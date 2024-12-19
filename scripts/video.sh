@@ -1,33 +1,36 @@
 #!/usr/bin/bash
 
-# 相关操作注释请见 gateway.sh
-cd "$(dirname "$0")" || exit 1
+WORK_DIR=$(dirname "$0")
+MODULE="video"
+PORT="10002"
 
-cd ..
-
-# 将 video 模块构建为镜像
-sudo docker build -t mutezebra/tiktok-video:2.0 --build-arg SERVICE=video --build-arg PORT=10002 .
-
-# 检查容器运行时是否为 docker
-runtime=$(kubectl get nodes -o jsonpath='{.items[0].status.nodeInfo.containerRuntimeVersion}')
-
-# 判断运行时是否是 docker
-if [[ "$runtime" != docker://* ]]; then
-  cd scripts/images || exit
-
-  # 将刚刚构建好的镜像保存为 tar 格式
-  sudo docker save -o video.tar mutezebra/tiktok-video:2.0
-
-  # 将 tar 格式的镜像文件导入到 k8s 中
-  sudo ctr -n=k8s.io i import video.tar
-
-  sudo rm -f video.tar
-
-  # 回到项目根目录
-  cd ../..
+if [ -f "$WORK_DIR/functions.sh" ]; then
+    source "$WORK_DIR/functions.sh" > /dev/null 2>&1
+else
+    echo "ERROR: $WORK_DIR/functions.sh NOT EXIST"
+    exit 1
 fi
 
-sudo kubectl delete -f deploy/video/video.yaml
-sudo kubectl apply -f deploy/video/config.yaml
-sleep 3
-sudo kubectl apply -f deploy/video/video.yaml
+CONFIG_PATHS=(video/config.yaml video/redis-pv.yaml)
+MIDDLEWARE_PATHS=(video/redis.yaml)
+SERVICE_PATHS=(video/video.yaml)
+
+OPTION=$1
+if [ "$OPTION" == "apply" ]; then
+    fn_apply "${CONFIG_PATHS[@]}"
+    fn_apply "${MIDDLEWARE_PATHS[@]}"
+    fn_apply "${SERVICE_PATHS[@]}"
+elif [ "$OPTION" == "create" ]; then
+    fn_apply "${CONFIG_PATHS[@]}"
+    fn_apply "${MIDDLEWARE_PATHS[@]}"
+    wait_for_pods_running "app=tiktok-video-redis-pod" 5 100 "$MODULE"
+
+    build_image_and_import "$MODULE" "$PORT"
+    fn_apply "${SERVICE_PATHS[@]}"
+elif  [ "$OPTION" == "delete" ]; then
+    fn_delete "${SERVICE_PATHS[@]}"
+    fn_delete "${MIDDLEWARE_PATHS[@]}"
+    fn_delete "${CONFIG_PATHS[@]}"
+else
+    echo_red "Only supported apply, create or delete"
+fi

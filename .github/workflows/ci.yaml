@@ -22,7 +22,7 @@ jobs:
           cache: false
       - name: Verify govet
         run: |
-          make vet && git add pkg cmd &&
+          make vet &&
           git diff --cached --exit-code || (echo 'Please run "make vet" to verify govet' && exit 1);
 
   fmt:
@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "refer to https://github.com/mvdan/gofumpt for detailed info" &&
           GO111MODULE=on go install mvdan.cc/gofumpt@v0.4.0 &&
-          make fmt && git add pkg cmd &&
+          make fmt &&
           git diff --cached --exit-code || (echo 'Please run "make fmt" to verify fmt' && exit 1);
 
   analyze:

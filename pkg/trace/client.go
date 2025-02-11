@@ -6,7 +6,7 @@ import (
 
 	"github.com/bytedance/gopkg/cloud/metainfo"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 
 	"github.com/cloudwego/kitex/pkg/endpoint"
 	"github.com/opentracing/opentracing-go"
@@ -16,7 +16,7 @@ import (
 func ClientTraceMiddleware(methodName string) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, req, resp interface{}) (err error) {
-			method, ok := metainfo.GetPersistentValue(ctx, consts.TracingRpcMethod)
+			method, ok := metainfo.GetPersistentValue(ctx, constants.TracingRpcMethod)
 			if !ok {
 				method = "unknown method"
 			}

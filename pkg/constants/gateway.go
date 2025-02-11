@@ -1,4 +1,4 @@
-package consts
+package constants
 
 import "time"
 
@@ -17,4 +17,7 @@ const (
 
 	FormVideoKey      = "video"
 	FormVideoCoverKey = "cover"
+
+	SentinelThreshold        = 100
+	SentinelStatIntervalInMs = 1000
 )

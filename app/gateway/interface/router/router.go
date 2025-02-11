@@ -9,21 +9,21 @@ import (
 	"github.com/mutezebra/tiktok/app/gateway/config"
 	"github.com/mutezebra/tiktok/app/gateway/interface/handler"
 	"github.com/mutezebra/tiktok/app/gateway/interface/middleware"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 func NewRouter() *server.Hertz {
 	h := server.Default(
-		server.WithHostPorts(config.Conf.Service[consts.GatewayServiceKey].Address),
-		server.WithMaxRequestBodySize(consts.GatewayMaxRequestBodySize),
-		server.WithExitWaitTime(consts.GatewayExitWaitTime),
+		server.WithHostPorts(config.Conf.Service[constants.GatewayServiceKey].Address),
+		server.WithMaxRequestBodySize(constants.GatewayMaxRequestBodySize),
+		server.WithExitWaitTime(constants.GatewayExitWaitTime),
 	)
 
 	h.GET("/ping", func(ctx context.Context, c *app.RequestContext) {
 		c.String(200, "pong")
 	})
 
-	h.Use(middleware.TraceMiddleware())
+	h.Use(middleware.TraceMiddleware(), middleware.SentinelMW())
 	v1 := h.Group("/api")
 
 	user := v1.Group("/user")

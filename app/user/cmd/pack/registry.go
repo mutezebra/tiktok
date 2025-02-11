@@ -7,7 +7,7 @@ import (
 	user "github.com/mutezebra/tiktok/app/user/domain/service"
 	"github.com/mutezebra/tiktok/app/user/interface/persistence/database"
 	"github.com/mutezebra/tiktok/app/user/usecase"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/oss"
@@ -18,8 +18,8 @@ import (
 func UserRegistry() *inject.Registry {
 	id := snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 	return &inject.Registry{
-		Addr:     config.Conf.Service[consts.UserServiceName].SvcAddress,
-		Key:      config.Conf.Service[consts.UserServiceName].ServiceName + fmt.Sprintf("/%d", id),
+		Addr:     config.Conf.Service[constants.UserServiceName].SvcAddress,
+		Key:      config.Conf.Service[constants.UserServiceName].ServiceName + fmt.Sprintf("/%d", id),
 		Prefix:   config.Conf.Etcd.ServicePrefix,
 		EndPoint: config.Conf.Etcd.Endpoint,
 	}

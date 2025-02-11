@@ -8,7 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 
 	"github.com/qiniu/go-sdk/v7/storage"
 )
@@ -73,7 +73,7 @@ func (m *Model) UploadVideo(ctx context.Context, name string, data []byte) (err 
 	resumeUploader := storage.NewResumeUploaderV2(&cfg)
 
 	ret := PutRet{}
-	putExtra := storage.RputV2Extra{PartSize: 2 * consts.MB}
+	putExtra := storage.RputV2Extra{PartSize: 2 * constants.MB}
 
 	err = resumeUploader.Put(ctx, &ret, upToken, path, bytes.NewReader(data), int64(len(data)), &putExtra)
 	return errors.Wrap(err, "upload video failed"), path

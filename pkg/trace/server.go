@@ -8,7 +8,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/log"
 )
 
@@ -17,7 +17,7 @@ func ServerTraceMiddleware(serviceName string) endpoint.Middleware {
 		return func(ctx context.Context, req, resp interface{}) (err error) {
 			tracer, closer, _ := NewTracer(serviceName, "http://127.0.0.1:14268/api/traces", "127.0.0.1:5775")
 			defer closer.Close()
-			method, ok := metainfo.GetPersistentValue(ctx, consts.TracingRpcMethod)
+			method, ok := metainfo.GetPersistentValue(ctx, constants.TracingRpcMethod)
 			if !ok {
 				method = "unknown method"
 			}
@@ -46,7 +46,7 @@ func ServerTraceMiddleware(serviceName string) endpoint.Middleware {
 func ServerTraceMiddleware111(tracer opentracing.Tracer) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, req, resp interface{}) (err error) {
-			method, ok := metainfo.GetValue(ctx, consts.TracingRpcMethod)
+			method, ok := metainfo.GetValue(ctx, constants.TracingRpcMethod)
 			if !ok {
 				method = "unknown method"
 			}

@@ -5,12 +5,12 @@ import (
 
 	"github.com/bytedance/gopkg/cloud/metainfo"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/user"
 )
 
 func Register(ctx context.Context, req *user.RegisterReq) (r *user.RegisterResp, err error) {
-	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "userService.Register")
+	ctx = metainfo.WithPersistentValue(ctx, constants.TracingRpcMethod, "userService.Register")
 	if err = handlerUserClient(); err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func Login(ctx context.Context, req *user.LoginReq) (r *user.LoginResp, err erro
 }
 
 func Info(ctx context.Context, req *user.InfoReq) (r *user.InfoResp, err error) {
-	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "userService.Info")
+	ctx = metainfo.WithPersistentValue(ctx, constants.TracingRpcMethod, "userService.Info")
 	if err = handlerUserClient(); err != nil {
 		return nil, err
 	}

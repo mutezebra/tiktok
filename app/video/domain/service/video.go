@@ -10,7 +10,7 @@ import (
 	"github.com/mutezebra/tiktok/app/video/config"
 	"github.com/mutezebra/tiktok/app/video/domain/model"
 	"github.com/mutezebra/tiktok/app/video/domain/repository"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
 )
@@ -141,7 +141,7 @@ func (s *Service) IncrViews(ctx context.Context, vid int64) error {
 func (s *Service) timedRefreshViews(intervals ...time.Duration) {
 	var interval time.Duration
 	if intervals == nil {
-		interval = consts.DatabaseDefaultUpdateViewInterval
+		interval = constants.DatabaseDefaultUpdateViewInterval
 	} else {
 		interval = intervals[0]
 	}

@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 var (
@@ -30,7 +30,7 @@ func (s *snowflake) generateID() int64 {
 	now := time.Now().UnixMilli()
 	if s.timestamp == now {
 		// Increment the sequence number and ensure it does not exceed its maximum value by applying a bitmask.
-		s.sequence = (s.sequence + 1) & consts.SequenceMask
+		s.sequence = (s.sequence + 1) & constants.SequenceMask
 		// If the sequence number has reached its maximum value this loop waits until the next millisecond so that
 		// a new timestamp can be generated.
 		if s.sequence == 0 {
@@ -41,13 +41,13 @@ func (s *snowflake) generateID() int64 {
 	} else {
 		s.sequence = 0
 	}
-	t := now - consts.Epoch
-	if t > consts.TimestampMax {
+	t := now - constants.Epoch
+	if t > constants.TimestampMax {
 		s.Unlock()
 		return 0
 	}
 	s.timestamp = now
-	id := (t << consts.TimestampShift) | (s.dataCenterID << consts.DataCenterIDShift) | (s.workerID << consts.WorkerIDShift) | (s.sequence)
+	id := (t << constants.TimestampShift) | (s.dataCenterID << constants.DataCenterIDShift) | (s.workerID << constants.WorkerIDShift) | (s.sequence)
 	s.Unlock()
 	return id
 }
@@ -55,11 +55,11 @@ func (s *snowflake) generateID() int64 {
 func initSnow(wid, cid int64) func() {
 	return func() {
 		workerID := wid
-		if workerID > consts.WorkerIDMax {
+		if workerID > constants.WorkerIDMax {
 			panic("workerID exceeds its maximum value")
 		}
 		dataCenterID := cid
-		if dataCenterID > consts.WorkerIDMax {
+		if dataCenterID > constants.WorkerIDMax {
 			panic("dataCenterID exceeds its maximum value")
 		}
 		snow = &snowflake{

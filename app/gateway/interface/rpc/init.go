@@ -11,7 +11,7 @@ import (
 
 	"github.com/mutezebra/tiktok/app/gateway/config"
 	"github.com/mutezebra/tiktok/app/gateway/domain/model"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/errno"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction/interactionservice"
@@ -41,22 +41,22 @@ func Init() {
 		log.LogrusObj.Panic(err)
 	}
 
-	initClient(consts.UserServiceName)
-	initClient(consts.VideoServiceName)
-	initClient(consts.InteractionServiceName)
-	initClient(consts.RelationServiceName)
+	initClient(constants.UserServiceName)
+	initClient(constants.VideoServiceName)
+	initClient(constants.InteractionServiceName)
+	initClient(constants.RelationServiceName)
 }
 
 func initClient(serviceName string) {
 	switch serviceName {
-	case consts.UserServiceName:
+	case constants.UserServiceName:
 		UserClient = userservice.MustNewClient(serviceName,
 			client.WithHostPorts(discovery(serviceName)[0]),
 			client.WithTransportProtocol(transport.TTHeader),
 			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 			client.WithMiddleware(trace.ClientTraceMiddleware("gateway-userClient")),
 		)
-	case consts.VideoServiceName:
+	case constants.VideoServiceName:
 		VideoClient = videoservice.MustNewClient(serviceName,
 			client.WithHostPorts(discovery(serviceName)...),
 			client.WithTransportProtocol(transport.TTHeader),
@@ -66,13 +66,13 @@ func initClient(serviceName string) {
 			streamclient.WithHostPorts(discovery(serviceName)...),
 			streamclient.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 			streamclient.WithMiddleware(trace.ClientTraceMiddleware("gateway-videoStreamClient")))
-	case consts.InteractionServiceName:
+	case constants.InteractionServiceName:
 		InteractionClient = interactionservice.MustNewClient(serviceName,
 			client.WithHostPorts(discovery(serviceName)...),
 			client.WithTransportProtocol(transport.TTHeader),
 			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 			client.WithMiddleware(trace.ClientTraceMiddleware("gateway-interactionClient")))
-	case consts.RelationServiceName:
+	case constants.RelationServiceName:
 		RelationClient = relationservice.MustNewClient(serviceName,
 			client.WithHostPorts(discovery(serviceName)...),
 			client.WithTransportProtocol(transport.TTHeader),

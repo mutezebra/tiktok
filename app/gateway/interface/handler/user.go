@@ -9,7 +9,7 @@ import (
 	"github.com/mutezebra/tiktok/app/gateway/domain/model"
 	"github.com/mutezebra/tiktok/app/gateway/interface/pack"
 	"github.com/mutezebra/tiktok/app/gateway/interface/rpc"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/user"
 )
 
@@ -58,7 +58,7 @@ func UserInfoHandler() app.HandlerFunc {
 		}
 		if req.UID == nil {
 			req.UID = new(int64)
-			*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+			*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 		}
 
 		resp, err := rpc.Info(ctx, &req)
@@ -73,13 +73,13 @@ func UserInfoHandler() app.HandlerFunc {
 
 func UploadAvatarHandler() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-		fileHeader, err := c.FormFile(consts.FormUserAvatarKey)
+		fileHeader, err := c.FormFile(constants.FormUserAvatarKey)
 		if err != nil {
 			pack.SendFailedResponse(c, pack.ReturnError(model.InternalServerErrorErrno, err))
 			return
 		}
 
-		if fileHeader.Size > consts.MB*5 {
+		if fileHeader.Size > constants.MB*5 {
 			pack.SendFailedResponse(c, pack.ReturnError(model.OutOfLimitAvatarSizeErrno, nil))
 			return
 		}
@@ -99,7 +99,7 @@ func UploadAvatarHandler() app.HandlerFunc {
 		}
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 		req.SetFileName(&fileHeader.Filename)
 
 		resp, err := rpc.UploadAvatar(ctx, &req)
@@ -117,7 +117,7 @@ func DownloadAvatarHandler() app.HandlerFunc {
 		var req user.DownloadAvatarReq
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		resp, err := rpc.DownloadAvatar(ctx, &req)
 		if err != nil {
@@ -134,9 +134,9 @@ func TotpQRCodeHandler() app.HandlerFunc {
 		var req user.TotpQrcodeReq
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 		req.UserName = new(string)
-		*req.UserName = string(c.GetHeader(consts.HeaderUserNameKey))
+		*req.UserName = string(c.GetHeader(constants.HeaderUserNameKey))
 
 		resp, err := rpc.TotpQrcode(ctx, &req)
 		if err != nil {
@@ -157,7 +157,7 @@ func EnableTotpHandler() app.HandlerFunc {
 		}
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		resp, err := rpc.EnableTotp(ctx, &req)
 		if err != nil {

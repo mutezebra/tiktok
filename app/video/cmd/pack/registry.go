@@ -8,7 +8,7 @@ import (
 	"github.com/mutezebra/tiktok/app/video/interface/persistence/cache"
 	"github.com/mutezebra/tiktok/app/video/interface/persistence/database"
 	"github.com/mutezebra/tiktok/app/video/usecase"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/oss"
 	"github.com/mutezebra/tiktok/pkg/snowflake"
@@ -17,8 +17,8 @@ import (
 func VideoRegistry() *inject.Registry {
 	id := snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 	return &inject.Registry{
-		Addr:     config.Conf.Service[consts.VideoServiceName].SvcAddress,
-		Key:      config.Conf.Service[consts.VideoServiceName].ServiceName + fmt.Sprintf("/%d", id),
+		Addr:     config.Conf.Service[constants.VideoServiceName].SvcAddress,
+		Key:      config.Conf.Service[constants.VideoServiceName].ServiceName + fmt.Sprintf("/%d", id),
 		Prefix:   config.Conf.Etcd.ServicePrefix,
 		EndPoint: config.Conf.Etcd.Endpoint,
 	}

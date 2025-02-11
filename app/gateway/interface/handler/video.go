@@ -11,7 +11,7 @@ import (
 	"github.com/mutezebra/tiktok/app/gateway/domain/model"
 	"github.com/mutezebra/tiktok/app/gateway/interface/pack"
 	"github.com/mutezebra/tiktok/app/gateway/interface/rpc"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	idl "github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
 )
 
@@ -90,7 +90,7 @@ func VideoPublishHandler() app.HandlerFunc {
 			return
 		}
 
-		coverFileHeader, err := c.FormFile(consts.FormVideoCoverKey)
+		coverFileHeader, err := c.FormFile(constants.FormVideoCoverKey)
 		if err != nil {
 			pack.SendFailedResponse(c, pack.ReturnError(model.InternalServerErrorErrno, err))
 			return
@@ -98,7 +98,7 @@ func VideoPublishHandler() app.HandlerFunc {
 
 		req.SetCoverName(&coverFileHeader.Filename)
 
-		if coverFileHeader.Size > consts.MB*6 {
+		if coverFileHeader.Size > constants.MB*6 {
 			pack.SendFailedResponse(c, pack.ReturnError(model.OutOfLimitCoverSizeErrno, nil))
 			return
 		}
@@ -116,7 +116,7 @@ func VideoPublishHandler() app.HandlerFunc {
 			return
 		}
 
-		videoFileHeader, err := c.FormFile(consts.FormVideoKey)
+		videoFileHeader, err := c.FormFile(constants.FormVideoKey)
 		if err != nil {
 			pack.SendFailedResponse(c, pack.ReturnError(model.InternalServerErrorErrno, err))
 			return
@@ -137,7 +137,7 @@ func VideoPublishHandler() app.HandlerFunc {
 			return
 		}
 
-		id, _ := strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		id, _ := strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 		req.SetUID(&id)
 
 		resp, err := rpc.PublishVideo(ctx, &req)
@@ -168,7 +168,7 @@ func VideoListHandler() app.HandlerFunc {
 			return
 		}
 
-		id, _ := strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		id, _ := strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 		req.SetUID(&id)
 
 		resp, err := rpc.GetVideoList(ctx, &req)

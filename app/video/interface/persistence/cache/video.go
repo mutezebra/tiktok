@@ -8,7 +8,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/log"
 )
 
@@ -32,9 +32,9 @@ func NewVideoCacheRepo() *VideoCacheRepo {
 			enablePopularRanking: false,
 			maxSizeOfPopularSet:  127,
 			minPopularVideoViews: 0,
-			rankKey:              consts.CacheVideoPopularKey,
-			popularVids:          make([]int64, 0, consts.CacheVideoPopularVideosSize),
-			refreshInterval:      consts.CacheVideoPopularRefreshInterval,
+			rankKey:              constants.CacheVideoPopularKey,
+			popularVids:          make([]int64, 0, constants.CacheVideoPopularVideosSize),
+			refreshInterval:      constants.CacheVideoPopularRefreshInterval,
 
 			ctx:    context.Background(),
 			client: RedisClient,
@@ -48,8 +48,8 @@ func (cache *VideoCacheRepo) GetPopularVids() []int64 {
 }
 
 func (cache *VideoCacheRepo) SetVideoViews(vid int64, views int32) error {
-	key := fmt.Sprintf("%s%d", consts.CacheVideoViewKeyPrefix, vid)
-	err := cache.client.SetEx(cache.ctx, key, views, consts.CacheVideoViewExpireTime).Err()
+	key := fmt.Sprintf("%s%d", constants.CacheVideoViewKeyPrefix, vid)
+	err := cache.client.SetEx(cache.ctx, key, views, constants.CacheVideoViewExpireTime).Err()
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (cache *VideoCacheRepo) SetVideoViews(vid int64, views int32) error {
 }
 
 func (cache *VideoCacheRepo) IncrVideoViews(vid int64) error {
-	key := fmt.Sprintf("%s%d", consts.CacheVideoViewKeyPrefix, vid)
+	key := fmt.Sprintf("%s%d", constants.CacheVideoViewKeyPrefix, vid)
 	views, err := cache.client.Incr(cache.ctx, key).Result()
 	if err != nil {
 		return err
@@ -68,7 +68,7 @@ func (cache *VideoCacheRepo) IncrVideoViews(vid int64) error {
 	if cache.popularRankModel.enablePopularRanking {
 		cache.popularRankModel.AddToRank(vid, int32(views))
 	}
-	return cache.client.Expire(cache.ctx, key, consts.CacheVideoViewExpireTime).Err()
+	return cache.client.Expire(cache.ctx, key, constants.CacheVideoViewExpireTime).Err()
 }
 
 func (cache *VideoCacheRepo) EnablePopularRanking() {
@@ -77,17 +77,17 @@ func (cache *VideoCacheRepo) EnablePopularRanking() {
 }
 
 func (cache *VideoCacheRepo) ViewKeyExist(vid int64) bool {
-	return cache.client.Exists(cache.ctx, fmt.Sprintf("%s%d", consts.CacheVideoViewKeyPrefix, vid)).Val() != 0
+	return cache.client.Exists(cache.ctx, fmt.Sprintf("%s%d", constants.CacheVideoViewKeyPrefix, vid)).Val() != 0
 }
 
 func (cache *VideoCacheRepo) ViewsKVS() map[int64]int32 {
 	var cursor uint64
 	result := make(map[int64]int32)
-	vidStart := len(consts.CacheVideoViewKeyPrefix)
+	vidStart := len(constants.CacheVideoViewKeyPrefix)
 	for {
 		var keys []string
 		var err error
-		keys, cursor, err = cache.client.Scan(cache.ctx, cursor, consts.CacheVideoViewKeyPrefix+"*", 10).Result()
+		keys, cursor, err = cache.client.Scan(cache.ctx, cursor, constants.CacheVideoViewKeyPrefix+"*", 10).Result()
 		if err != nil {
 			log.LogrusObj.Error(fmt.Sprintf("scan views failed,cause:%s", err))
 		}

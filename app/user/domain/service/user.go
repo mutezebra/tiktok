@@ -18,7 +18,7 @@ import (
 	"github.com/mutezebra/tiktok/app/user/config"
 	"github.com/mutezebra/tiktok/app/user/domain/model"
 	"github.com/mutezebra/tiktok/app/user/domain/repository"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction/interactionservice"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/relation"
@@ -146,25 +146,25 @@ func (srv *Service) GetClient(serviceName string) any {
 	}
 
 	switch serviceName {
-	case consts.UserServiceName:
+	case constants.UserServiceName:
 		if equal() {
 			return userClient
 		}
 		srv.initClient(serviceName)
 		return userClient
-	case consts.VideoServiceName:
+	case constants.VideoServiceName:
 		if equal() {
 			return videoClient
 		}
 		srv.initClient(serviceName)
 		return videoClient
-	case consts.InteractionServiceName:
+	case constants.InteractionServiceName:
 		if equal() {
 			return interactionClient
 		}
 		srv.initClient(serviceName)
 		return interactionClient
-	case consts.RelationServiceName:
+	case constants.RelationServiceName:
 		if equal() {
 			return relationClient
 		}
@@ -177,26 +177,26 @@ func (srv *Service) GetClient(serviceName string) any {
 
 func (srv *Service) initClient(serviceName string) {
 	switch serviceName {
-	case consts.UserServiceName:
+	case constants.UserServiceName:
 		userClient = userservice.MustNewClient(serviceName,
 			client.WithHostPorts(srv.Discovery(serviceName)),
 			client.WithTransportProtocol(transport.TTHeader),
 			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 			client.WithMiddleware(trace.ClientTraceMiddleware("user-userClient")),
 		)
-	case consts.VideoServiceName:
+	case constants.VideoServiceName:
 		videoClient = videoservice.MustNewClient(serviceName,
 			client.WithHostPorts(srv.Discovery(serviceName)),
 			client.WithTransportProtocol(transport.TTHeader),
 			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 			client.WithMiddleware(trace.ClientTraceMiddleware("user-videoClient")))
-	case consts.InteractionServiceName:
+	case constants.InteractionServiceName:
 		interactionClient = interactionservice.MustNewClient(serviceName,
 			client.WithHostPorts(srv.Discovery(serviceName)),
 			client.WithTransportProtocol(transport.TTHeader),
 			client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 			client.WithMiddleware(trace.ClientTraceMiddleware("user-interactionClient")))
-	case consts.RelationServiceName:
+	case constants.RelationServiceName:
 		relationClient = relationservice.MustNewClient(serviceName,
 			client.WithHostPorts(srv.Discovery(serviceName)),
 			client.WithTransportProtocol(transport.TTHeader),
@@ -206,29 +206,29 @@ func (srv *Service) initClient(serviceName string) {
 }
 
 func (srv *Service) GetFriendsList(ctx context.Context, uid int64) (*relation.GetFriendsListResp, error) {
-	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "relationService.GetFriendsList")
-	c := srv.GetClient(consts.RelationServiceName).(relationservice.Client)
+	ctx = metainfo.WithPersistentValue(ctx, constants.TracingRpcMethod, "relationService.GetFriendsList")
+	c := srv.GetClient(constants.RelationServiceName).(relationservice.Client)
 	req := &relation.GetFriendsListReq{UID: &uid}
 	return c.GetFriendsList(ctx, req)
 }
 
 func (srv *Service) GetFansList(ctx context.Context, uid int64) (*relation.GetFansListResp, error) {
-	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "relationService.GetFansList")
-	c := srv.GetClient(consts.RelationServiceName).(relationservice.Client)
+	ctx = metainfo.WithPersistentValue(ctx, constants.TracingRpcMethod, "relationService.GetFansList")
+	c := srv.GetClient(constants.RelationServiceName).(relationservice.Client)
 	req := &relation.GetFansListReq{UID: &uid}
 	return c.GetFansList(ctx, req)
 }
 
 func (srv *Service) GetFollowList(ctx context.Context, uid int64) (*relation.GetFollowListResp, error) {
-	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "relationService.GetFollowsList")
-	c := srv.GetClient(consts.RelationServiceName).(relationservice.Client)
+	ctx = metainfo.WithPersistentValue(ctx, constants.TracingRpcMethod, "relationService.GetFollowsList")
+	c := srv.GetClient(constants.RelationServiceName).(relationservice.Client)
 	req := &relation.GetFollowListReq{UID: &uid}
 	return c.GetFollowList(ctx, req)
 }
 
 func (srv *Service) GetVideoList(ctx context.Context, uid int64) (*video.GetVideoListResp, error) {
-	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "videoService.GetVideoList")
-	c := srv.GetClient(consts.VideoServiceName).(videoservice.Client)
+	ctx = metainfo.WithPersistentValue(ctx, constants.TracingRpcMethod, "videoService.GetVideoList")
+	c := srv.GetClient(constants.VideoServiceName).(videoservice.Client)
 	pages, size := int32(1), int8(10)
 	req := &video.GetVideoListReq{
 		UID:   &uid,
@@ -239,8 +239,8 @@ func (srv *Service) GetVideoList(ctx context.Context, uid int64) (*video.GetVide
 }
 
 func (srv *Service) LikeList(ctx context.Context, uid int64) (*interaction.LikeListResp, error) {
-	ctx = metainfo.WithPersistentValue(ctx, consts.TracingRpcMethod, "interaction.GetLikeList")
-	c := srv.GetClient(consts.InteractionServiceName).(interactionservice.Client)
+	ctx = metainfo.WithPersistentValue(ctx, constants.TracingRpcMethod, "interaction.GetLikeList")
+	c := srv.GetClient(constants.InteractionServiceName).(interactionservice.Client)
 	pages, size := int8(1), int8(10)
 	req := &interaction.LikeListReq{
 		UID:      &uid,

@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 type Claims struct {
@@ -73,7 +73,7 @@ func GenerateToken(userName string, id int64) (accessToken, refreshToken string,
 // GenerateAccessToken 签发AccessToken
 func GenerateAccessToken(userName string, id int64) (accessToken string, err error) {
 	timeNow := time.Now()
-	accessTokenExpireTime := timeNow.Add(consts.AccessTokenExpireTime).Unix()
+	accessTokenExpireTime := timeNow.Add(constants.AccessTokenExpireTime).Unix()
 	claims := &Claims{
 		UserName: userName,
 		ID:       id,
@@ -85,7 +85,7 @@ func GenerateAccessToken(userName string, id int64) (accessToken string, err err
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	accessToken, err = token.SignedString([]byte(consts.JwtSecret))
+	accessToken, err = token.SignedString([]byte(constants.JwtSecret))
 	if err != nil {
 		return "", err
 	}
@@ -95,7 +95,7 @@ func GenerateAccessToken(userName string, id int64) (accessToken string, err err
 // GenerateRefreshToken 签发AccessToken
 func GenerateRefreshToken(userName string, id int64) (refreshToken string, err error) {
 	timeNow := time.Now()
-	refreshTokenExpireTime := timeNow.Add(consts.RefreshTokenExpireTime).Unix()
+	refreshTokenExpireTime := timeNow.Add(constants.RefreshTokenExpireTime).Unix()
 	claims := &Claims{
 		UserName: userName,
 		ID:       id,
@@ -107,7 +107,7 @@ func GenerateRefreshToken(userName string, id int64) (refreshToken string, err e
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	refreshToken, err = token.SignedString([]byte(consts.JwtSecret))
+	refreshToken, err = token.SignedString([]byte(constants.JwtSecret))
 	if err != nil {
 		return "", err
 	}
@@ -117,7 +117,7 @@ func GenerateRefreshToken(userName string, id int64) (refreshToken string, err e
 // ParseToken 解析token并判断其有没有过期
 func ParseToken(token string) (*Claims, error, bool) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(consts.JwtSecret), nil
+		return []byte(constants.JwtSecret), nil
 	})
 	if err != nil {
 		return nil, err, false

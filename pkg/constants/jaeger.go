@@ -1,4 +1,4 @@
-package consts
+package constants
 
 const (
 	TracingRpcMethod = "rpc-method"

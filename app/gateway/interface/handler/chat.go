@@ -11,7 +11,7 @@ import (
 	"github.com/mutezebra/tiktok/app/gateway/interface/pack"
 	"github.com/mutezebra/tiktok/app/gateway/interface/persistence/database"
 	"github.com/mutezebra/tiktok/app/gateway/usecase"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 func ChatHandler() app.HandlerFunc {
@@ -22,7 +22,7 @@ func ChatHandler() app.HandlerFunc {
 	} // use default options
 
 	return func(ctx context.Context, c *app.RequestContext) {
-		UID, _ := strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		UID, _ := strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		toS := c.Query("to")
 		to, err := strconv.ParseInt(toS, 10, 64)

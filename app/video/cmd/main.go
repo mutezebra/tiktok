@@ -12,7 +12,7 @@ import (
 	"github.com/mutezebra/tiktok/app/video/config"
 	"github.com/mutezebra/tiktok/app/video/interface/persistence/cache"
 	"github.com/mutezebra/tiktok/app/video/interface/persistence/database"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video/videoservice"
 	"github.com/mutezebra/tiktok/pkg/log"
@@ -26,12 +26,12 @@ func main() {
 	defer registry.Close()
 	registry.MustRegister(context.Background())
 
-	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.VideoServiceName].Address)
+	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[constants.VideoServiceName].Address)
 	srv := videoservice.NewServer(pack.ApplyVideo(),
 		server.WithServiceAddr(addr),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: consts.VideoServiceName}),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.VideoServiceName}),
 		server.WithMetaHandler(transmeta.ServerTTHeaderHandler),
-		server.WithMiddleware(trace.ServerTraceMiddleware(consts.VideoServiceName)),
+		server.WithMiddleware(trace.ServerTraceMiddleware(constants.VideoServiceName)),
 	)
 
 	if err := srv.Run(); err != nil {

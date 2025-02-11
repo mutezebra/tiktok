@@ -11,7 +11,7 @@ import (
 	"github.com/mutezebra/tiktok/app/video/domain/repository"
 	videoService "github.com/mutezebra/tiktok/app/video/domain/service"
 	"github.com/mutezebra/tiktok/app/video/usecase/pack"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
 )
 
@@ -58,7 +58,7 @@ func (v *VideoCase) VideoFeed(req *video.VideoFeedReq, stream video.VideoService
 
 	resp := new(video.VideoFeedResp)
 	begin := 0
-	offset := 2 * consts.MB
+	offset := 2 * constants.MB
 	remain := len(data)
 	for remain > 0 {
 		if remain < offset {

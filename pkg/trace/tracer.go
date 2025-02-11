@@ -8,7 +8,7 @@ import (
 	"github.com/uber/jaeger-client-go"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 func NewTracer(serviceName string, colEnp, agentEnp string) (opentracing.Tracer, io.Closer, error) {
@@ -22,7 +22,7 @@ func NewTracer(serviceName string, colEnp, agentEnp string) (opentracing.Tracer,
 			LogSpans: true,
 		},
 	}
-	if serviceName == consts.GatewayServiceKey {
+	if serviceName == constants.GatewayServiceKey {
 		cfg.Reporter.CollectorEndpoint = colEnp
 	} else {
 		cfg.Reporter.LocalAgentHostPort = agentEnp

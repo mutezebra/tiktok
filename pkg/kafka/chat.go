@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/segmentio/kafka-go"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/log"
 )
 
@@ -53,9 +53,9 @@ func (m *MQModel) RunGroupReader(ctx context.Context, topic string, groupID stri
 		Brokers:     []string{m.address},
 		GroupID:     groupID,
 		Topic:       topic,
-		MinBytes:    consts.ReaderDefaultMinBytes,
-		MaxBytes:    consts.ReaderDefaultMaxBytes,
-		MaxAttempts: consts.ReaderDefaultAttempts,
+		MinBytes:    constants.ReaderDefaultMinBytes,
+		MaxBytes:    constants.ReaderDefaultMaxBytes,
+		MaxAttempts: constants.ReaderDefaultAttempts,
 	}
 
 	for i := 0; i < readerNumber; i++ {
@@ -87,7 +87,7 @@ func (m *MQModel) RunWriter(ctx context.Context, topic string, ch chan []byte) {
 		Addr:                   kafka.TCP(m.address),
 		Topic:                  topic,
 		Balancer:               &kafka.RoundRobin{},
-		MaxAttempts:            consts.WriterDefaultAttempts,
+		MaxAttempts:            constants.WriterDefaultAttempts,
 		RequiredAcks:           kafka.RequireOne,
 		Async:                  true,
 		AllowAutoTopicCreation: false,

@@ -11,7 +11,7 @@ import (
 	"github.com/mutezebra/tiktok/app/interaction/cmd/pack"
 	"github.com/mutezebra/tiktok/app/interaction/config"
 	"github.com/mutezebra/tiktok/app/interaction/interface/persistence/database"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction/interactionservice"
 	"github.com/mutezebra/tiktok/pkg/log"
@@ -24,10 +24,10 @@ func main() {
 	defer registry.Close()
 	registry.MustRegister(context.Background())
 
-	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.InteractionServiceName].Address)
+	addr, _ := net.ResolveTCPAddr("tcp", config.Conf.Service[constants.InteractionServiceName].Address)
 	srv := interactionservice.NewServer(pack.ApplyInteraction(),
 		server.WithServiceAddr(addr),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: consts.InteractionServiceName}),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.InteractionServiceName}),
 		server.WithMetaHandler(transmeta.ServerTTHeaderHandler),
 		server.WithMiddleware(trace.ServerTraceMiddleware("interaction")),
 	)

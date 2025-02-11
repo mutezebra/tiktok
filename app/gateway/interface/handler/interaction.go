@@ -9,7 +9,7 @@ import (
 	"github.com/mutezebra/tiktok/app/gateway/domain/model"
 	"github.com/mutezebra/tiktok/app/gateway/interface/pack"
 	"github.com/mutezebra/tiktok/app/gateway/interface/rpc"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 )
 
@@ -22,7 +22,7 @@ func LikeHandler() app.HandlerFunc {
 		}
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		resp, err := rpc.Like(ctx, &req)
 		if err != nil {
@@ -43,7 +43,7 @@ func DisLikeHandler() app.HandlerFunc {
 		}
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		resp, err := rpc.DisLike(ctx, &req)
 		if err != nil {
@@ -64,7 +64,7 @@ func LikeListHandler() app.HandlerFunc {
 		}
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		resp, err := rpc.LikeList(ctx, &req)
 		if err != nil {
@@ -85,7 +85,7 @@ func CommentHandler() app.HandlerFunc {
 		}
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		resp, err := rpc.Comment(ctx, &req)
 		if err != nil {
@@ -124,7 +124,7 @@ func DeleteCommentHandler() app.HandlerFunc {
 		}
 
 		req.UID = new(int64)
-		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(consts.HeaderUserIdKey)), 10, 64)
+		*req.UID, _ = strconv.ParseInt(string(c.GetHeader(constants.HeaderUserIdKey)), 10, 64)
 
 		resp, err := rpc.DeleteComment(ctx, &req)
 		if err != nil {

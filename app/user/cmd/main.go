@@ -11,7 +11,7 @@ import (
 	"github.com/mutezebra/tiktok/app/user/cmd/pack"
 	"github.com/mutezebra/tiktok/app/user/config"
 	"github.com/mutezebra/tiktok/app/user/interface/persistence/database"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/inject"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/user/userservice"
 	"github.com/mutezebra/tiktok/pkg/log"
@@ -26,7 +26,7 @@ func main() {
 	defer registry.Close()
 	registry.MustRegister(context.Background())
 
-	addr, err := net.ResolveTCPAddr("tcp", config.Conf.Service[consts.UserServiceName].Address)
+	addr, err := net.ResolveTCPAddr("tcp", config.Conf.Service[constants.UserServiceName].Address)
 	if err != nil {
 		log.LogrusObj.Panic(err)
 	}
@@ -34,7 +34,7 @@ func main() {
 	srv := userservice.NewServer(pack.ApplyUser(),
 		server.WithServiceAddr(addr),
 		server.WithMiddleware(trace.ServerTraceMiddleware("user")),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: consts.UserServiceName}),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.UserServiceName}),
 		server.WithMetaHandler(transmeta.ServerTTHeaderHandler))
 
 	if err = srv.Run(); err != nil {

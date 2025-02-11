@@ -1,4 +1,4 @@
-package consts
+package constants
 
 // msg_type
 const (

@@ -5,16 +5,16 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/log"
 )
 
 const (
-	topicName          = consts.ChatMQPersiTopicName
-	partitions         = consts.ChatMQPersiTopicPartitions
-	replicationFactors = consts.ChatMQPersiReplicationFactors
-	readerGroup        = consts.ChatMQPersiReaderGroupName
-	readerNum          = consts.ChatMQPersiReaderGroupNumber
+	topicName          = constants.ChatMQPersiTopicName
+	partitions         = constants.ChatMQPersiTopicPartitions
+	replicationFactors = constants.ChatMQPersiReplicationFactors
+	readerGroup        = constants.ChatMQPersiReaderGroupName
+	readerNum          = constants.ChatMQPersiReaderGroupNumber
 )
 
 // EnableMQ create the topic, start the writer, and start the consumer group

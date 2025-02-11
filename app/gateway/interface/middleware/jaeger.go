@@ -8,14 +8,14 @@ import (
 	"github.com/opentracing/opentracing-go/ext"
 
 	"github.com/mutezebra/tiktok/app/gateway/config"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/log"
 	"github.com/mutezebra/tiktok/pkg/trace"
 )
 
 func TraceMiddleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-		tracer, closer, err := trace.NewTracer(consts.GatewayServiceKey, config.Conf.Jaeger.CollectorEndpoint, config.Conf.Jaeger.AgentHostPort)
+		tracer, closer, err := trace.NewTracer(constants.GatewayServiceKey, config.Conf.Jaeger.CollectorEndpoint, config.Conf.Jaeger.AgentHostPort)
 		if err != nil {
 			log.LogrusObj.Errorf("failed when get tracer,error: %v", err)
 			return

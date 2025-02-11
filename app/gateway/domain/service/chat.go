@@ -15,7 +15,7 @@ import (
 
 	"github.com/mutezebra/tiktok/app/gateway/domain/model"
 	"github.com/mutezebra/tiktok/app/gateway/domain/repository"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/kafka"
 	"github.com/mutezebra/tiktok/pkg/log"
 )
@@ -49,8 +49,8 @@ func DefaultService(repo repository.ChatRepository, enableAsyncPersistence bool)
 			repo: repo,
 
 			mq:        &kafka.MQModel{},
-			mqReadCh:  make(chan []byte, consts.ChatMQReadChSize),
-			mqWriteCh: make(chan []byte, consts.ChatMQWriteChSize),
+			mqReadCh:  make(chan []byte, constants.ChatMQReadChSize),
+			mqWriteCh: make(chan []byte, constants.ChatMQWriteChSize),
 
 			ctx:                    context.Background(),
 			bufferPool:             sync.Pool{New: func() any { return new(bytes.Buffer) }},
@@ -101,13 +101,13 @@ func (s *Service) Unregister(client *Client) error {
 func (s *Service) SendMsg(msg *Message) error {
 	var err error
 	switch msg.MsgType {
-	case consts.ChatTextMessage:
+	case constants.ChatTextMessage:
 		err = s.SendChatTextMessage(msg)
 
-	case consts.HistoryChatMessage:
+	case constants.HistoryChatMessage:
 		err = s.SendHistoryChatMessage(msg)
 
-	case consts.NotReadMessage:
+	case constants.NotReadMessage:
 		err = s.SendNotReadMessage(msg)
 
 	default:
@@ -126,7 +126,7 @@ func (s *Service) WriteToConn(message []byte, to int64) error {
 // kafka consumes the Message object and sends it to the goroutine repository via a channel
 func (s *Service) EnableSyncPersistence() {
 	s.EnableMQ()
-	go s.MessagePersistence(consts.ChatDefaultPersistenceGoroutineNum)
+	go s.MessagePersistence(constants.ChatDefaultPersistenceGoroutineNum)
 }
 
 func (s *Service) SendChatTextMessage(msg *Message) error {

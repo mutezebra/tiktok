@@ -9,7 +9,7 @@ import (
 	"github.com/mutezebra/tiktok/app/interaction/domain/repository"
 	interactionService "github.com/mutezebra/tiktok/app/interaction/domain/service"
 	"github.com/mutezebra/tiktok/app/interaction/usecase/pack"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/interaction"
 	"github.com/mutezebra/tiktok/pkg/kitex_gen/api/video"
 )
@@ -38,7 +38,7 @@ type commentDTO struct {
 func (i *InteractionCase) Like(ctx context.Context, req *interaction.LikeReq) (r *interaction.LikeResp, err error) {
 	var exist bool
 	switch req.GetActionType() {
-	case consts.LikeCommentActionKey:
+	case constants.LikeCommentActionKey:
 		exist, err = i.repo.WhetherCommentLikeItemExist(ctx, req.GetUID(), req.GetCommentID())
 		if err != nil {
 			return nil, pack.ReturnError(model.DatabaseWhetherCommentLikeItemExistError, err)
@@ -58,7 +58,7 @@ func (i *InteractionCase) Like(ctx context.Context, req *interaction.LikeReq) (r
 		if err = i.repo.LikeComment(ctx, req.GetUID(), req.GetCommentID()); err != nil {
 			return nil, pack.ReturnError(model.DatabaseLikeCommentError, err)
 		}
-	case consts.LikeVideoActionKey:
+	case constants.LikeVideoActionKey:
 		exist, err = i.repo.WhetherVideoLikeItemExist(ctx, req.GetUID(), req.GetVideoID())
 		if err != nil {
 			return nil, pack.ReturnError(model.DatabaseWhetherVideoLikeItemExistError, err)
@@ -83,11 +83,11 @@ func (i *InteractionCase) Like(ctx context.Context, req *interaction.LikeReq) (r
 
 func (i *InteractionCase) Dislike(ctx context.Context, req *interaction.DislikeReq) (r *interaction.DislikeResp, err error) {
 	switch req.GetActionType() {
-	case consts.DisLikeCommentActionKey:
+	case constants.DisLikeCommentActionKey:
 		if err = i.repo.DislikeComment(ctx, req.GetUID(), req.GetCommentID()); err != nil {
 			return nil, pack.ReturnError(model.DatabaseDislikeCommentError, err)
 		}
-	case consts.DisLikeVideoActionKey:
+	case constants.DisLikeVideoActionKey:
 		if err = i.repo.DislikeVideo(ctx, req.GetUID(), req.GetVideoID()); err != nil {
 			return nil, pack.ReturnError(model.DatabaseDislikeVideoError, err)
 		}

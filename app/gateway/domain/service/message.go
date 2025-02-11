@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/mutezebra/tiktok/app/gateway/domain/repository"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 type Message struct {
@@ -37,12 +37,12 @@ const (
 // CheckMessageParams check the message params
 func (m *Message) CheckMessageParams() (result string) {
 	switch m.MsgType {
-	case consts.ChatTextMessage:
+	case constants.ChatTextMessage:
 		if m.Content == "" {
 			return ContentEmptyError
 		}
 
-	case consts.HistoryChatMessage:
+	case constants.HistoryChatMessage:
 		if m.PageNum < 1 {
 			return PageNumError
 		}
@@ -66,7 +66,7 @@ func (m *Message) CheckMessageParams() (result string) {
 		}
 		m.timeEnd = t.Unix()
 
-	case consts.NotReadMessage:
+	case constants.NotReadMessage:
 
 	default:
 		return UnSupportedType

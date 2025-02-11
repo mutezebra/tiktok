@@ -9,15 +9,15 @@ import (
 
 	"github.com/mutezebra/tiktok/app/interaction/config"
 	"github.com/mutezebra/tiktok/app/interaction/usecase"
-	"github.com/mutezebra/tiktok/pkg/consts"
+	"github.com/mutezebra/tiktok/pkg/constants"
 	"github.com/mutezebra/tiktok/pkg/inject"
 )
 
 func InteractionRegistry() *inject.Registry {
 	id := snowflake.GenerateID(config.Conf.System.WorkerID, config.Conf.System.DataCenterID)
 	return &inject.Registry{
-		Addr:     config.Conf.Service[consts.InteractionServiceName].SvcAddress,
-		Key:      config.Conf.Service[consts.InteractionServiceName].ServiceName + fmt.Sprintf("/%d", id),
+		Addr:     config.Conf.Service[constants.InteractionServiceName].SvcAddress,
+		Key:      config.Conf.Service[constants.InteractionServiceName].ServiceName + fmt.Sprintf("/%d", id),
 		Prefix:   config.Conf.Etcd.ServicePrefix,
 		EndPoint: config.Conf.Etcd.Endpoint,
 	}

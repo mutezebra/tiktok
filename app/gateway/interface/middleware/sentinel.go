@@ -3,8 +3,6 @@ package middleware
 import (
 	"context"
 
-	"github.com/mutezebra/tiktok/pkg/constants"
-
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/core/flow"
 	"github.com/bytedance/gopkg/util/logger"
@@ -13,6 +11,7 @@ import (
 	"github.com/hertz-contrib/opensergo/sentinel/adapter"
 
 	"github.com/mutezebra/tiktok/app/gateway/domain/model"
+	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 func SentinelMW() app.HandlerFunc {

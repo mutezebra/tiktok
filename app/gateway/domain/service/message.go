@@ -3,24 +3,14 @@ package chat
 import (
 	"time"
 
+	"github.com/mutezebra/tiktok/app/gateway/domain/service/message"
+
 	"github.com/mutezebra/tiktok/app/gateway/domain/repository"
 	"github.com/mutezebra/tiktok/pkg/constants"
 )
 
 type Message struct {
-	MsgType   int8 `json:"msg_type"`
-	HaveRead  bool
-	PageSize  int8   `json:"page_size"`
-	PageNum   int32  `json:"page_num"`
-	Content   string `json:"content"`
-	TimeStart string `json:"time_start"`
-	TimeEnd   string `json:"time_end"`
-	timeSince int64
-	timeEnd   int64
-	GroupID   int64 `json:"group_id"`
-	From      int64
-	To        int64
-	CreateAt  int64
+	*message.Message
 }
 
 const (
@@ -59,12 +49,12 @@ func (m *Message) CheckMessageParams() (result string) {
 		if t, err = time.Parse("2006-01-02 15:04:05", m.TimeStart); err != nil {
 			return TimeStartError
 		}
-		m.timeSince = t.Unix()
+		m.UTimeSince = t.Unix()
 
 		if t, err = time.Parse("2006-01-02 15:04:05", m.TimeEnd); err != nil {
 			return TimeEndError
 		}
-		m.timeEnd = t.Unix()
+		m.UTimeEnd = t.Unix()
 
 	case constants.NotReadMessage:
 
@@ -81,9 +71,9 @@ func (m *Message) buildHistoryQueryReq() *repository.HistoryQueryReq {
 		From:     m.From,
 		To:       m.To,
 		PageNum:  m.PageNum,
-		PageSize: m.PageSize,
-		Start:    m.timeSince,
-		End:      m.timeEnd,
+		PageSize: int8(m.PageSize),
+		Start:    m.UTimeSince,
+		End:      m.UTimeEnd,
 	}
 }
 
